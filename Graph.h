@@ -80,6 +80,46 @@ struct Graph {
 		return edgesCount++;
 	}
 
+	bool isBipartite(int w[], int cnt[], int v, int col) {
+		int * vertices = new int[vertexCount];
+		vertices[0] = v;
+		w[v] = col;
+		int head = 0, tail = 1;
+		while (head < tail) {
+			int curVertex = vertices[head++], curColor = w[curVertex];
+			if (cnt != NULL) {
+				++cnt[curColor];
+			}
+			for (auto& it : edges[curVertex]) {
+				int toVertex = to[it];
+				if (w[toVertex] == -1) {
+					w[toVertex] = curColor ^ 1;
+					vertices[tail++] = toVertex;
+				} else
+				if (w[toVertex] != (curColor ^ 1)) {
+					delete[] vertices;
+					return false;
+				}
+			}
+		}
+		delete[] vertices;
+		return true;
+	}
+
+	bool isBipartite(int w[], int cnt[] = NULL) {
+		fill_n(w, vertexCount, -1);
+		if (cnt != NULL) {
+			cnt[0] = cnt[1] = 0;
+		}
+		bool ret = true;
+		for (int i = 0; i < vertexCount && ret; ++i) {
+			if (w[i] == -1) {
+				ret &= isBipartite(w, cnt, i, 0);
+			}
+		}
+		return ret;
+	}
+
 private:
 	Graph();
 

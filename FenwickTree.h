@@ -1,14 +1,14 @@
 #pragma once
 #include "Head.h"
 
-template<class T> struct FenwickTreeSum {
-
+template<class T> class FenwickTreeSum {
+public:
 	T *data;
 	int N;
 
 	FenwickTreeSum(const int N) : N(N) {
 		data = new T[N];
-		memset(data, 0, N * sizeof(T));
+		fill_n(data, N, 0);
 	}
 
 	~FenwickTreeSum() {
@@ -16,7 +16,7 @@ template<class T> struct FenwickTreeSum {
 	}
 
 	void clear() {
-		memset(data, 0, N * sizeof(T));
+		fill_n(data, N, 0);
 	}
 
 	void build(T a[]) {

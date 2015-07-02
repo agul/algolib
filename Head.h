@@ -62,6 +62,4 @@ const ll LINF = 0x3f3f3f3f3f3f3f3fLL;
 const int DX[] = { -1, 0, 1, 0, -1, -1, 1, 1};
 const int DY[] = { 0, -1, 0, 1 -1, 1, 1, -1};
 
-int __;
-
 void inputFiles();

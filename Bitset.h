@@ -6,8 +6,8 @@ unordered_map<unsigned int, int> BITSET_COUNT;
 
 template<size_t N> struct Bitset {
 
-	const int BITSET_LENGTH = (N >> 5) + 1;
-	unsigned int data[(N >> 5) + 1];
+	static const int BITSET_LENGTH = (N >> 5) + 1;
+	unsigned int data[BITSET_LENGTH];
 
 	Bitset() {
 		memset(data, 0, sizeof(data));

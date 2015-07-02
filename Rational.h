@@ -1,7 +1,7 @@
 #pragma once
 #include "Head.h"
 #include "Maths.h"
-#include "Strings.h"
+#include "StringUtils.h"
 
 struct Rational {
 
@@ -335,7 +335,7 @@ struct Rational {
 	}
 
 	inline void print() const {
-		printf(LLD" "LLD, a, b);
+		printf(LLD " " LLD, a, b);
 	}
 
 	inline void print(ostream& out) const {
@@ -343,7 +343,7 @@ struct Rational {
 	}
 
 	inline void readSlash() {
-		scanf(LLD"/"LLD, &a, &b);
+		scanf(LLD "/" LLD, &a, &b);
 		norm();
 	}
 
@@ -354,7 +354,7 @@ struct Rational {
 	}
 
 	inline void printSlash() const {
-		printf(LLD"/"LLD, a, b);
+		printf(LLD "/" LLD, a, b);
 	}
 
 	inline void printSlash(ostream& out) const {
