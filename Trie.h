@@ -10,7 +10,7 @@ public:
 		unordered_map<char, int> next;
 
 		State() : cnt(0) {}
-		State(int cnt) : cnt(cnt) {}
+		State(const int cnt) : cnt(cnt) {}
 		~State() {
 			next.clear();
 		}

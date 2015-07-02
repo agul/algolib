@@ -1,7 +1,8 @@
 #pragma once
 #include "Head.h"
 
-struct DSU {
+class DSU {
+public:
 	
 	int * p, n, numSets;
 
@@ -13,40 +14,10 @@ struct DSU {
 		delete[] p;
 	}
 
-	void init(int _n) {
-		n = _n;
-		srand(time(0));
-		for (int i = 0; i < n; ++i) {
-			p[i] = i;
-		}
-		numSets = n;
-	}
-
-	int findSet(const int v) {
-		if (v == p[v]) {
-			return v;
-		}
-		return p[v] = findSet(p[v]);
-	}
-
-	bool unite(int a, int b) {
-		a = findSet(a), b = findSet(b);
-		if (a == b) {
-			return false;
-		}
-		if (rand() & 1) {
-			swap(a, b);
-		}
-		p[a] = b;
-		--numSets;
-		return true;
-	}
-
-	void finalize() {
-		for (int i = 0; i < n; ++i) {
-			p[i] = findSet(p[i]);
-		}
-	}
+	void init(const int _n);
+	int findSet(const int v);
+	bool unite(int a, int b);
+	void finalize();
 
 	int getNumSets() const {
 		return numSets;
