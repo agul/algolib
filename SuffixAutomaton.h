@@ -14,7 +14,7 @@ public:
 
 	};
 
-	State states[1000];
+	State states[N];
 	int sz, last;
 
 	void clear();
