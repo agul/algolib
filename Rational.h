@@ -3,8 +3,8 @@
 #include "Maths.h"
 #include "StringUtils.h"
 
-struct Rational {
-
+class Rational {
+public:
 	typedef ll TBase;
 
 	static const Rational ZERO;
@@ -14,10 +14,8 @@ struct Rational {
 
 	TBase a, b;
 
-	Rational() : a(0), b(1) { }
-
-	Rational(TBase _a) : a(_a), b(1) { }
-
+	Rational() : a(0), b(1) {}
+	Rational(TBase _a) : a(_a), b(1) {}
 	Rational(TBase _a, TBase _b) : a(_a), b(_b) {
 		norm();
 	}
@@ -119,77 +117,77 @@ struct Rational {
 	}
 
 	Rational operator + (const int x) const {
-		return Rational(a + (TBase)x * b, b);
+		return Rational(a + static_cast<TBase>(x) * b, b);
 	}
 
 	Rational operator - (const int x) const {
-		return Rational(a - (TBase)x * b, b);
+		return Rational(a - static_cast<TBase>(x) * b, b);
 	}
 
 	Rational operator * (const int x) const {
-		return Rational(a * (TBase)x, b);
+		return Rational(a * static_cast<TBase>(x), b);
 	}
 
 	Rational operator / (const int x) const {
-		return Rational(a, b * (TBase)x);
+		return Rational(a, b * static_cast<TBase>(x));
 	}
 
 	Rational& operator += (const int x) {
-		a += b * (TBase)x;
+		a += b * static_cast<TBase>(x);
 		return *this;
 	}
 
 	Rational& operator -= (const int x) {
-		a -= b * (TBase)x;
+		a -= b * static_cast<TBase>(x);
 		return *this;
 	}
 
 	Rational& operator *= (const int x) {
-		a *= (TBase)x;
+		a *= static_cast<TBase>(x);
 		norm();
 		return *this;
 	}
 
 	Rational& operator /= (const int x) {
-		b *= (TBase)x;
+		b *= static_cast<TBase>(x);
 		norm();
 		return *this;
 	}
 
 	Rational operator + (const ll x) const {
-		return Rational(a + (TBase)x * b, b);
+		return Rational(a + static_cast<TBase>(x) * b, b);
 	}
 
 	Rational operator - (const ll x) const {
-		return Rational(a - (TBase)x * b, b);
+		return Rational(a - static_cast<TBase>(x) * b, b);
 	}
 
 	Rational operator * (const ll x) const {
-		return Rational(a * (TBase)x, b);
+		return Rational(a * static_cast<TBase>(x), b);
 	}
 
 	Rational operator / (const ll x) const {
-		return Rational(a, b * (TBase)x);
+		return Rational(a, b * static_cast<TBase>(x));
 	}
 
 	Rational& operator += (const ll x) {
-		a += b * (TBase)x;
+		a += b * static_cast<TBase>(x);
 		return *this;
 	}
 
 	Rational& operator -= (const ll x) {
-		a -= b * (TBase)x;
+		a -= b * static_cast<TBase>(x);
 		return *this;
 	}
 
 	Rational& operator *= (const ll x) {
-		a *= (TBase)x;
+		a *= static_cast<TBase>(x);
 		norm();
 		return *this;
 	}
 
 	Rational& operator /= (const ll x) {
-		b *= (TBase)x;
+		b *= static_cast<TBase>(x);
 		norm();
 		return *this;
 	}
@@ -235,51 +233,51 @@ struct Rational {
 	}
 
 	bool operator == (const int x) const {
-		return (a == (TBase)x * b);
+		return (a == static_cast<TBase>(x) * b);
 	}
 
 	bool operator != (const int x) const {
-		return (a != (TBase)x * b);
+		return (a != static_cast<TBase>(x) * b);
 	}
 
 	bool operator < (const int x) const {
-		return (a < (TBase)x * b);
+		return (a < static_cast<TBase>(x) * b);
 	}
 
 	bool operator >(const int x) const {
-		return (a > (TBase)x * b);
+		return (a > static_cast<TBase>(x) * b);
 	}
 
 	bool operator <= (const int x) const {
-		return (a <= (TBase)x * b);
+		return (a <= static_cast<TBase>(x) * b);
 	}
 
 	bool operator >= (const int x) const {
-		return (a >= (TBase)x * b);
+		return (a >= static_cast<TBase>(x) * b);
 	}
 
 	bool operator == (const ll x) const {
-		return (a == (TBase)x * b);
+		return (a == static_cast<TBase>(x) * b);
 	}
 
 	bool operator != (const ll x) const {
-		return (a != (TBase)x * b);
+		return (a != static_cast<TBase>(x) * b);
 	}
 
 	bool operator < (const ll x) const {
-		return (a < (TBase)x * b);
+		return (a < static_cast<TBase>(x) * b);
 	}
 
 	bool operator >(const ll x) const {
-		return (a > (TBase)x * b);
+		return (a > static_cast<TBase>(x) * b);
 	}
 
 	bool operator <= (const ll x) const {
-		return (a <= (TBase)x * b);
+		return (a <= static_cast<TBase>(x) * b);
 	}
 
 	bool operator >= (const ll x) const {
-		return (a >= (TBase)x * b);
+		return (a >= static_cast<TBase>(x) * b);
 	}
 
 	bool operator == (const double x) const {
@@ -314,7 +312,7 @@ struct Rational {
 		return in >> x.a >> x.b;
 	}
 
-	inline void norm() {
+	void norm() {
 		TBase g = gcd(a, b);
 		a /= g;
 		b /= g;
@@ -324,85 +322,85 @@ struct Rational {
 		}
 	}
 
-	inline void read() {
+	void read() {
 		scanf(LLD LLD, &a, &b);
 		norm();
 	}
 
-	inline void read(istream &in) {
+	void read(istream &in) {
 		in >> a >> b;
 		norm();
 	}
 
-	inline void print() const {
+	void print() const {
 		printf(LLD " " LLD, a, b);
 	}
 
-	inline void print(ostream& out) const {
+	void print(ostream& out) const {
 		out << a << " " << b;
 	}
 
-	inline void readSlash() {
+	void readSlash() {
 		scanf(LLD "/" LLD, &a, &b);
 		norm();
 	}
 
-	inline void readSlash(istream& in) {
+	void readSlash(istream& in) {
 		char ch;
 		in >> a >> ch >> b;
 		norm();
 	}
 
-	inline void printSlash() const {
+	void printSlash() const {
 		printf(LLD "/" LLD, a, b);
 	}
 
-	inline void printSlash(ostream& out) const {
+	void printSlash(ostream& out) const {
 		out << a << "/" << b;
 	}
 
-	inline Rational negate() const {
+	Rational negate() const {
 		return Rational(-a, b);
 	}
 
-	inline Rational abs() const {
-		if (a < 0) return Rational(-a, b); else return Rational(a, b);
+	Rational abs() const {
+		return (a < 0 ? Rational(-a, b) : Rational(a, b));
 	}
 
-	inline Rational inverse() const {
+	Rational inverse() const {
 		return Rational(b, a);
 	}
 
-	inline int sign() const {
+	int sign() const {
 		return (a < 0 ? -1 : (a > 0));
 	}
 
-	inline double doubleValue() const {
+	double doubleValue() const {
 		return (a + 0.) / b;
 	}
 
-	inline TBase Floor() const {
+	TBase Floor() const {
 		return a / b;
 	}
 
-	inline TBase Ceil() const {
-		return (TBase)ceil((a + 0.) / b - EPS);
+	TBase Ceil() const {
+		return static_cast<TBase>(ceil((a + 0.) / b - EPS));
 	}
 
-	inline TBase Round() const {
+	TBase Round() const {
 		double cur = (a + 0.) / b;
-		return (TBase)(cur < 0 ? ceil(cur - .5 - EPS) : floor(cur + .5 + EPS));
+		return static_cast<TBase>((cur < 0 ? ceil(cur - .5 - EPS) : floor(cur + .5 + EPS)));
 	}
 
-	inline double frac() const {
+	double frac() const {
 		return (a + 0.) / b - a / b;
 	}
 
-	inline ll hashCode() const {
+	ll hashCode() const {
 		return a * 877117 + b;
 	}
 
-	inline Rational pow(ll n) const {
+	Rational pow(ll n) const {
 		return Rational(ppow(a, n), ppow(b, n));
 	}
 
