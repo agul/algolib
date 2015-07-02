@@ -29,9 +29,12 @@ public:
 	int addDirectedEdge(const int _from, const int _to);
 	bool isBipartite(int w[], int cnt[], int v, int col) const;
 	bool isBipartite(int w[], int cnt[] = NULL) const;
+	bool topSortAcyclic(int order[]) const;
+	void topSortRec(int order[]) const;
 
 private:
 	Graph();
+	void _topSortDfs(const int v, int order[], bool used[], int& cnt) const;
 
 };
 
@@ -50,3 +53,5 @@ private:
 	UndirectedGraph();
 
 };
+
+void stronglyConnectedComponents(const Graph& g, const Graph& gr, int color[]);

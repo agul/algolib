@@ -87,7 +87,93 @@ bool Graph::isBipartite(int w[], int cnt[]) const {
 	return ret;
 }
 
+bool Graph::topSortAcyclic(int order[]) const 
+// non-recursive topological sorting, works only for acyclic graphs 
+{
+	int * degree = new int[vertexCount];
+	fill_n(degree, vertexCount, 0);
+	for (int i = 0; i < edgesCount; ++i) {
+		++degree[to[i]];
+	}
+	int head = 0, tail = 0;
+	for (int i = 0; i < vertexCount; ++i) {
+		if (!degree[i]) {
+			order[tail++] = i;
+		}
+	}
+	while (head < tail) {
+		int curVertex = order[head++];
+		for (auto& it : edges[curVertex]) {
+			int toVertex = to[it];
+			if (!(--degree[toVertex])) {
+				order[tail++] = toVertex;
+			}
+		}
+	}
+	delete[] degree;
+	return tail == vertexCount;
+}
+
+void Graph::topSortRec(int order[]) const {
+	bool * used = new bool[vertexCount];
+	fill_n(used, vertexCount, false);
+	int cnt = 0;
+	for (int i = 0; i < vertexCount; ++i) {
+		if (!used[i]) {
+			_topSortDfs(i, order, used, cnt);
+		}
+	}
+	reverse(order, order + vertexCount);
+}
+
+void Graph::_topSortDfs(const int v, int order[], bool used[], int& cnt) const {
+	used[v] = true;
+	for (auto& it : edges[v]) {
+		int toVertex = to[it];
+		if (!used[toVertex]) {
+			_topSortDfs(toVertex, order, used, cnt);
+		}
+	}
+	order[cnt++] = v;
+}
+
 void UndirectedGraph::addBidirectionalEdge(const int _from, const int _to) {
 	addDirectedEdge(_from, _to);
 	addDirectedEdge(_to, _from);
+}
+
+void stronglyConnectedComponents(const Graph& g, const Graph& gr, int color[])
+// g - graph, gr - reversed graph, color - output (index of SCC for each vertex)
+{
+	int n = g.vertexCount;
+	int * order = new int[n];
+	bool * used = new bool[n];
+	int * q = new int[n];
+	fill_n(order, n, 0);
+	g.topSortRec(order);
+	int cnt = 0;
+	fill_n(used, n, false);
+	for (int i = 0; i < n; ++i) {
+		int v = order[i];
+		if (!used[v]) {
+			int head = 0, tail = 1;
+			q[0] = v;
+			while (head < tail) {
+				int curVertex = q[head++];
+				color[curVertex] = cnt;
+				used[curVertex] = true;
+				for (auto& it : gr.edges[curVertex]) {
+					int to = gr.to[it];
+					if (!used[to]) {
+						used[to] = true;
+						q[tail++] = to;
+					}
+				}
+			}
+			++cnt;
+		}
+	}
+	delete[] q;
+	delete[] used;
+	delete[] order;
 }
