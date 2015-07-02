@@ -35,7 +35,8 @@ private:
 
 };
 
-struct UndirectedGraph : Graph {
+class UndirectedGraph : public Graph {
+public:
 
 	UndirectedGraph(const int maxVertexNum, const int maxEdgesNum, const int mask = 0) : Graph(maxVertexNum, maxEdgesNum << 1, mask) {}
 
@@ -43,10 +44,7 @@ struct UndirectedGraph : Graph {
 		vertexCount = _vertexCount;
 	}
 
-	void addBidirectionalEdge(const int _from, const int _to) {
-		addDirectedEdge(_from, _to);
-		addDirectedEdge(_to, _from);
-	}
+	void addBidirectionalEdge(const int _from, const int _to);
 
 private:
 	UndirectedGraph();

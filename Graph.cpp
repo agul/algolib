@@ -86,3 +86,8 @@ bool Graph::isBipartite(int w[], int cnt[]) const {
 	}
 	return ret;
 }
+
+void UndirectedGraph::addBidirectionalEdge(const int _from, const int _to) {
+	addDirectedEdge(_from, _to);
+	addDirectedEdge(_to, _from);
+}
