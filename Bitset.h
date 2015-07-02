@@ -2,15 +2,15 @@
 #include "Head.h"
 
 #define bitset __MY_BITSET__
-unordered_map<unsigned int, int> BITSET_COUNT;
 
-template<size_t N> struct Bitset {
+template<size_t N> class Bitset {
+public:
 
 	static const int BITSET_LENGTH = (N >> 5) + 1;
 	unsigned int data[BITSET_LENGTH];
 
 	Bitset() {
-		memset(data, 0, sizeof(data));
+		fill_n(data, BITSET_LENGTH, 0);
 	}
 
 	Bitset& set(const int x) {
@@ -55,12 +55,12 @@ template<size_t N> struct Bitset {
 	}
 
 	Bitset& reset() {
-		memset(data, 0, sizeof(data));
+		fill_n(data, BITSET_LENGTH, 0);
 		return *this;
 	}
 
 	Bitset& set() {
-		memset(data, 0xff, sizeof(data));
+		fill_n(data, BITSET_LENGTH, 0xffffffff);
 		return *this;
 	}
 
@@ -72,20 +72,7 @@ template<size_t N> struct Bitset {
 	}
 
 	int count() const {
-		int ret = 0, tmp, cur;
-		for (int i = 0; i < BITSET_LENGTH; ++i) {
-			if (BITSET_COUNT.count(tmp = data[i])) {
-				ret += BITSET_COUNT[tmp];
-			} else {
-				cur = 0;
-				while (tmp) {
-					cur += tmp & 1;
-					tmp >>= 1;
-				}
-				ret += (BITSET_COUNT[data[i]] = cur);
-			}
-		}
-		return ret;
+		return accumulate(data, data + BITSET_LENGTH, 0, popcount);
 	}
 
 	Bitset& operator &= (const Bitset& bitset) {
