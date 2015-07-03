@@ -126,7 +126,9 @@ void Graph::topSortRec(int order[]) const {
 	reverse(order, order + vertexCount);
 }
 
-void Graph::_topSortDfs(const int v, int order[], bool used[], int& cnt) const {
+void Graph::_topSortDfs(const int v, int order[], bool used[], int& cnt) const 
+// internal function for recursive topological sorting
+{
 	used[v] = true;
 	for (auto& it : edges[v]) {
 		int toVertex = to[it];
@@ -137,10 +139,14 @@ void Graph::_topSortDfs(const int v, int order[], bool used[], int& cnt) const {
 	order[cnt++] = v;
 }
 
+
+
 void UndirectedGraph::addBidirectionalEdge(const int _from, const int _to) {
 	addDirectedEdge(_from, _to);
 	addDirectedEdge(_to, _from);
 }
+
+
 
 void stronglyConnectedComponents(const Graph& g, const Graph& gr, int color[])
 // g - graph, gr - reversed graph, color - output (index of SCC for each vertex)

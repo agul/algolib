@@ -28,7 +28,7 @@
 
 using namespace std;
 
-#ifdef WIN32
+#ifdef _WIN32
 #define LLD "%I64d"
 #define LLU "%I64u"
 #define popcount(a) __popcnt(a)

@@ -72,7 +72,11 @@ public:
 	}
 
 	int count() const {
-		return accumulate(data, data + BITSET_LENGTH, 0, popcount);
+		int ret = 0;
+		for (int i = 0; i < BITSET_LENGTH; ++i) {
+			ret += __popcnt(data[i]);
+		}
+		return ret;
 	}
 
 	Bitset& operator &= (const Bitset& bitset) {
