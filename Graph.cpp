@@ -4,7 +4,7 @@ Graph::Graph(const int maxVertexNum, const int maxEdgesNum, const int mask) : ma
 	from = new int[maxEdgesNum];
 	to = new int[maxEdgesNum];
 	edges.resize(maxVertexNum);
-	weight = (mask & (1 << GT_WEIGHTED) ? new ll[maxEdgesNum] : NULL);
+	weight = (mask & GT_WEIGHTED ? new ll[maxEdgesNum] : NULL);
 	vertexCount = 0;
 	edgesCount = 0;
 }
@@ -44,6 +44,11 @@ int Graph::addDirectedEdge(const int _from, const int _to) {
 	to[edgesCount] = _to;
 	edges[_from].push_back(edgesCount);
 	return edgesCount++;
+}
+
+int Graph::addDirectedWeightedEdge(const int _from, const int _to, const ll _weight) {
+	weight[edgesCount] = _weight;
+	return addDirectedEdge(_from, _to);
 }
 
 bool Graph::isBipartite(int w[], int cnt[], int v, int col) const {
@@ -137,6 +142,57 @@ void Graph::_topSortDfs(const int v, int order[], bool used[], int& cnt) const
 		}
 	}
 	order[cnt++] = v;
+}
+
+void Graph::dijkstra(int startVertex, ll dist[]) const {
+	fill_n(dist, vertexCount, LINF);
+	dist[startVertex] = 0;
+	if (isSparse()) {
+		priority_queue<pair<ll, int>> q;
+		q.push(mp(0, startVertex));
+		while (!q.empty()) {
+			auto it = q.top();
+			q.pop();
+			int curVertex = it.Y;
+			ll curlen = -it.X;
+			if (curlen > dist[curVertex]) {
+				continue;
+			}
+			for (auto& it : edges[curVertex]) {
+				ll newlen = curlen + weight[it];
+				int toVertex = to[it];
+				if (dist[toVertex] > newlen) {
+					dist[toVertex] = newlen;
+					q.push(mp(-newlen, toVertex));
+				}
+			}
+		}
+	} else {
+		bool * used = new bool[vertexCount];
+		fill_n(used, vertexCount, false);
+		for (int i = 0; i < vertexCount; ++i) {
+			int index = -1;
+			ll curlen = LINF;
+			for (int j = 0; j < vertexCount; ++j) {
+				if (!used[j] && dist[j] < curlen) {
+					curlen = dist[j];
+					index = j;
+				}
+			}
+			if (index == -1) {
+				break;
+			}
+			used[index] = true;
+			for (auto& it : edges[index]) {
+				int toVertex = to[it];
+				ll newlen = curlen + weight[it];
+				if (!used[toVertex] && dist[toVertex] > newlen) {
+					dist[toVertex] = newlen;
+				}
+			}
+		}
+		delete[] used;
+	}
 }
 
 
