@@ -115,7 +115,7 @@ template<class T> T inverseElementCompMod(const T n, const T mod)
 	return ppow(n, eulerFunction(mod) - 1, mod);
 }
 
-template<class T, size_t N> void binomialCoefficients(T c[N][N]) {
+template<class T, size_t N> void binomialCoefficients(T (&c)[N][N]) {
 	for (int i = 0; i < N; ++i) {
 		c[i][0] = c[i][i] = 1;
 		for (int j = 1; j < i; ++j) {
@@ -124,7 +124,7 @@ template<class T, size_t N> void binomialCoefficients(T c[N][N]) {
 	}
 }
 
-template<class T, size_t N> void binomialCoefficients(T c[N][N], const T mod) {
+template<class T, size_t N> void binomialCoefficients(T (&c)[N][N], const T mod) {
 	for (int i = 0; i < N; ++i) {
 		c[i][0] = c[i][i] = 1;
 		for (int j = 1; j < i; ++j) {

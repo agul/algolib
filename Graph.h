@@ -41,6 +41,24 @@ public:
 	void topSortRec(int order[]) const;
 	void dijkstra(int startVertex, ll dist[]) const;
 
+	template<size_t N> void floyd(ll(&dist)[N][N]) const {
+		for (int i = 0; i < vertexCount; ++i) {
+			fill_n(dist[i], vertexCount, LINF);
+			dist[i][i] = 0;
+		}
+		for (int i = 0; i < edgesCount; ++i) {
+			ll& cur = dist[from[i]][to[i]];
+			cur = min(cur, weight[i]);
+		}
+		for (int k = 0; k < vertexCount; ++k) {
+			for (int i = 0; i < vertexCount; ++i) {
+				for (int j = 0; j < vertexCount; ++j) {
+					dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+				}
+			}
+		}
+	}
+
 private:
 	Graph();
 	void _topSortDfs(const int v, int order[], bool used[], int& cnt) const;
