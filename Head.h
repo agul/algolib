@@ -24,6 +24,7 @@
 #include <random>
 #include <sstream>
 #include <numeric>
+#include <limits>
 #pragma hdrstop
 
 using namespace std;
