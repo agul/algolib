@@ -81,4 +81,4 @@ private:
 
 };
 
-void stronglyConnectedComponents(const Graph& g, const Graph& gr, int color[]);
+int stronglyConnectedComponents(const Graph& g, const Graph& gr, int color[]);

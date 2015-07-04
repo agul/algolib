@@ -202,7 +202,7 @@ void UndirectedGraph::addBidirectionalEdge(const int _from, const int _to) {
 
 
 
-void stronglyConnectedComponents(const Graph& g, const Graph& gr, int color[])
+int stronglyConnectedComponents(const Graph& g, const Graph& gr, int color[])
 // g - graph, gr - reversed graph, color - output (index of SCC for each vertex)
 {
 	int n = g.vertexCount;
@@ -236,4 +236,5 @@ void stronglyConnectedComponents(const Graph& g, const Graph& gr, int color[])
 	delete[] q;
 	delete[] used;
 	delete[] order;
+	return cnt;
 }
