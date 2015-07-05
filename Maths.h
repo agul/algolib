@@ -32,8 +32,8 @@ template<class T> inline bool isPrime(const T n)
 	return true;
 }
 
-template<class T> inline T ppow(T a, ll b) {
-	T ret = 1;
+inline ll ppow(ll a, ll b) {
+	ll ret = 1;
 	while (b) {
 		if (b & 1) {
 			ret *= a;
@@ -44,8 +44,8 @@ template<class T> inline T ppow(T a, ll b) {
 	return ret;
 }
 
-template<class T> inline T ppow(T a, ll b, ll md) {
-	T ret = 1;
+inline ll ppow(ll a, ll b, ll md) {
+	ll ret = 1;
 	a %= md;
 	while (b) {
 		if (b & 1) {
