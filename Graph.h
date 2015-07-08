@@ -39,7 +39,8 @@ public:
 	bool isBipartite(int w[], int cnt[] = NULL) const;
 	bool topSortAcyclic(int order[]) const;
 	void topSortRec(int order[]) const;
-	void dijkstra(int startVertex, ll dist[]) const;
+	void dijkstra(int startVertex, ll dist[], int last[] = NULL) const;
+	ll dijkstra(int startVertex, int finishVertex, int path[] = NULL) const;
 
 	template<size_t N> void floyd(ll(&dist)[N][N]) const {
 		for (int i = 0; i < vertexCount; ++i) {

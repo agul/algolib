@@ -23,4 +23,7 @@ public:
 		return numSets;
 	}
 
+private:
+	DSU();
+
 };

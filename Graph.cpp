@@ -144,9 +144,12 @@ void Graph::_topSortDfs(const int v, int order[], bool used[], int& cnt) const
 	order[cnt++] = v;
 }
 
-void Graph::dijkstra(int startVertex, ll dist[]) const {
+void Graph::dijkstra(int startVertex, ll dist[], int last[]) const {
 	fill_n(dist, vertexCount, LINF);
 	dist[startVertex] = 0;
+	if (last != NULL) {
+		fill_n(last, vertexCount, -1);
+	}
 	if (isSparse()) {
 		priority_queue<pair<ll, int>> q;
 		q.push(mp(0, startVertex));
@@ -164,6 +167,7 @@ void Graph::dijkstra(int startVertex, ll dist[]) const {
 				if (dist[toVertex] > newlen) {
 					dist[toVertex] = newlen;
 					q.push(mp(-newlen, toVertex));
+					last[toVertex] = it;
 				}
 			}
 		}
@@ -188,11 +192,38 @@ void Graph::dijkstra(int startVertex, ll dist[]) const {
 				ll newlen = curlen + weight[it];
 				if (!used[toVertex] && dist[toVertex] > newlen) {
 					dist[toVertex] = newlen;
+					last[toVertex] = it;
 				}
 			}
 		}
 		delete[] used;
 	}
+}
+
+ll Graph::dijkstra(int startVertex, int finishVertex, int path[]) const {
+	if (startVertex == finishVertex) {
+		return 0;
+	}
+	ll * dist = new ll[vertexCount];
+	int * last = NULL;
+	if (path != NULL) {
+		last = new int[vertexCount];
+	}
+	dijkstra(startVertex, dist, last);
+	if (path != NULL) {
+		fill_n(path, vertexCount, -1);
+		int pathSize = 0, curVertex = finishVertex;
+		while (curVertex != startVertex) {
+			int curEdge = last[curVertex];
+			path[pathSize++] = curEdge;
+			curVertex = from[curEdge];
+		}
+		reverse(path, path + pathSize);
+		delete[] last;
+	}
+	ll ans = dist[finishVertex];
+	delete[] dist;
+	return ans;
 }
 
 void UndirectedGraph::addBidirectionalEdge(const int _from, const int _to) {
