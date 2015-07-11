@@ -3,6 +3,10 @@
 #include "Maths.h"
 #include "StringUtils.h"
 
+class IO;
+
+extern IO io;
+
 class Rational {
 public:
 	typedef ll TBase;
@@ -323,7 +327,7 @@ public:
 	}
 
 	void read() {
-		scanf(LLD LLD, &a, &b);
+		io >> a >> b;
 		norm();
 	}
 
@@ -333,7 +337,7 @@ public:
 	}
 
 	void print() const {
-		printf(LLD " " LLD, a, b);
+		io << a << " " << b;
 	}
 
 	void print(ostream& out) const {
@@ -341,7 +345,8 @@ public:
 	}
 
 	void readSlash() {
-		scanf(LLD "/" LLD, &a, &b);
+		char ch;
+		io >> a >> ch >> b;
 		norm();
 	}
 
@@ -352,7 +357,7 @@ public:
 	}
 
 	void printSlash() const {
-		printf(LLD "/" LLD, a, b);
+		io << a << "/" << b;
 	}
 
 	void printSlash(ostream& out) const {
