@@ -30,7 +30,6 @@ void suffixArrayCyclic(int sa[], const char * s, int n, const int alphabet)
 	}
 	int h, ci, ni;
 	for (h = 0; (1 << h) <= n; ++h) {
-		cerr << h << " " << clock() << " " << n << endl;
 		ci = h & 1, ni = ci ^ 1;
 		for (int i = 0; i < n; ++i) {
 			pn[i] = sa[i] - (1 << h);

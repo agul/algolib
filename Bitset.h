@@ -74,7 +74,7 @@ public:
 	int count() const {
 		int ret = 0;
 		for (int i = 0; i < BITSET_LENGTH; ++i) {
-			ret += __popcnt(data[i]);
+			ret += popcount(data[i]);
 		}
 		return ret;
 	}

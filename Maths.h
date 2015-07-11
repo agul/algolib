@@ -153,3 +153,12 @@ template<class T> string toRoman(T n) {
 	}
 	return res;
 }
+
+void calcPowers(ll deg[], ll base, int n);
+
+template<class T> void calcPowers(T deg[], T base, int n, T MOD) {
+	deg[0] = 1 % MOD;
+	for (int i = 1; i <= n; ++i) {
+		deg[i] = (ll)deg[i - 1] * base % MOD;
+	}
+}
