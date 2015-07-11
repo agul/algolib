@@ -132,7 +132,7 @@ template<class T, size_t N> void binomialCoefficients(T (&c)[N][N], const T mod)
 				c[i][j] -= mod;
 			}
 		}
-		for (int j = i + 1; j < n; ++j) {
+		for (int j = i + 1; j < N; ++j) {
 			c[i][j] = 0;
 		}
 	}
