@@ -65,8 +65,6 @@ const ll LINF = 0x3f3f3f3f3f3f3f3fLL;
 const int DX[] = { -1, 0, 1, 0, -1, -1, 1, 1};
 const int DY[] = { 0, -1, 0, 1, -1, 1, 1, -1};
 
-void inputFiles();
-
 template<class T> void addMod(T& a, const T& b, const T& mod = 1000000007) {
 	if ((a += b) >= mod) {
 		a -= mod;
