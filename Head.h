@@ -25,6 +25,7 @@
 #include <sstream>
 #include <numeric>
 #include <limits>
+#include <chrono>
 #pragma hdrstop
 
 using namespace std;
@@ -65,3 +66,21 @@ const int DX[] = { -1, 0, 1, 0, -1, -1, 1, 1};
 const int DY[] = { 0, -1, 0, 1, -1, 1, 1, -1};
 
 void inputFiles();
+
+template<class T> void addMod(T& a, const T& b, const T& mod = 1000000007) {
+	if ((a += b) >= mod) {
+		a -= mod;
+	}
+}
+
+template<class T> void umin(T& a, const T& b) {
+	if (b < a) {
+		a = b;
+	}
+}
+
+template<class T> void umax(T& a, const T& b) {
+	if (a < b) {
+		a = b;
+	}
+}

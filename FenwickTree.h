@@ -46,4 +46,7 @@ public:
 		return query(r) - query(l - 1);
 	}
 
+private:
+	FenwickTreeSum() =delete;
+
 };

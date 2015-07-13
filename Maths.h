@@ -162,3 +162,18 @@ template<class T> void calcPowers(T deg[], T base, int n, T MOD) {
 		deg[i] = (ll)deg[i - 1] * base % MOD;
 	}
 }
+
+namespace Random {
+
+	static mt19937_64 gen(chrono::system_clock::now().time_since_epoch().count());
+	static uniform_int_distribution <ll> distrib(0, numeric_limits<ll>::max());
+
+	template<class T> static T get(T r) {
+		return distrib(gen) % r;
+	}
+
+	template<class T> static T get(T l, T r) {
+		return get(r - l + 1) + l;
+	}
+
+};

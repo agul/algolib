@@ -75,12 +75,22 @@ void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, cons
 // building suffix and LCP array for cyclic shifts, O(n log^2 n)
 // to prevent using cyclic shifts consider n = n + 1; s[n] = 0;
 {
-	int *cnt, *c[2], *pn, *lpos, *rpos, *la[2];
-	SegmentTreeMin<int> tree(n);
+	int *cnt, *c[2], *pn, *lpos, *rpos, *la[2], * indices, * arr;
+	auto comparator = [&arr](const int& x, const int& y) {
+		if (x == -1) {
+			return false;
+		}
+		return y == -1 || arr[x] < arr[y];
+	};
+	SegmentTreeCmp<int> tree(n, static_cast<function<bool(const int& x, const int&y)>>(comparator), -1);
 	cnt = new int[max(255, n)];
 	pn = new int[n];
 	lpos = new int[n];
 	rpos = new int[n];
+	indices = new int[n];
+	for (int i = 0; i < n; ++i) {
+		indices[i] = i;
+	}
 	fill_n(lpos, n, 0);
 	fill_n(rpos, n, 0);
 	for (int i = 0; i < 2; ++i) {
@@ -140,7 +150,8 @@ void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, cons
 			}
 			c[ni][sa[i]] = classes - 1;
 		}
-		tree.build(la[ci]);
+		arr = la[ci];
+		tree.build(indices);
 		for (int i = 0; i < n - 1; ++i) {
 			int a = sa[i], b = sa[i + 1];
 			if (c[ci][a] != c[ci][b]) {
@@ -148,7 +159,7 @@ void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, cons
 			}
 			else {
 				int aa = (a + (1 << h)) % n, bb = (b + (1 << h)) % n;
-				la[ni][i] = (1 << h) + la[ci][tree.query(la[ci], lpos[c[ci][aa]], rpos[c[ci][bb]] - 1)];
+				la[ni][i] = (1 << h) + la[ci][tree.query(lpos[c[ci][aa]], rpos[c[ci][bb]] - 1)];
 				la[ni][i] = min(n, la[ni][i]);
 			}
 		}
@@ -160,6 +171,7 @@ void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, cons
 	delete[] pn;
 	delete[] lpos;
 	delete[] rpos;
+	delete[] indices;
 	for (int i = 0; i < 2; ++i) {
 		delete[] c[i];
 		delete[] la[i];

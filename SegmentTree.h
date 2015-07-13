@@ -1,40 +1,58 @@
 #pragma once
 #include "Head.h"
 
-template<class T> struct SegmentTreeMin {
+template<class T> class SegmentTreeCmp {
+public:
 
-	int offset, size, *data, N;
+	T * data;
+	int offset, size, N;
 
-	SegmentTreeMin(const int N) : N(N) {
+	SegmentTreeCmp(const int N, function<bool(const T&, const T&)> less, const T& neutral) : N(N), less(less), neutral(neutral) {
 		for (offset = 1; offset < N; offset <<= 1);
 		size = offset << 1;
-		data = new int[size];
+		data = new T[size];
 	}
 
-	~SegmentTreeMin() {
+	~SegmentTreeCmp() {
 		delete[] data;
 	}
 
+	void setComparator(function<bool(const T&, const T&)> cmp) {
+		less = cmp;
+	}
+
+	void setNeutral(const T& val) {
+		neutral = val;
+	}
+
 	void build(T a[]) {
-		memset(data, -1, size * sizeof(int));
+		arr = a;
+		fill_n(data, size, neutral);
 		for (int i = 0; i < N; ++i) {
-			data[offset + i] = i;
+			data[offset + i] = a[i];
 		}
 		for (int i = offset - 1; i >= 1; --i) {
-			data[i] = cmp(a, data[i << 1], data[(i << 1) ^ 1]);
+			const T& x = data[i << 1], &y = data[(i << 1) ^ 1];
+			data[i] = (less(x, y) ? x : y);
 		}
 	}
 
-	int query(T a[], int l, int r) {
+	T query(int l, int r) {
 		l += offset;
 		r += offset;
-		int res = -1;
+		T res = neutral;
 		while (l <= r) {
 			if (l & 1) {
-				res = cmp(a, res, data[l++]);
+				const T& cur = data[l++];
+				if (less(cur, res)) {
+					res = cur;
+				}
 			}
 			if (!(r & 1)) {
-				res = cmp(a, res, data[r--]);
+				const T& cur = data[r--];
+				if (less(cur, res)) {
+					res = cur;
+				}
 			}
 			l >>= 1;
 			r >>= 1;
@@ -42,14 +60,21 @@ template<class T> struct SegmentTreeMin {
 		return res;
 	}
 
-	int cmp(T a[], const int x, const int y) {
-		if (x == -1) {
-			return y;
+	void update(int pos, const T& val) {
+		pos += offset;
+		data[pos] = val;
+		pos >>= 1;
+		while (pos >= 1) {
+			const T &x = data[pos << 1], &y = data[(pos << 1) ^ 1];
+			data[pos] = (less(x, y) ? x : y);
+			pos >>= 1;
 		}
-		if (y == -1) {
-			return x;
-		}
-		return (a[x] < a[y] ? x : y);
 	}
+
+private:
+	SegmentTreeCmp() =delete;
+
+	function<bool(const T&, const T&)> less;
+	T * arr, neutral;
 
 };

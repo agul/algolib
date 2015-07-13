@@ -24,6 +24,6 @@ public:
 	}
 
 private:
-	DSU();
+	DSU() =delete;
 
 };

@@ -61,7 +61,7 @@ public:
 	}
 
 private:
-	Graph();
+	Graph() =delete;
 	void _topSortDfs(const int v, int order[], bool used[], int& cnt) const;
 
 };
@@ -78,7 +78,7 @@ public:
 	void addBidirectionalEdge(const int _from, const int _to);
 
 private:
-	UndirectedGraph();
+	UndirectedGraph() =delete;
 
 };
 
