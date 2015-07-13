@@ -72,7 +72,7 @@ public:
 	}
 
 private:
-	SegmentTreeCmp() =delete;
+	SegmentTreeCmp();
 
 	function<bool(const T&, const T&)> less;
 	T * arr, neutral;

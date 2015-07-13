@@ -47,6 +47,6 @@ public:
 	}
 
 private:
-	FenwickTreeSum() =delete;
+	FenwickTreeSum();
 
 };

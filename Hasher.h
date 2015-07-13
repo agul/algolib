@@ -27,7 +27,7 @@ public:
 	ll getHash(const int l, const int r) const;
 
 private:
-	SingleHasher() =delete;
+	SingleHasher();
 
 };
 
@@ -129,7 +129,7 @@ public:
 	}
 
 private:
-	Hasher() =delete;
+	Hasher();
 
 	int cmpSubstrings(int a, int b) const {
 		int LEN = n - max(a, b), L = lcp(a, b);

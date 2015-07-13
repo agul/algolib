@@ -1,6 +1,7 @@
 #pragma once
 #include "Head.h"
 #include "SegmentTree.h"
+#include "SparseTable.h"
 
 void suffixArrayCyclic(int sa[], const char * s, int n, const int alphabet = 27);
 void suffixArrayCyclic(int sa[], const string& s, const int alphabet = 27);
