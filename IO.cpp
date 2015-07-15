@@ -229,7 +229,7 @@ inline char IO::nextCharWS() {
 		rbCount = fread(readBuffer, sizeof(readBuffer[0]), sizeof(readBuffer), stdin);
 		if (rbCount <= 0) {
 			eof = true;
-			return IO_ERR;
+			return ret;
 		}
 		rbOffset = 0;
 	}
@@ -267,7 +267,7 @@ inline char IO::nextChar() {
 		rbCount = fread(readBuffer, sizeof(readBuffer[0]), sizeof(readBuffer), stdin);
 		if (rbCount <= 0) {
 			eof = true;
-			return IO_ERR;
+			return ret;
 		}
 		rbOffset = 0;
 	}
@@ -307,6 +307,7 @@ inline void IO::nextString(char * s) {
 			rbCount = fread(readBuffer, sizeof(readBuffer[0]), sizeof(readBuffer), stdin);
 			if (rbCount <= 0) {
 				eof = true;
+				s[ind] = 0;
 				return;
 			}
 			rbOffset = 0;
@@ -335,6 +336,7 @@ inline void IO::nextLine(char * s) {
 			rbCount = fread(readBuffer, sizeof(readBuffer[0]), sizeof(readBuffer), stdin);
 			if (rbCount <= 0) {
 				eof = true;
+				s[ind] = 0;
 				return;
 			}
 			rbOffset = 0;

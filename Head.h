@@ -71,14 +71,10 @@ template<class T> void addMod(T& a, const T& b, const T& mod = 1000000007) {
 	}
 }
 
-template<class T> void umin(T& a, const T& b) {
-	if (b < a) {
-		a = b;
-	}
+template<class T> bool umin(T& a, const T& b) {
+	return (b < a ? a = b, true : false);
 }
 
-template<class T> void umax(T& a, const T& b) {
-	if (a < b) {
-		a = b;
-	}
+template<class T> bool umax(T& a, const T& b) {
+	return (a < b ? a = b, true : false);
 }

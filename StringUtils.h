@@ -63,3 +63,6 @@ void prefixFunction(int p[], const string& s);
 
 void zFunction(int z[], const char * s, int n = 0);
 void zFunction(int z[], const string& s);
+
+void countPalindromes(int d1[], int d2[], const char * s, int n = 0);
+void countPalindromes(int d1[], int d2[], const string& s);
