@@ -4,6 +4,7 @@
 #include <cstdio>
 #pragma warning(disable : 4996)
 #include <algorithm>
+#include <array>
 #include <cstdlib>
 #include <vector>
 #include <cstring>
@@ -26,18 +27,22 @@
 #include <numeric>
 #include <limits>
 #include <chrono>
+#include <type_traits>
 #pragma hdrstop
 
 using namespace std;
 
-#ifdef _WIN32
+#ifdef _MSC_VER
+#include <intrin.h>
 #define LLD "%I64d"
 #define LLU "%I64u"
 #define popcount(a) __popcnt(a)
+#define clz(a) __clz(a)
 #else
 #define LLD "%lld"
 #define LLU "%llu"
 #define popcount(a) __builtin_popcount(a)
+#define clz(a) __builtin_clz(a)
 #endif
 
 #define fill(a, x) memset(a, x, sizeof(a))
@@ -65,16 +70,39 @@ const ll LINF = 0x3f3f3f3f3f3f3f3fLL;
 const int DX[] = { -1, 0, 1, 0, -1, -1, 1, 1};
 const int DY[] = { 0, -1, 0, 1, -1, 1, 1, -1};
 
-template<class T> void addMod(T& a, const T& b, const T& mod = 1000000007) {
+template<class T> 
+inline void addMod(T& a, const T& b, const T& mod = 1000000007) {
 	if ((a += b) >= mod) {
 		a -= mod;
 	}
 }
 
-template<class T> bool umin(T& a, const T& b) {
+template<class T> 
+inline void subMod(T& a, const T& b, const T& mod = 1000000007) {
+	if ((a -= b) < 0) {
+		a += mod;
+	}
+}
+
+template<class T>
+inline void mulMod(T& a, const T& b, const T& mod = 1000000007) {
+	a = a * b % mod;
+}
+
+template<class T> 
+inline bool umin(T& a, const T& b) {
 	return (b < a ? a = b, true : false);
 }
 
-template<class T> bool umax(T& a, const T& b) {
+template<class T> 
+inline bool umax(T& a, const T& b) {
 	return (a < b ? a = b, true : false);
 }
+
+#ifdef _MSC_VER
+static uint32_t __inline __clz(uint32_t x) {
+	unsigned long r = 0;
+	_BitScanReverse(&r, x);
+	return (31 - r);
+}
+#endif
