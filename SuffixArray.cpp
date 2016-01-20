@@ -82,7 +82,7 @@ void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, cons
 		}
 		return y == -1 || arr[x] < arr[y];
 	};
-	SegmentTreeCmp<int> tree(n, static_cast<function<bool(const int& x, const int&y)>>(comparator), -1);
+	static SegmentTreeCmp<int> tree(n, static_cast<function<bool(const int& x, const int&y)>>(comparator), -1);
 	cnt = new int[max(255, n)];
 	pn = new int[n];
 	lpos = new int[n];
