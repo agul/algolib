@@ -8,7 +8,12 @@ public:
 	int offset, size, N;
 
 	SegmentTreeCmp(const int N, function<bool(const T&, const T&)> less, const T& neutral) : N(N), less(less), neutral(neutral) {
-		for (offset = 1; offset < N; offset <<= 1);
+		if (N & (N - 1)) {
+			offset = 1 << (33 - clz(N)); // 32 - clz(a) + 1;
+		}
+		else {
+			offset = 1 << (32 - clz(N));
+		}
 		size = offset << 1;
 		data = new T[size];
 	}
