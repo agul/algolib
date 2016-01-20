@@ -4,7 +4,7 @@ void Trie::init()
 // add initial state to trie
 {
 	sz = 1;
-	states.push_back(Trie::State());
+	states.emplace_back(Trie::State());
 }
 
 void Trie::clear() 
@@ -27,7 +27,7 @@ Trie::State Trie::addChar(Trie::State& state, const char ch, const bool isTermin
 		return ret;
 	}
 	state.next[ch] = sz++;
-	states.push_back(Trie::State(int(isTerminal)));
+	states.emplace_back(Trie::State(int(isTerminal)));
 	//states[sz].cnt = int(isTerminal);
 	return states.back();
 }
@@ -44,7 +44,7 @@ int Trie::addChar(const int v, const char ch, const bool isTerminal)
 	}
 	int ret = sz;
 	state.next[ch] = sz++;
-	states.push_back(Trie::State(int(isTerminal)));
+	states.emplace_back(Trie::State(int(isTerminal)));
 	//states[sz].cnt = int(isTerminal);
 	return ret;
 }
