@@ -76,6 +76,7 @@ public:
 	}
 
 	void addBidirectionalEdge(const int _from, const int _to);
+	void addBidirectionalWeightedEdge(const int _from, const int _to, const ll _weight);
 
 private:
 	UndirectedGraph();
