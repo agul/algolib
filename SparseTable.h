@@ -6,7 +6,7 @@ public:
 	T ** data;
 	int * logTable;
 
-	SparseTableCmp(const int N, function<bool(const T&, const T&)> less) : N(N), less(less) {
+	SparseTableCmp(const int N, const std::function<bool(const T&, const T&)>& less) : N(N), less(less) {
 		logTable = new int[N + 1];
 		logTable[0] = logTable[1] = 0;
 		for (int i = 2; i <= N; ++i) {
@@ -26,7 +26,7 @@ public:
 		delete[] logTable;
 	}
 
-	void setComparator(function<bool(const T&, const T&)> cmp) {
+	void setComparator(const std::function<bool(const T&, const T&)>& cmp) {
 		less = cmp;
 	}
 
