@@ -6,30 +6,30 @@
 template<size_t N> class Bitset {
 public:
 
-	static const int BITSET_LENGTH = (N >> 5) + 1;
-	unsigned int data[BITSET_LENGTH];
+	static const int BITSET_LENGTH = (N >> 6) + 1;
+	unsigned long long data[BITSET_LENGTH];
 
 	Bitset() {
 		fill_n(data, BITSET_LENGTH, 0);
 	}
 
 	Bitset& set(const int x) {
-		data[x >> 5] |= (1 << (x & 31));
+		data[x >> 6] |= (1LL << (x & 63));
 		return *this;
 	}
 
 	Bitset& flip(const int x) {
-		data[x >> 5] ^= (1 << (x & 31));
+		data[x >> 6] ^= (1LL << (x & 63));
 		return *this;
 	}
 
 	Bitset& clear(const int x) {
-		data[x >> 5] &= ~(1 << (x & 31));
+		data[x >> 6] &= ~(1LL << (x & 63));
 		return *this;
 	}
 
 	bool get(const int x) const {
-		return data[x >> 5] & (1 << (x & 31));
+		return data[x >> 6] & (1LL << (x & 63));
 	}
 
 	int size() const {
@@ -60,7 +60,7 @@ public:
 	}
 
 	Bitset& set() {
-		fill_n(data, BITSET_LENGTH, 0xffffffff);
+		fill_n(data, BITSET_LENGTH, 0xffffffffffffffffLL);
 		return *this;
 	}
 
@@ -146,6 +146,24 @@ public:
 		Bitset ret;
 		for (int i = 0; i < BITSET_LENGTH; ++i) {
 			ret.data[i] = data[i] ^ bitset.data[i];
+		}
+		return ret;
+	}
+
+	Bitset rotate_left(const size_t shift) const {
+		Bitset ret;
+		int full_shift = shift >> 6;
+		int rem_shift = shift & 63;
+		for (int i = 0; i < BITSET_LENGTH; ++i) {
+			int ind = i + full_shift;
+			if (ind >= BITSET_LENGTH) {
+				ind -= BITSET_LENGTH;
+			}
+			int prv = i - 1;
+			if (prv < 0) {
+				prv += BITSET_LENGTH;
+			}
+			ret.data[ind] = (data[i] << rem_shift) | (data[prv] >> (64 - rem_shift));
 		}
 		return ret;
 	}

@@ -9,15 +9,15 @@ template<class T> T gcd(T a, T b) {
 	return a;
 }
 
-template<class T> inline T lcm(const T a, const T b) {
+template<class T> inline T lcm(const T& a, const T& b) {
 	return a / gcd(a, b) * b;
 }
 
-template<class T> inline T sqr(const T x) {
+template<class T> inline T sqr(const T& x) {
 	return x * x;
 }
 
-template<class T> inline bool isPrime(const T n)
+template<class T> inline bool isPrime(const T& n)
 // Straightforward checking in O(sqrt(N))
 {
 	if (n < 2) {
@@ -32,8 +32,52 @@ template<class T> inline bool isPrime(const T n)
 	return true;
 }
 
-inline ll ppow(ll a, ll b) {
+inline void eratosthenesSieve(bool prime[], const int n) {
+	if (n < 2) {
+		fill_n(prime, n, false);
+		return;
+	}
+	fill_n(prime, n, true);
+	prime[0] = prime[1] = false;
+	for (int i = 4; i < n; i += 2) {
+		prime[i] = false;
+	}
+	for (ll i = 3; i * i < n; i += 2) {
+		if (prime[i]) {
+			ll ii = i << 1;
+			for (ll j = i * i; j < n; j += ii) {
+				prime[j] = false;
+			}
+		}
+	}
+}
+
+inline void primesVector(bool prime[], const int n, int primes[], int& primesCnt) {
+	if (n < 2) {
+		primesCnt = 0;
+		return;
+	}
+	primesCnt = 1;
+	primes[0] = 2;
+	for (int i = 3; i < n; i += 2) {
+		if (prime[i]) {
+			primes[primesCnt++] = i;
+		}
+	}
+}
+
+template<class T>
+T factorial(T n, const T& mod = 1000000007) {
 	ll ret = 1;
+	for (int i = 2; i <= n; ++i) {
+		ret = (ret * i) % mod;
+	}
+	return ret % mod;
+}
+
+template<class T>
+inline T ppow(T a, T b) {
+	T ret = 1;
 	while (b) {
 		if (b & 1) {
 			ret *= a;
@@ -44,7 +88,8 @@ inline ll ppow(ll a, ll b) {
 	return ret;
 }
 
-inline ll ppow(ll a, ll b, ll md) {
+template<class T>
+inline T ppow(T a, T b, T md) {
 	ll ret = 1;
 	a %= md;
 	while (b) {
@@ -57,7 +102,8 @@ inline ll ppow(ll a, ll b, ll md) {
 	return ret % md;
 }
 
-template<class T> int digitSum(T n) {
+template<class T>
+int digitSum(T n) {
 	int res = 0;
 	n = abs(n);
 	while (n) {
@@ -67,7 +113,8 @@ template<class T> int digitSum(T n) {
 	return res;
 }
 
-template<class T> int digitCount(T n) {
+template<class T>
+int digitCount(T n) {
 	int res = 0;
 	n = abs(n);
 	while (n) {
@@ -98,7 +145,6 @@ template<class T> T inverseElement(const T n, const T mod)
 {
 	return ppow(n, mod - 2, mod);
 }
-
 
 inline void inverseElementForSegment(int r[], const int mod)
 // inverse element for prime mod for numbers [1; mod - 1]

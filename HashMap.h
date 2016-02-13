@@ -21,8 +21,10 @@ namespace oaht
 
 	template<typename _Key, typename _Value, typename _Hash = std::hash<_Key>>
 	class hash_map {
-	public:
-		hash_map(size_t capacity) : capacity(capacity), size(0) {
+	public:		
+		const node<_Key, _Value> UNDEFINED;
+
+		hash_map(size_t capacity) : capacity(capacity), size(0), UNDEFINED(node<_Key, _Value>()) {
 			nodes = new node<_Key, _Value>[capacity];
 
 			for (size_t i = 0; i < capacity; i++)
@@ -47,6 +49,19 @@ namespace oaht
 			}
 
 			return false;
+		}
+
+		const node<_Key, _Value>& find(const _Key& key) const {
+			size_t index = get_index(key, capacity);
+			for (size_t i = 0; i < capacity; i++) {
+				if (nodes[index].key == key) {
+					return nodes[index];
+				}
+				index++;
+				if (index == capacity)
+					index = 0;
+			}
+			return UNDEFINED;
 		}
 
 		_Value& operator[](const _Key& key) {
@@ -76,7 +91,7 @@ namespace oaht
 		size_t size;
 
 		node<_Key, _Value>* nodes;
-
+		
 	private:
 		size_t get_index(const _Key& key, size_t size) const {
 			return (h(key) * 22543) % size;
@@ -122,7 +137,8 @@ namespace oaht
 					index = 0;
 			}
 
-			throw std::logic_error("Unexpected case.");
+			return false;
+			// throw std::logic_error("Unexpected case.");
 		}
 
 		_Hash h;

@@ -1,4 +1,4 @@
-#include "Graph.h"
+#include "Graph/Graph.h"
 
 Graph::Graph(const int maxVertexNum, const int maxEdgesNum, const int mask) : maxVertexNum(maxVertexNum), maxEdgesNum(maxEdgesNum) {
 	from = new int[maxEdgesNum];
@@ -42,7 +42,7 @@ void Graph::deepClear() {
 int Graph::addDirectedEdge(const int _from, const int _to) {
 	from[edgesCount] = _from;
 	to[edgesCount] = _to;
-	edges[_from].push_back(edgesCount);
+	edges[_from].emplace_back(edgesCount);
 	return edgesCount++;
 }
 
@@ -229,6 +229,11 @@ ll Graph::dijkstra(int startVertex, int finishVertex, int path[]) const {
 void UndirectedGraph::addBidirectionalEdge(const int _from, const int _to) {
 	addDirectedEdge(_from, _to);
 	addDirectedEdge(_to, _from);
+}
+
+void UndirectedGraph::addBidirectionalWeightedEdge(const int _from, const int _to, const ll _weight) {
+	addDirectedWeightedEdge(_from, _to, _weight);
+	addDirectedWeightedEdge(_to, _from, _weight);
 }
 
 
