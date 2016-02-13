@@ -389,13 +389,17 @@ IO& IO::operator >>(char * s) {
 }
 
 void IO::assignFiles(const string& task) const {
-	freopen((task + ".in").c_str(), "r", stdin);
-	freopen((task + ".out").c_str(), "w", stdout);
+	if (useFastIO) {
+		freopen((task + ".in").c_str(), "r", stdin);
+		freopen((task + ".out").c_str(), "w", stdout);
+	}
 }
 
 void IO::assignFiles(const string& inputFile, const string& outputFile) const {
-	freopen(inputFile.c_str(), "r", stdin);
-	freopen(outputFile.c_str(), "w", stdout);
+	if (useFastIO) {
+		freopen(inputFile.c_str(), "r", stdin);
+		freopen(outputFile.c_str(), "w", stdout);
+	}
 }
 
 void IO::assignFilesInputTxt() const {
