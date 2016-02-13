@@ -34,10 +34,10 @@ template<class T> inline bool isPrime(const T& n)
 
 inline void eratosthenesSieve(bool prime[], const int n) {
 	if (n < 2) {
-		fill_n(prime, n, false);
+		std::fill_n(prime, n, false);
 		return;
 	}
-	fill_n(prime, n, true);
+	std::fill_n(prime, n, true);
 	prime[0] = prime[1] = false;
 	for (int i = 4; i < n; i += 2) {
 		prime[i] = false;
@@ -184,7 +184,7 @@ template<class T, size_t N> void binomialCoefficients(T (&c)[N][N], const T mod)
 	}
 }
 
-template<class T> string toRoman(T n) {
+template<class T> std::string toRoman(T n) {
 	const int ValsCount = 13;
 	const int Vals[] = { 1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000 };
 	const char * Digits[] = { "I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M" };
@@ -209,16 +209,30 @@ template<class T> void calcPowers(T deg[], T base, int n, T MOD) {
 	}
 }
 
+inline uint32_t abs(const uint32_t x) {
+	return x;
+}
+
+inline uint64_t abs(const uint64_t x) {
+	return x;
+}
+
 namespace Random {
 
-	static mt19937_64 gen(chrono::system_clock::now().time_since_epoch().count());
-	static uniform_int_distribution <ll> distrib(0, numeric_limits<ll>::max());
+	static std::chrono::system_clock::rep GetRandSeed() {
+		return std::chrono::system_clock::now().time_since_epoch().count();
+	}
 
-	template<class T> static T get(T r) {
+	static std::mt19937_64 gen(GetRandSeed());
+	static std::uniform_int_distribution<int64_t> distrib(0, std::numeric_limits<int64_t>::max());
+
+	template<typename T>
+	static T get(T r) {
 		return distrib(gen) % r;
 	}
 
-	template<class T> static T get(T l, T r) {
+	template<typename T>
+	static T get(T l, T r) {
 		return get(r - l + 1) + l;
 	}
 

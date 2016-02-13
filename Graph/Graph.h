@@ -44,7 +44,7 @@ public:
 
 	template<size_t N> void floyd(ll(&dist)[N][N]) const {
 		for (int i = 0; i < vertexCount; ++i) {
-			fill_n(dist[i], vertexCount, LINF);
+			std::fill_n(dist[i], vertexCount, LINF);
 			dist[i][i] = 0;
 		}
 		for (int i = 0; i < edgesCount; ++i) {

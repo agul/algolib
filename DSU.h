@@ -1,5 +1,6 @@
 #pragma once
 #include "Head.h"
+#include "Maths.h"
 
 class DSU {
 public:

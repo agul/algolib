@@ -9,7 +9,7 @@ inline char lowerCase(const char ch) {
 	return (ch >= 'A' && ch <= 'Z') ? ch ^ 32 : ch;
 }
 
-inline string upperCase(string s) {
+inline std::string upperCase(std::string s) {
 	int n = s.length();
 	for (int i = 0; i < n; ++i) {
 		s[i] = upperCase(s[i]);
@@ -17,7 +17,7 @@ inline string upperCase(string s) {
 	return s;
 }
 
-inline string lowerCase(string s) {
+inline std::string lowerCase(std::string s) {
 	int n = s.length();
 	for (int i = 0; i < n; ++i) {
 		s[i] = lowerCase(s[i]);
@@ -36,7 +36,7 @@ inline bool isAlpha(const char ch) {
 	return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'));
 }
 
-inline bool isDigit(const char ch) {
+inline bool is_digit(const char ch) {
 	return (ch >= '0' && ch <= '9');
 }
 
@@ -48,21 +48,21 @@ inline bool isUpperCase(const char ch) {
 	return (ch >= 'A' && ch <= 'Z');
 }
 
-template<class T> inline string toa(const T x)
+template<class T> inline std::string toa(const T x)
 // convert string to other types using sstream
 {
-	stringstream ss;
+	std::stringstream ss;
 	ss << x;
-	string ret;
+	std::string ret;
 	ss >> ret;
 	return ret;
 }
 
 void prefixFunction(int p[], const char * s, int n = 0);
-void prefixFunction(int p[], const string& s);
+void prefixFunction(int p[], const std::string& s);
 
 void zFunction(int z[], const char * s, int n = 0);
-void zFunction(int z[], const string& s);
+void zFunction(int z[], const std::string& s);
 
 void countPalindromes(int d1[], int d2[], const char * s, int n = 0);
-void countPalindromes(int d1[], int d2[], const string& s);
+void countPalindromes(int d1[], int d2[], const std::string& s);

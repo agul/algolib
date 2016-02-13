@@ -54,7 +54,7 @@ public:
 private:
 	SparseTableCmp();
 
-	function<bool(const T&, const T&)> less;
+	std::function<bool(const T&, const T&)> less;
 	T * arr;
 	int N;
 

@@ -60,7 +60,7 @@ Trie::State Trie::addString(Trie::State& state, const char * s, const int n, con
 	return cur;
 }
 
-Trie::State Trie::addString(Trie::State& state, const string& s, const bool addSubstrings)  
+Trie::State Trie::addString(Trie::State& state, const std::string& s, const bool addSubstrings)
 // extend Trie by one string
 // REQUIRE: all chars in interval [0..alphabet_size]
 {
@@ -77,7 +77,7 @@ int Trie::addString(int v, const char * s, const int n, const bool addSubstrings
 	return v;
 }
 
-int Trie::addString(const int v, const string& s, const bool addSubstrings)  
+int Trie::addString(const int v, const std::string& s, const bool addSubstrings)
 // extend Trie by one string
 // REQUIRE: all chars in interval [0..alphabet_size]
 {

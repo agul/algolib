@@ -4,10 +4,10 @@
 #include "SparseTable.h"
 
 void suffixArrayCyclic(int sa[], const char * s, int n, const int alphabet = 27);
-void suffixArrayCyclic(int sa[], const string& s, const int alphabet = 27);
+void suffixArrayCyclic(int sa[], const std::string& s, const int alphabet = 27);
 
 void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, const int alphabet = 27);
-void suffixLCPArrayCyclic(int sa[], int lcp[], const string& s, const int alphabet = 27);
+void suffixLCPArrayCyclic(int sa[], int lcp[], const std::string& s, const int alphabet = 27);
 
 class SuffixArray {
 // class for internal functions for suffix array construction
@@ -21,7 +21,7 @@ public:
 };
 
 void suffixArray(int sa[], const char * s, const int n, const int alphabet = 27);
-void suffixArray(int sa[], const string& s, const int alphabet = 27);
+void suffixArray(int sa[], const std::string& s, const int alphabet = 27);
 
 void LCPArray(int lcp[], const int sa[], const char * s, const int n);
-void LCPArray(int lcp[], const int sa[], const string& s);
+void LCPArray(int lcp[], const int sa[], const std::string& s);

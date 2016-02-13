@@ -22,7 +22,7 @@ public:
 	}
 
 	void hashString(const char * s, int n = 0);
-	void hashString(const string& s);
+	void hashString(const std::string& s);
 
 	ll getHash(const int l, const int r) const;
 
@@ -33,7 +33,8 @@ private:
 
 class DoubleHasher_t {
 public:
-	static const int MA = 1e9 + 7, MB = 1e9 + 9;
+	static const uint32_t MA = static_cast<uint32_t>(1e9) + 7;
+	static const uint32_t MB = static_cast<uint32_t>(1e9) + 9;
 
 	int a, b;
 
@@ -103,7 +104,7 @@ public:
 		}
 	}
 
-	void hashString(const string& s) {
+	void hashString(const std::string& s) {
 		hashString(s.c_str(), s.length());
 	}
 

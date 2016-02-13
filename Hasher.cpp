@@ -12,7 +12,7 @@ void SingleHasher::hashString(const char * s, int n)
 	}
 }
 
-void SingleHasher::hashString(const string& s) {
+void SingleHasher::hashString(const std::string& s) {
 	hashString(s.c_str(), s.length());
 }
 

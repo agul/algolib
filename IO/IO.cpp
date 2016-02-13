@@ -2,327 +2,326 @@
 
 extern bool fastIO;
 
-inline void IO::SkipWS() {
+inline void IO::skipws() {
 	while (!eof_ && (current_char_ == ' ' || current_char_ == '\n')) {
-		ShiftChar();
+		shift_char();
 	}
 }
 
-inline void IO::SkipToEndl() {
+inline void IO::skip_to_endl() {
 	while (!eof_ && current_char_ != '\n') {
-		ShiftChar();
+		shift_char();
 	}
-	ShiftChar();
+	shift_char();
 }
 
 template<typename T>
-T IO::ReadNumber() {
-	bool neg = false;
-	while (!eof_ && !isDigit(current_char_) && (std::is_unsigned<T>() || current_char_ != '-')) {
-		ShiftChar();
+T IO::read_number() {
+	bool is_negative = false;
+	while (!eof_ && !is_digit(current_char_) && (std::is_unsigned<T>() || current_char_ != '-')) {
+		shift_char();
 	}
 	if (std::is_signed<T>() && current_char_ == '-') {
-		neg = true;
-		ShiftChar();
+		is_negative = true;
+		shift_char();
 	}
 	T result = 0;
-	while (!eof_ && isDigit(current_char_)) {
+	while (!eof_ && is_digit(current_char_)) {
 		result = (result << 3) + (result << 1) + current_char_ - '0';
-		ShiftChar();
+		shift_char();
 	}
-	return (neg ? result * -1 : result);
+	return (is_negative ? result * -1 : result);
 }
 
 template<typename T>
-void IO::PrintNumber(const T& value) {
-	T x = value;
-	if (write_bytes_offset_ + 32 > kBufferSize) {
-		Flush();
+void IO::print_number(const T& value) {
+	T current_value = value;
+	if (write_buffer_offset_ + 32 > kBufferSize) {
+		flush();
 	}
-	if (x < 0) {
-		write_buffer_[write_bytes_offset_++] = '-';
-		x *= -1;
-	}
-	else
-	if (x == 0) {
-		write_buffer_[write_bytes_offset_++] = '0';
+	if (current_value < 0) {
+		write_buffer_[write_buffer_offset_++] = '-';
+		current_value = abs(current_value);
+	} else
+	if (current_value == 0) {
+		write_buffer_[write_buffer_offset_++] = '0';
 		return;
 	}
-	std::size_t start_index = write_bytes_offset_;
-	while (x != 0) {
-		write_buffer_[write_bytes_offset_++] = x % 10 + '0';
-		x /= 10;
+	std::size_t start_index = write_buffer_offset_;
+	while (current_value != 0) {
+		write_buffer_[write_buffer_offset_++] = current_value % 10 + '0';
+		current_value /= 10;
 	}
-	std::reverse(write_buffer_.begin() + start_index, write_buffer_.begin() + write_bytes_offset_);
+	std::reverse(write_buffer_.begin() + start_index, write_buffer_.begin() + write_buffer_offset_);
 }
 
-inline void IO::NextLine(char* s) {
+inline void IO::next_line(char* s) {
 	if (current_char_ == '\0') {
-		ShiftChar();
+		shift_char();
 	}
-	std::size_t ind = 0;
+	std::size_t index = 0;
 	while (!eof_ && current_char_ != '\n') {
-		s[ind++] = current_char_;
-		ShiftChar();
+		s[index++] = current_char_;
+		shift_char();
 	}
-	s[ind] = 0;
-	ShiftChar();
+	s[index] = 0;
+	shift_char();
 }
 
-inline void IO::UpdateBuffer() {
-	if (read_bytes_offset_ == read_bytes_count_) {
+inline void IO::update_buffer() {
+	if (read_buffer_offset_ == read_bytes_count_) {
 		read_bytes_count_ = fread(&read_buffer_[0], sizeof(read_buffer_[0]), read_buffer_.size(), stdin);
 		if (read_bytes_count_ == 0) {
 			eof_ = true;
 			return;
 		}
-		read_bytes_offset_ = 0;
+		read_buffer_offset_ = 0;
 	}
 }
 
-inline void IO::ShiftChar() {
-	UpdateBuffer();
-	current_char_ = read_buffer_[read_bytes_offset_++];
+inline void IO::shift_char() {
+	update_buffer();
+	current_char_ = read_buffer_[read_buffer_offset_++];
 }
 
-inline int IO::NextInt() {
-	return ReadNumber<int>();
+inline int32_t IO::next_int() {
+	return read_number<int32_t>();
 }
 
-inline unsigned int IO::NextUint() {
-	return ReadNumber<unsigned int>();
+inline uint32_t IO::next_uint() {
+	return read_number<uint32_t>();
 }
 
-inline long long IO::NextLong()  {
-	return ReadNumber<long long>();
+inline int64_t IO::next_long()  {
+	return read_number<int64_t>();
 }
 
-inline unsigned long long IO::NextUlong() {
-	return ReadNumber<unsigned long long>();
+inline uint64_t IO::next_ulong() {
+	return read_number<uint64_t>();
 }
 
-inline char IO::NextCharWS() {
-	if (!current_char_) {
-		ShiftChar();
+inline char IO::next_char_ws() {
+	if (current_char_ == '\0') {
+		shift_char();
 	}
 	char ret = current_char_;
-	ShiftChar();
+	shift_char();
 	return ret;
 }
 
-inline char IO::NextChar() {
-	if (!current_char_) {
-		ShiftChar();
+inline char IO::next_char() {
+	if (current_char_ == '\0') {
+		shift_char();
 	}
-	SkipWS();
+	skipws();
 	char ret = current_char_;
-	ShiftChar();
+	shift_char();
 	return ret;
 }
 
-inline void IO::NextString(char* s) {
-	if (!current_char_) {
-		ShiftChar();
+inline void IO::next_string(char* s) {
+	if (current_char_ == '\0') {
+		shift_char();
 	}
-	SkipWS();
-	int ind = 0;
+	skipws();
+	std::size_t index = 0;
 	while (!eof_ && current_char_ != ' ' && current_char_ != '\n') {
-		s[ind++] = current_char_;
-		ShiftChar();
+		s[index++] = current_char_;
+		shift_char();
 	}
-	s[ind] = 0;
+	s[index] = 0;
 }
 
-IO& IO::operator >>(int& x) {
-	x = ::NextInt();
+IO& IO::operator >>(int32_t& x) {
+	x = ::next_int();
 	return *this;
 }
 
-IO& IO::operator >>(unsigned int& x) {
-	x = ::NextUint();
+IO& IO::operator >>(uint32_t& x) {
+	x = ::next_uint();
 	return *this;
 }
 
-IO& IO::operator >>(long long& x) {
-	x = ::NextLong();
+IO& IO::operator >>(int64_t& x) {
+	x = ::next_long();
 	return *this;
 }
 
-IO& IO::operator >>(unsigned long long& x) {
-	x = ::NextUlong();
+IO& IO::operator >>(uint64_t& x) {
+	x = ::next_ulong();
 	return *this;
 }
 
 IO& IO::operator >>(char& x) {
-	x = ::NextChar();
+	x = ::next_char();
 	return *this;
 }
 
-IO& IO::operator >>(char * s) {
-	::NextString(s);
+IO& IO::operator >>(char* s) {
+	::next_string(s);
 	return *this;
 }
 
-void IO::assignFiles(const std::string& task) {
+void IO::assign_files(const std::string& task) {
 	if (useFastIO) {
 		freopen((task + ".in").c_str(), "r", stdin);
 		freopen((task + ".out").c_str(), "w", stdout);
 	}
 }
 
-void IO::assignFiles(const std::string& inputFile, const std::string& outputFile) {
+void IO::assign_files(const std::string& inputFile, const std::string& outputFile) {
 	if (useFastIO) {
 		freopen(inputFile.c_str(), "r", stdin);
 		freopen(outputFile.c_str(), "w", stdout);
 	}
 }
 
-void IO::assignFilesInputTxt() {
+void IO::assign_files_input_txt() {
 	if (useFastIO) {
 		freopen("input.txt", "r", stdin);
 		freopen("output.txt", "w", stdout);
 	}
 }
 
-inline void IO::Flush() {
-	fwrite(&write_buffer_[0], sizeof(write_buffer_[0]), write_bytes_offset_, stdout);
-	write_bytes_offset_ = 0;
+inline void IO::flush() {
+	fwrite(&write_buffer_[0], sizeof(write_buffer_[0]), write_buffer_offset_, stdout);
+	write_buffer_offset_ = 0;
 }
 
-inline void IO::NewLine() {
-	if (write_bytes_offset_ == kBufferSize) {
-		Flush();
+inline void IO::new_line() {
+	if (write_buffer_offset_ == kBufferSize) {
+		flush();
 	}
-	write_buffer_[write_bytes_offset_++] = '\n';
+	write_buffer_[write_buffer_offset_++] = '\n';
 }
 
-inline void IO::PrintInt(const int& x) {
-	PrintNumber(x);
+inline void IO::print_int(const int32_t x) {
+	print_number(x);
 }
 
-inline void IO::PrintUint(const unsigned int& x) {
-	PrintNumber(x);
+inline void IO::print_uint(const uint32_t x) {
+	print_number(x);
 }
 
-inline void IO::PrintLong(const long long& x) {
-	PrintNumber(x);
+inline void IO::print_long(const int64_t x) {
+	print_number(x);
 }
 
-inline void IO::PrintUlong(const unsigned long long& x) {
-	PrintNumber(x);
+inline void IO::print_ulong(const uint64_t x) {
+	print_number(x);
 }
 
-inline void IO::PrintChar(const char& x) {
-	if (write_bytes_offset_ == kBufferSize) {
-		Flush();
+inline void IO::print_char(const char x) {
+	if (write_buffer_offset_ == kBufferSize) {
+		flush();
 	}
-	write_buffer_[write_bytes_offset_++] = x;
+	write_buffer_[write_buffer_offset_++] = x;
 }
 
-inline void IO::PrintString(const char* s) {
-	for (int i = 0; s[i]; ++i) {
-		if (write_bytes_offset_ == kBufferSize) {
-			Flush();
+inline void IO::print_string(const char* s) {
+	for (std::size_t i = 0; s[i] != '\0'; ++i) {
+		if (write_buffer_offset_ == kBufferSize) {
+			flush();
 		}
-		write_buffer_[write_bytes_offset_++] = s[i];
+		write_buffer_[write_buffer_offset_++] = s[i];
 	}
 }
 
-inline void IO::PrintLine(const char* s) {
-	for (int i = 0; s[i]; ++i) {
-		if (write_bytes_offset_ == kBufferSize) {
-			Flush();
+inline void IO::print_line(const char* s) {
+	for (std::size_t i = 0; s[i] != '\0'; ++i) {
+		if (write_buffer_offset_ == kBufferSize) {
+			flush();
 		}
-		write_buffer_[write_bytes_offset_++] = s[i];
+		write_buffer_[write_buffer_offset_++] = s[i];
 	}
-	if (write_bytes_offset_ == kBufferSize) {
-		Flush();
+	if (write_buffer_offset_ == kBufferSize) {
+		flush();
 	}
-	write_buffer_[write_bytes_offset_++] = '\n';
+	write_buffer_[write_buffer_offset_++] = '\n';
 }
 
-IO& IO::operator <<(const int& x) {
-	::PrintInt(x);
+IO& IO::operator <<(const int32_t x) {
+	::print_int(x);
 	return *this;
 }
 
-IO& IO::operator <<(const unsigned int& x) {
-	::PrintUint(x);
+IO& IO::operator <<(const uint32_t x) {
+	::print_uint(x);
 	return *this;
 }
 
-IO& IO::operator <<(const long long& x) {
-	::PrintLong(x);
+IO& IO::operator <<(const int64_t x) {
+	::print_long(x);
 	return *this;
 }
 
-IO& IO::operator <<(const unsigned long long& x) {
-	::PrintUlong(x);
+IO& IO::operator <<(const uint64_t x) {
+	::print_ulong(x);
 	return *this;
 }
 
-IO& IO::operator <<(const char& x) {
-	::PrintChar(x);
+IO& IO::operator <<(const char x) {
+	::print_char(x);
 	return *this;
 }
 
 IO& IO::operator <<(const char* s) {
-	::PrintString(s);
+	::print_string(s);
 	return *this;
 }
 
 IO& IO::operator <<(const std::string& s) {
-	::PrintString(s.c_str());
+	::print_string(s.c_str());
 	return *this;
 }
 
-IO& IO::operator <<(ostream& (*fn)(ostream&)) {
-	::NewLine();
+IO& IO::operator <<(std::ostream& (*)(std::ostream&)) {
+	::new_line();
 	return *this;
 }
 
-inline int NextInt() {
+inline int32_t next_int() {
 	if (useFastIO) {
-		return io.NextInt();
+		return io.next_int();
 	}
-	int ret;
+	int32_t ret;
 	*pin >> ret;
 	return ret;
 }
 
-inline unsigned int NextUint() {
+inline uint32_t next_uint() {
 	if (useFastIO) {
-		return io.NextUint();
+		return io.next_uint();
 	}
-	unsigned int ret;
+	uint32_t ret;
 	*pin >> ret;
 	return ret;
 }
 
-inline long long NextLong() {
+inline int64_t next_long() {
 	if (useFastIO) {
-		return io.NextLong();
+		return io.next_long();
 	}
-	long long ret;
+	int64_t ret;
 	*pin >> ret;
 	return ret;
 }
 
-inline unsigned long long NextUlong() {
+inline uint64_t next_ulong() {
 	if (useFastIO) {
-		return io.NextUlong();
+		return io.next_ulong();
 	}
-	unsigned long long ret;
+	uint64_t ret;
 	*pin >> ret;
 	return ret;
 }
 
-inline void SkipWS() {
+inline void skipws() {
 	if (useFastIO) {
-		io.SkipWS();
+		io.skipws();
 		return;
 	}
-	*pin >> noskipws;
+	*pin >> std::noskipws;
 	char ch;
 	while (*pin >> ch) {
 		if (ch != ' ' && ch != '\n') {
@@ -332,119 +331,119 @@ inline void SkipWS() {
 	}
 }
 
-inline void SkipToEndl() {
+inline void skip_to_endl() {
 	if (useFastIO) {
-		io.SkipToEndl();
+		io.skip_to_endl();
 		return;
 	}
 	std::string s;
-	getline(*pin, s);
+	std::getline(*pin, s);
 }
 
-inline char NextCharWS() {
+inline char next_char_ws() {
 	if (useFastIO) {
-		return io.NextCharWS();
+		return io.next_char_ws();
 	}
 	char ch;
-	*pin >> noskipws >> ch >> skipws;
+	*pin >> std::noskipws >> ch >> std::skipws;
 	return ch;
 }
 
-inline char NextChar() {
+inline char next_char() {
 	if (useFastIO) {
-		return io.NextChar();
+		return io.next_char();
 	}
 	char ch;
-	*pin >> skipws >> ch;
+	*pin >> std::skipws >> ch;
 	return ch;
 }
 
-inline void NextString(char* s) {
+inline void next_string(char* s) {
 	if (useFastIO) {
-		io.NextString(s);
+		io.next_string(s);
 		return;
 	}
 	*pin >> s;
 }
 
-inline void NextLine(char* s) {
+inline void next_line(char* s) {
 	if (useFastIO) {
-		io.NextLine(s);
+		io.next_line(s);
 		return;
 	}
 	std::string st;
-	getline(*pin, st);
+	std::getline(*pin, st);
 	strcpy(s, st.c_str());
 }
 
-inline void Flush() {
+inline void flush() {
 	if (useFastIO) {
-		io.Flush();
+		io.flush();
 		return;
 	}
-	*pout << flush;
+	*pout << std::flush;
 }
 
-inline void NewLine() {
+inline void new_line() {
 	if (useFastIO) {
-		io.NewLine();
+		io.new_line();
 		return;
 	}
-	*pout << endl;
+	*pout << std::endl;
 }
 
-inline void PrintInt(const int& x) {
+inline void print_int(const int32_t x) {
 	if (useFastIO) {
-		io.PrintInt(x);
-		return;
-	}
-	*pout << x;
-}
-
-inline void PrintUint(const unsigned int& x) {
-	if (useFastIO) {
-		io.PrintUint(x);
+		io.print_int(x);
 		return;
 	}
 	*pout << x;
 }
 
-inline void PrintLong(const long long& x) {
+inline void print_uint(const uint32_t x) {
 	if (useFastIO) {
-		io.PrintLong(x);
+		io.print_uint(x);
 		return;
 	}
 	*pout << x;
 }
 
-inline void PrintUlong(const unsigned long long& x) {
+inline void print_long(const int64_t x) {
 	if (useFastIO) {
-		io.PrintUlong(x);
+		io.print_long(x);
 		return;
 	}
 	*pout << x;
 }
 
-inline void PrintChar(const char& x) {
+inline void print_ulong(const uint64_t x) {
 	if (useFastIO) {
-		io.PrintChar(x);
+		io.print_ulong(x);
 		return;
 	}
 	*pout << x;
 }
 
-inline void PrintString(const char* s) {
+inline void print_char(const char x) {
 	if (useFastIO) {
-		io.PrintString(s);
+		io.print_char(x);
+		return;
+	}
+	*pout << x;
+}
+
+inline void print_string(const char* s) {
+	if (useFastIO) {
+		io.print_string(s);
 		return;
 	}
 	*pout << s;
 }
 
-inline void PrintLine(const char* s) {
+inline void print_line(const char* s) {
 	if (useFastIO) {
-		io.PrintLine(s);
+		io.print_line(s);
 		return;
 	}
-	*pout << s << endl;
+	*pout << s << std::endl;
 }

@@ -2,7 +2,7 @@
 
 void DSU::init(const int _n) {
 	n = _n;
-	srand(time(0));
+	srand(static_cast<uint32_t>(Random::GetRandSeed()));
 	for (int i = 0; i < n; ++i) {
 		p[i] = i;
 	}
@@ -22,7 +22,7 @@ bool DSU::unite(int a, int b) {
 		return false;
 	}
 	if (rand() & 1) {
-		swap(a, b);
+		std::swap(a, b);
 	}
 	p[a] = b;
 	--numSets;

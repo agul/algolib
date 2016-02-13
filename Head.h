@@ -30,7 +30,7 @@
 #include <type_traits>
 #pragma hdrstop
 
-using namespace std;
+// using namespace std;
 
 #ifdef _MSC_VER
 #include <intrin.h>
@@ -51,18 +51,18 @@ using namespace std;
 #define sz(a) ((int)a.size())
 #define X first
 #define Y second
-#define mp make_pair
+#define mp std::make_pair
 #define all(a) a.begin(), a.end()
 #define pb push_back
 
 #define ll long long
 #define ull unsigned long long
 #define uint unsigned int
-#define pii pair<int, int>
-#define pll pair<ll, ll>
-#define vi vector<int>
-#define vvi vector<vi>
-#define vp vector<pii>
+#define pii std::pair<int, int>
+#define pll std::pair<ll, ll>
+#define vi std::vector<int>
+#define vvi std::vector<vi>
+#define vp std::vector<pii>
 #define ld long double
 
 const int INF = 0x3f3f3f3f;

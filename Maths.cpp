@@ -6,3 +6,5 @@ void calcPowers(ll deg[], ll base, int n) {
 		deg[i] = deg[i - 1] * base;
 	}
 }
+
+

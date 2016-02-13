@@ -11,7 +11,7 @@ Graph::Graph(const int maxVertexNum, const int maxEdgesNum, const int mask) : ma
 
 void Graph::clear(int size) {
 	edgesCount = 0;
-	size = (size == -1 ? sz(edges) : min(size, sz(edges)));
+	size = (size == -1 ? sz(edges) : std::min(size, sz(edges)));
 	if (size == -1) {
 		size = sz(edges);
 	}
@@ -79,7 +79,7 @@ bool Graph::isBipartite(int w[], int cnt[], int v, int col) const {
 }
 
 bool Graph::isBipartite(int w[], int cnt[]) const {
-	fill_n(w, vertexCount, -1);
+	std::fill_n(w, vertexCount, -1);
 	if (cnt != NULL) {
 		cnt[0] = cnt[1] = 0;
 	}
@@ -96,7 +96,7 @@ bool Graph::topSortAcyclic(int order[]) const
 // non-recursive topological sorting, works only for acyclic graphs 
 {
 	int * degree = new int[vertexCount];
-	fill_n(degree, vertexCount, 0);
+	std::fill_n(degree, vertexCount, 0);
 	for (int i = 0; i < edgesCount; ++i) {
 		++degree[to[i]];
 	}
@@ -121,14 +121,14 @@ bool Graph::topSortAcyclic(int order[]) const
 
 void Graph::topSortRec(int order[]) const {
 	bool * used = new bool[vertexCount];
-	fill_n(used, vertexCount, false);
+	std::fill_n(used, vertexCount, false);
 	int cnt = 0;
 	for (int i = 0; i < vertexCount; ++i) {
 		if (!used[i]) {
 			_topSortDfs(i, order, used, cnt);
 		}
 	}
-	reverse(order, order + vertexCount);
+	std::reverse(order, order + vertexCount);
 }
 
 void Graph::_topSortDfs(const int v, int order[], bool used[], int& cnt) const 
@@ -145,13 +145,13 @@ void Graph::_topSortDfs(const int v, int order[], bool used[], int& cnt) const
 }
 
 void Graph::dijkstra(int startVertex, ll dist[], int last[]) const {
-	fill_n(dist, vertexCount, LINF);
+	std::fill_n(dist, vertexCount, LINF);
 	dist[startVertex] = 0;
 	if (last != NULL) {
-		fill_n(last, vertexCount, -1);
+		std::fill_n(last, vertexCount, -1);
 	}
 	if (isSparse()) {
-		priority_queue<pair<ll, int>> q;
+		std::priority_queue<std::pair<ll, int>> q;
 		q.push(mp(0, startVertex));
 		while (!q.empty()) {
 			auto it = q.top();
@@ -173,7 +173,7 @@ void Graph::dijkstra(int startVertex, ll dist[], int last[]) const {
 		}
 	} else {
 		bool * used = new bool[vertexCount];
-		fill_n(used, vertexCount, false);
+		std::fill_n(used, vertexCount, false);
 		for (int i = 0; i < vertexCount; ++i) {
 			int index = -1;
 			ll curlen = LINF;
@@ -211,14 +211,14 @@ ll Graph::dijkstra(int startVertex, int finishVertex, int path[]) const {
 	}
 	dijkstra(startVertex, dist, last);
 	if (path != NULL) {
-		fill_n(path, vertexCount, -1);
+		std::fill_n(path, vertexCount, -1);
 		int pathSize = 0, curVertex = finishVertex;
 		while (curVertex != startVertex) {
 			int curEdge = last[curVertex];
 			path[pathSize++] = curEdge;
 			curVertex = from[curEdge];
 		}
-		reverse(path, path + pathSize);
+		std::reverse(path, path + pathSize);
 		delete[] last;
 	}
 	ll ans = dist[finishVertex];
@@ -245,10 +245,10 @@ int stronglyConnectedComponents(const Graph& g, const Graph& gr, int color[])
 	int * order = new int[n];
 	bool * used = new bool[n];
 	int * q = new int[n];
-	fill_n(order, n, 0);
+	std::fill_n(order, n, 0);
 	g.topSortRec(order);
 	int cnt = 0;
-	fill_n(used, n, false);
+	std::fill_n(used, n, false);
 	for (int i = 0; i < n; ++i) {
 		int v = order[i];
 		if (!used[v]) {

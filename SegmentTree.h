@@ -7,7 +7,7 @@ public:
 	T * data;
 	int offset, size, N;
 
-	SegmentTreeCmp(const int N, function<bool(const T&, const T&)> less, const T& neutral) : N(N), less(less), neutral(neutral) {
+	SegmentTreeCmp(const int N, std::function<bool(const T&, const T&)> less, const T& neutral) : N(N), less(less), neutral(neutral) {
 		if (N & (N - 1)) {
 			offset = 1 << (32 - clz(N)); // 32 - clz(a) + 1;
 		}
@@ -22,7 +22,7 @@ public:
 		delete[] data;
 	}
 
-	void setComparator(function<bool(const T&, const T&)> cmp) {
+	void setComparator(std::function<bool(const T&, const T&)> cmp) {
 		less = cmp;
 	}
 
@@ -32,7 +32,7 @@ public:
 
 	void build(T a[]) {
 		arr = a;
-		fill_n(data, size, neutral);
+		std::fill_n(data, size, neutral);
 		for (int i = 0; i < N; ++i) {
 			data[offset + i] = a[i];
 		}
@@ -79,7 +79,7 @@ public:
 private:
 	SegmentTreeCmp();
 
-	function<bool(const T&, const T&)> less;
+	std::function<bool(const T&, const T&)> less;
 	T * arr, neutral;
 
 };

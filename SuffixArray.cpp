@@ -5,12 +5,12 @@ void suffixArrayCyclic(int sa[], const char * s, int n, const int alphabet)
 // to prevent using cyclic shifts consider n = n + 1; s[n] = 0;
 {
 	int * cnt, *c[2], *pn;
-	cnt = new int[max(255, n)];
+	cnt = new int[std::max(255, n)];
 	pn = new int[n];
 	for (int i = 0; i < 2; ++i) {
 		c[i] = new int[n];
 	}
-	fill_n(cnt, alphabet, 0);
+	std::fill_n(cnt, alphabet, 0);
 	for (int i = 0; i < n; ++i) {
 		++cnt[s[i]];
 	}
@@ -37,7 +37,7 @@ void suffixArrayCyclic(int sa[], const char * s, int n, const int alphabet)
 				pn[i] += n;
 			}
 		}
-		fill_n(cnt, classes, 0);
+		std::fill_n(cnt, classes, 0);
 		for (int i = 0; i < n; ++i) {
 			++cnt[c[ci][pn[i]]];
 		}
@@ -64,7 +64,7 @@ void suffixArrayCyclic(int sa[], const char * s, int n, const int alphabet)
 	}
 }
 
-void suffixArrayCyclic(int sa[], const string& s, const int alphabet)
+void suffixArrayCyclic(int sa[], const std::string& s, const int alphabet)
 // building suffix array for cyclic shifts, O(n log n)
 // to prevent using cyclic shifts consider n = n + 1; s[n] = 0;
 {
@@ -82,8 +82,8 @@ void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, cons
 		}
 		return y == -1 || arr[x] < arr[y];
 	};
-	static SegmentTreeCmp<int> tree(n, static_cast<function<bool(const int& x, const int&y)>>(comparator), -1);
-	cnt = new int[max(255, n)];
+	static SegmentTreeCmp<int> tree(n, static_cast<std::function<bool(const int& x, const int&y)>>(comparator), -1);
+	cnt = new int[std::max(255, n)];
 	pn = new int[n];
 	lpos = new int[n];
 	rpos = new int[n];
@@ -91,14 +91,14 @@ void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, cons
 	for (int i = 0; i < n; ++i) {
 		indices[i] = i;
 	}
-	fill_n(lpos, n, 0);
-	fill_n(rpos, n, 0);
+	std::fill_n(lpos, n, 0);
+	std::fill_n(rpos, n, 0);
 	for (int i = 0; i < 2; ++i) {
 		c[i] = new int[n];
 		la[i] = new int[n];
-		fill_n(la[i], n, 0);
+		std::fill_n(la[i], n, 0);
 	}
-	fill_n(cnt, alphabet, 0);
+	std::fill_n(cnt, alphabet, 0);
 	for (int i = 0; i < n; ++i) {
 		++cnt[s[i]];
 	}
@@ -131,7 +131,7 @@ void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, cons
 				pn[i] += n;
 			}
 		}
-		fill_n(cnt, classes, 0);
+		std::fill_n(cnt, classes, 0);
 		for (int i = 0; i < n; ++i) {
 			++cnt[c[ci][pn[i]]];
 		}
@@ -160,7 +160,7 @@ void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, cons
 			else {
 				int aa = (a + (1 << h)) % n, bb = (b + (1 << h)) % n;
 				la[ni][i] = (1 << h) + la[ci][tree.query(lpos[c[ci][aa]], rpos[c[ci][bb]] - 1)];
-				la[ni][i] = min(n, la[ni][i]);
+				la[ni][i] = std::min(n, la[ni][i]);
 			}
 		}
 	}
@@ -178,7 +178,7 @@ void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, cons
 	}
 }
 
-void suffixLCPArrayCyclic(int sa[], int lcp[], const string& s, const int alphabet)
+void suffixLCPArrayCyclic(int sa[], int lcp[], const std::string& s, const int alphabet)
 // building suffix and LCP array for cyclic shifts, O(n log^2 n)
 // to prevent using cyclic shifts consider n = n + 1; s[n] = 0;
 {
@@ -198,7 +198,7 @@ bool SuffixArray::lessOrEqual(const int a1, const int a2, const int a3, const in
 
 void SuffixArray::radixPass(const int* a, int* b, const int * r, const int n, const int alphabet) {
 	int* cnt = new int[alphabet + 1];
-	fill_n(cnt, alphabet + 1, 0);
+	std::fill_n(cnt, alphabet + 1, 0);
 	for (int i = 0; i < n; i++) {
 		++cnt[r[a[i]]];
 	}
@@ -301,7 +301,7 @@ void suffixArray(int sa[], const char * s, const int n, const int alphabet)
 	delete[] str;
 }
 
-void suffixArray(int sa[], const string& s, const int alphabet)
+void suffixArray(int sa[], const std::string& s, const int alphabet)
 // constructing suffix array in O(N)
 // REQUIRE: all chars in interval [0..alphabet)
 {
@@ -313,7 +313,7 @@ void LCPArray(int lcp[], const int sa[], const char * s, const int n)
 {
 	int k = 0;
 	int * rank = new int[n];
-	fill_n(rank, n, 0);
+	std::fill_n(rank, n, 0);
 	for (int i = 0; i < n; i++) {
 		rank[sa[i]] = i;
 	}
@@ -331,7 +331,7 @@ void LCPArray(int lcp[], const int sa[], const char * s, const int n)
 	delete[] rank;
 }
 
-void LCPArray(int lcp[], const int sa[], const string& s)
+void LCPArray(int lcp[], const int sa[], const std::string& s)
 // constructing LCP array using suffix array in O(N)
 {
 	LCPArray(lcp, sa, s.c_str(), s.length());

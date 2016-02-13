@@ -7,9 +7,9 @@ public:
 	class State {
 	public:
 		int len, link, cnt;
-		unordered_map<char, int> next;
+		std::unordered_map<char, int> next;
 
-		void setState(const int _len, const int _link, const unordered_map<char, int>& _next);
+		void setState(const int _len, const int _link, const std::unordered_map<char, int>& _next);
 
 	};
 

@@ -10,7 +10,7 @@ public:
 	unsigned long long data[BITSET_LENGTH];
 
 	Bitset() {
-		fill_n(data, BITSET_LENGTH, 0);
+		std::fill_n(data, BITSET_LENGTH, 0);
 	}
 
 	Bitset& set(const int x) {
@@ -55,12 +55,12 @@ public:
 	}
 
 	Bitset& reset() {
-		fill_n(data, BITSET_LENGTH, 0);
+		std::fill_n(data, BITSET_LENGTH, 0);
 		return *this;
 	}
 
 	Bitset& set() {
-		fill_n(data, BITSET_LENGTH, 0xffffffffffffffffLL);
+		std::fill_n(data, BITSET_LENGTH, 0xffffffffffffffffLL);
 		return *this;
 	}
 

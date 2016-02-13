@@ -8,7 +8,7 @@ public:
 
 	FenwickTreeSum(const int N) : N(N) {
 		data = new T[N];
-		fill_n(data, N, 0);
+		std::fill_n(data, N, 0);
 	}
 
 	~FenwickTreeSum() {
@@ -16,7 +16,7 @@ public:
 	}
 
 	void clear() {
-		fill_n(data, N, 0);
+		std::fill_n(data, N, 0);
 	}
 
 	void setSize(const int n) {
@@ -64,8 +64,8 @@ public:
 	FenwickTreeSumRangeUpdates(const int N) : N(N) {
 		add = new T[N];
 		mul = new T[N];
-		fill_n(add, N, 0);
-		fill_n(mul, N, 0);
+		std::fill_n(add, N, 0);
+		std::fill_n(mul, N, 0);
 	}
 
 	~FenwickTreeSumRangeUpdates() {
@@ -74,8 +74,8 @@ public:
 	}
 
 	void clear() {
-		fill_n(add, N, 0);
-		fill_n(mul, N, 0);
+		std::fill_n(add, N, 0);
+		std::fill_n(mul, N, 0);
 	}
 
 	void setSize(const int n) {

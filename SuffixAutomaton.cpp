@@ -1,6 +1,6 @@
 #include "SuffixAutomaton.h"
 
-void SuffixAutomaton::State::setState(const int _len, const int _link, const unordered_map<char, int>& _next)
+void SuffixAutomaton::State::setState(const int _len, const int _link, const std::unordered_map<char, int>& _next)
 // assign values to the state, similar to constructor
 {
 	len = _len;
@@ -60,7 +60,7 @@ void SuffixAutomaton::occurenceCount()
 	for (int i = 0; i < sz; ++i) {
 		val[i] = i;
 	}
-	sort(val, val + sz, [this](const int& a, const int& b) {
+	std::sort(val, val + sz, [this](const int& a, const int& b) {
 		return this->states[a].len > this->states[b].len;
 	});
 	for (int i = 0; i < sz; ++i) {
