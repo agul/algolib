@@ -163,19 +163,25 @@ IO& IO::operator >>(char * s) {
 	return *this;
 }
 
-void IO::assignFiles(const std::string& task) const {
-	freopen((task + ".in").c_str(), "r", stdin);
-	freopen((task + ".out").c_str(), "w", stdout);
+void IO::assignFiles(const std::string& task) {
+	if (useFastIO) {
+		freopen((task + ".in").c_str(), "r", stdin);
+		freopen((task + ".out").c_str(), "w", stdout);
+	}
 }
 
-void IO::assignFiles(const std::string& inputFile, const std::string& outputFile) const {
-	freopen(inputFile.c_str(), "r", stdin);
-	freopen(outputFile.c_str(), "w", stdout);
+void IO::assignFiles(const std::string& inputFile, const std::string& outputFile) {
+	if (useFastIO) {
+		freopen(inputFile.c_str(), "r", stdin);
+		freopen(outputFile.c_str(), "w", stdout);
+	}
 }
 
-void IO::assignFilesInputTxt() const {
-	freopen("input.txt", "r", stdin);
-	freopen("output.txt", "w", stdout);
+void IO::assignFilesInputTxt() {
+	if (useFastIO) {
+		freopen("input.txt", "r", stdin);
+		freopen("output.txt", "w", stdout);
+	}
 }
 
 inline void IO::Flush() {

@@ -67,9 +67,9 @@ public:
 	IO& operator <<(const std::string& s);
 	IO& operator <<(std::ostream& (*fn)(std::ostream&));
 
-	void assignFiles(const std::string& task) const;
-	void assignFiles(const std::string& inputFile, const std::string& outputFile) const;
-	void assignFilesInputTxt() const;
+	static void assignFiles(const std::string& task);
+	static void assignFiles(const std::string& inputFile, const std::string& outputFile);
+	static void assignFilesInputTxt();
 
 private:
 	using Buffer = std::array<char, kBufferSize>;
