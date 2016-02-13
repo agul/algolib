@@ -32,7 +32,7 @@ template<class T> inline bool isPrime(const T& n)
 	return true;
 }
 
-inline void eratosthenesSieve(bool prime[], const int& n) {
+inline void eratosthenesSieve(bool prime[], const int n) {
 	if (n < 2) {
 		fill_n(prime, n, false);
 		return;
@@ -52,7 +52,7 @@ inline void eratosthenesSieve(bool prime[], const int& n) {
 	}
 }
 
-inline void primesVector(bool prime[], const int& n, int primes[], int& primesCnt) {
+inline void primesVector(bool prime[], const int n, int primes[], int& primesCnt) {
 	if (n < 2) {
 		primesCnt = 0;
 		return;
@@ -75,8 +75,9 @@ T factorial(T n, const T& mod = 1000000007) {
 	return ret % mod;
 }
 
-inline ll ppow(ll a, ll b) {
-	ll ret = 1;
+template<class T>
+inline T ppow(T a, T b) {
+	T ret = 1;
 	while (b) {
 		if (b & 1) {
 			ret *= a;
@@ -87,7 +88,8 @@ inline ll ppow(ll a, ll b) {
 	return ret;
 }
 
-inline ll ppow(ll a, ll b, ll md) {
+template<class T>
+inline T ppow(T a, T b, T md) {
 	ll ret = 1;
 	a %= md;
 	while (b) {
@@ -100,7 +102,8 @@ inline ll ppow(ll a, ll b, ll md) {
 	return ret % md;
 }
 
-template<class T> int digitSum(T n) {
+template<class T>
+int digitSum(T n) {
 	int res = 0;
 	n = abs(n);
 	while (n) {
@@ -110,7 +113,8 @@ template<class T> int digitSum(T n) {
 	return res;
 }
 
-template<class T> int digitCount(T n) {
+template<class T>
+int digitCount(T n) {
 	int res = 0;
 	n = abs(n);
 	while (n) {
@@ -141,7 +145,6 @@ template<class T> T inverseElement(const T n, const T mod)
 {
 	return ppow(n, mod - 2, mod);
 }
-
 
 inline void inverseElementForSegment(int r[], const int mod)
 // inverse element for prime mod for numbers [1; mod - 1]
