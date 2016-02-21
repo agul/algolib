@@ -55,8 +55,8 @@
 #define all(a) a.begin(), a.end()
 #define pb push_back
 
-#define ll long long
-#define ull unsigned long long
+#define ll int64_t
+#define ull uint64_t
 #define uint unsigned int
 #define pii std::pair<int, int>
 #define pll std::pair<ll, ll>
@@ -65,6 +65,7 @@
 #define vp std::vector<pii>
 #define ld long double
 
+const long double PI = 3.14159265358979323846;
 const int INF = 0x3f3f3f3f;
 const double EPS = 1e-9;
 const ll LINF = 0x3f3f3f3f3f3f3f3fLL;
@@ -82,22 +83,25 @@ inline bool is_equal_to_zero(const T& a) {
 
 
 template<class T> 
-inline void add_mod(T& a, const T& b, const T& mod = 1000000007) {
+inline T& add_mod(T& a, const T& b, const T& mod = 1000000007) {
 	if ((a += b) >= mod) {
 		a -= mod;
 	}
+	return a;
 }
 
 template<class T> 
-inline void sub_mod(T& a, const T& b, const T& mod = 1000000007) {
+inline T& sub_mod(T& a, const T& b, const T& mod = 1000000007) {
 	if ((a -= b) < 0) {
 		a += mod;
 	}
+	return a;
 }
 
 template<class T>
-inline void mul_mod(T& a, const T& b, const T& mod = 1000000007) {
+inline T& mul_mod(T& a, const T& b, const T& mod = 1000000007) {
 	a = a * b % mod;
+	return a;
 }
 
 template<class T> 
@@ -108,6 +112,17 @@ inline bool umin(T& a, const T& b) {
 template<class T> 
 inline bool umax(T& a, const T& b) {
 	return (a < b ? a = b, true : false);
+}
+
+namespace std {
+
+	template<typename T>
+	struct hash<std::pair<T, T>> {
+		std::size_t operator()(const std::pair<T, T>& lhs) const {
+			return lhs.first * 877117 + lhs.second;
+		}
+	};
+
 }
 
 #ifdef _MSC_VER
