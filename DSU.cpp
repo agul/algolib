@@ -3,9 +3,7 @@
 void DSU::init(const int _n) {
 	n = _n;
 	srand(static_cast<uint32_t>(Random::GetRandSeed()));
-	for (int i = 0; i < n; ++i) {
-		p[i] = i;
-	}
+	std::iota(p, p + n, 0);
 	numSets = n;
 }
 
