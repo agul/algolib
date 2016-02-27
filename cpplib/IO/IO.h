@@ -5,8 +5,8 @@
 
 class IO {
 public:
-	static const int32_t IO_ERR = -1;
-	static const std::size_t kBufferSize = 1 << 18;
+	constexpr static const int32_t IO_ERR = -1;
+	constexpr static const std::size_t kBufferSize = 1 << 18;
 
 	IO() : read_bytes_count_(0), read_buffer_offset_(0), current_char_(0), eof_(false) {
 		static_assert(kBufferSize > 32, "Size of a buffer must be greater than 32 due to comparison in IO::flush() method.");
@@ -67,7 +67,7 @@ public:
 	IO& operator <<(const std::string& s);
 
 	// Intended to use with std::endl.
-	IO& operator <<(std::ostream& (*fn)(std::ostream&));
+	IO& operator <<(std::ostream& (*)(std::ostream&));
 
 	static void assign_files(const std::string& task);
 	static void assign_files(const std::string& inputFile, const std::string& outputFile);
@@ -109,7 +109,7 @@ inline void skip_to_endl();
 inline char next_char_ws();
 inline char next_char();
 inline void next_string(char* s);
-inline void next_line(char* s);
+void next_line(char* s);
 
 inline void flush();
 inline void new_line();

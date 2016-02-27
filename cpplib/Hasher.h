@@ -79,7 +79,7 @@ public:
 	int P;
 	const char * str;
 
-	Hasher(const int n, const int P = max(rand(), 307)) : P(P) {
+	Hasher(const int n, const int P = std::max(rand(), 307)) : P(P) {
 		hash = new T[n + 1];
 		deg = new T[n + 1];
 		deg[0] = 1;

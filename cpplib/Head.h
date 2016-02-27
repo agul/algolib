@@ -30,8 +30,6 @@
 #include <type_traits>
 #pragma hdrstop
 
-// using namespace std;
-
 #ifdef _MSC_VER
 #include <intrin.h>
 #define LLD "%I64d"
@@ -60,6 +58,7 @@
 #define uint unsigned int
 #define pii std::pair<int, int>
 #define pll std::pair<ll, ll>
+#define pli std::pair<ll, int>
 #define vi std::vector<int>
 #define vvi std::vector<vi>
 #define vp std::vector<pii>
@@ -116,9 +115,9 @@ inline bool umax(T& a, const T& b) {
 
 namespace std {
 
-	template<typename T>
-	struct hash<std::pair<T, T>> {
-		std::size_t operator()(const std::pair<T, T>& lhs) const {
+	template<typename T, typename U>
+	struct hash<std::pair<T, U>> {
+		std::size_t operator()(const std::pair<T, U>& lhs) const {
 			return lhs.first * 877117 + lhs.second;
 		}
 	};

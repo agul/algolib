@@ -366,7 +366,7 @@ inline void next_string(char* s) {
 	*pin >> s;
 }
 
-inline void next_line(char* s) {
+void next_line(char* s) {
 	if (useFastIO) {
 		io.next_line(s);
 		return;

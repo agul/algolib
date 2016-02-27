@@ -78,11 +78,11 @@ void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, cons
 	int *cnt, *c[2], *pn, *lpos, *rpos, *la[2], * indices, * arr;
 	auto comparator = [&arr](const int& x, const int& y) {
 		if (x == -1) {
-			return false;
+			return y;
 		}
-		return y == -1 || arr[x] < arr[y];
+		return (y == -1 || arr[x] < arr[y] ? x : y);
 	};
-	static SegmentTreeCmp<int> tree(n, static_cast<std::function<bool(const int& x, const int&y)>>(comparator), -1);
+	static SegmentTree<int> tree(n, comparator, -1);
 	cnt = new int[std::max(255, n)];
 	pn = new int[n];
 	lpos = new int[n];

@@ -4,7 +4,7 @@
 template<class T> T gcd(T a, T b) {
 	while (b) {
 		a %= b;
-		swap(a, b);
+		std::swap(a, b);
 	}
 	return a;
 }
@@ -75,8 +75,8 @@ T factorial(T n, const T& mod = 1000000007) {
 	return ret % mod;
 }
 
-template<class T>
-inline T ppow(T a, T b) {
+template<typename T, typename U>
+inline T ppow(T a, U b) {
 	T ret = 1;
 	while (b) {
 		if (b & 1) {
@@ -174,9 +174,8 @@ template<class T, size_t N> void binomialCoefficients(T (&c)[N][N], const T mod)
 	for (int i = 0; i < N; ++i) {
 		c[i][0] = c[i][i] = 1;
 		for (int j = 1; j < i; ++j) {
-			if ((c[i][j] = c[i - 1][j - 1] + c[i - 1][j]) >= mod) {
-				c[i][j] -= mod;
-			}
+			c[i][j] = c[i - 1][j - 1];
+			add_mod(c[i][j], c[i - 1][j], mod);
 		}
 		for (int j = i + 1; j < N; ++j) {
 			c[i][j] = 0;

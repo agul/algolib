@@ -154,10 +154,10 @@ void Graph::dijkstra(int startVertex, ll dist[], int last[]) const {
 		std::priority_queue<std::pair<ll, int>> q;
 		q.push(mp(0, startVertex));
 		while (!q.empty()) {
-			auto it = q.top();
+			auto cur_pair = q.top();
 			q.pop();
-			int curVertex = it.Y;
-			ll curlen = -it.X;
+			int curVertex = cur_pair.Y;
+			ll curlen = -cur_pair.X;
 			if (curlen > dist[curVertex]) {
 				continue;
 			}

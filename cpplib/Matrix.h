@@ -1,6 +1,6 @@
 #pragma once
 #include "Head.h"
-#include "IO.h"
+#include "IO/IO.h"
 #include "Maths.h"
 
 struct maximal_element_search_tag {};
@@ -12,9 +12,10 @@ public:
 	using RowStorage = std::vector<T>;
 	using DataStorage = std::vector<RowStorage>;
 
-	Matrix(const size_t rows_cnt, const size_t cols_cnt) :
+	Matrix(const size_t rows_cnt, const size_t cols_cnt, const T mod = 1000000007) :
 		rows_cnt_(rows_cnt), cols_cnt_(cols_cnt),
-		data_(rows_cnt, RowStorage(cols_cnt)) {}
+		data_(rows_cnt, RowStorage(cols_cnt, 0)),
+		mod_(mod) {}
 
 	Matrix() = delete;
 
@@ -71,9 +72,37 @@ public:
 		return cols_cnt_;
 	}
 
+	Matrix operator * (const Matrix& rhs) const {
+		Matrix result(rows_cnt_, rhs.cols_cnt_);
+		for (size_t i = 0; i < rows_cnt_; i++) {
+			for (size_t k = 0; k < rhs.cols_cnt_; k++) {
+				for (size_t j = 0; j < rhs.rows_cnt_; j++) {
+					add_mod(result[i][k], data_[i][j] * rhs[j][k] % mod_, mod_);
+				}
+			}
+		}
+		return result;
+	}
+
+	void swap(Matrix& rhs) {
+		data_.swap(rhs.data_);
+		std::swap(mod_, rhs.mod_);
+		std::swap(rows_cnt_, rhs.rows_cnt_);
+		std::swap(cols_cnt_, rhs.cols_cnt_);
+	}
+
+	static Matrix identity_matrix(const size_t rows_cnt, const size_t cols_cnt) {
+		Matrix result(rows_cnt, cols_cnt);
+		for (size_t i = 0; i < std::min(rows_cnt, cols_cnt); ++i) {
+			result[i][i] = 1;
+		}
+		return result;
+	}
+
 private:
 	size_t rows_cnt_;
 	size_t cols_cnt_;
+	T mod_;
 
 	DataStorage data_;
 
