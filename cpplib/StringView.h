@@ -45,11 +45,11 @@ public:
 		return{ begin(), end() };
 	}
 
-	iterator begin() const {
+	constexpr iterator begin() const {
 		return data_;
 	}
 
-	iterator end() const {
+	constexpr iterator end() const {
 		return data_ + length_;
 	}
 
