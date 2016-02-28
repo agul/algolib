@@ -6,7 +6,11 @@ public:
 	using iterator = const char*;
 
 	constexpr StringView() : data_(nullptr), length_(0) {}
+
 	constexpr StringView(const StringView&) = default;
+	constexpr StringView(StringView&&) = default;
+	StringView& operator =(const StringView&) = default;
+	StringView& operator =(StringView&&) = default;
 
 	StringView(const char* begin, const char* end) : data_(begin), length_(static_cast<size_t>(end - begin)) {}
 	StringView(const char* data, size_t length) : data_(data), length_(length) {}
