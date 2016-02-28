@@ -21,6 +21,10 @@ public:
 		return data_;
 	}
 
+	constexpr const char* c_str() const {
+		return data_;
+	}
+
 	constexpr size_t length() const {
 		return length_;
 	}
