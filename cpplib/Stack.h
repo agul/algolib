@@ -52,7 +52,7 @@ public:
 		std::swap(top_index_, rhs.top_index_);
 	}
 
-	bool operator ==(const Stack& rhs) const {
+	/* bool operator ==(const Stack& rhs) const {
 		return top_index_ == rhs.top_index_ && data_ == rhs.data_;
 	}
 
@@ -74,7 +74,7 @@ public:
 
 	bool operator >=(const Stack& rhs) const {
 		return data_ >= rhs.data_;
-	}
+	} */
 
 private:
 	container data_;
