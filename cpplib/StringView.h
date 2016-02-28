@@ -26,7 +26,7 @@ public:
 	}
 
 	constexpr bool empty() const {
-		return length() == 0;
+		return length_ == 0;
 	}
 
 	constexpr char front() const {
@@ -34,14 +34,36 @@ public:
 	}
 
 	constexpr char back() const {
-		return data_[length() - 1];
+		return data_[length_ - 1];
 	}
 
+	std::string to_string() const {
+		return{ begin(), end() };
+	}
 
+	iterator begin() const {
+		return data_;
+	}
 
+	iterator end() const {
+		return data_ + length_;
+	}
 
+	StringView substr(const size_t pos) const;
+	StringView substr(const size_t pos, const size_t len) const;
+	size_t find(const char ch, const size_t pos = 0) const;
+
+	std::string operator +(const StringView& rhs) const;
+
+	friend bool operator ==(const StringView& lhs, const StringView& rhs);
+	friend bool operator ==(const StringView& lhs, const char* rhs);
+	friend bool operator ==(const char* lhs, const StringView& rhs);
+	friend bool operator !=(const StringView& lhs, const StringView& rhs);
+	friend bool operator !=(const StringView& lhs, const char* rhs);
+	friend bool operator !=(const char* lhs, const StringView& rhs);
 
 private:
 	const char* data_;
 	size_t length_;
 };
+
