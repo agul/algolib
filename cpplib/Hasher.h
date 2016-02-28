@@ -1,6 +1,7 @@
 #pragma once
 #include "Head.h"
 #include "Maths.h"
+#include "StringView.h"
 
 class SingleHasher {
 public:
@@ -77,7 +78,7 @@ public:
 
 	T * deg, * hash;
 	int P;
-	const char * str;
+	StringView str;
 
 	Hasher(const int n, const int P = std::max(rand(), 307)) : P(P) {
 		hash = new T[n + 1];
@@ -93,19 +94,12 @@ public:
 		delete[] deg;
 	}
 
-	void hashString(const char * s, int n = 0) {
+	void hashString(const StringView& s) {
 		str = s;
-		if (!n) {
-			n = strlen(s);
-		}
 		hash[0] = 0;
-		for (int i = 0; i < n; ++i) {
+		for (int i = 0; i < s.length(); ++i) {
 			hash[i + 1] = hash[i] * P + s[i];
 		}
-	}
-
-	void hashString(const std::string& s) {
-		hashString(s.c_str(), s.length());
 	}
 
 	T getHash(const int l, const int r) const {
