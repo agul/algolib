@@ -31,6 +31,10 @@ public:
 		return top_index_ == 0;
 	}
 
+	void clear() {
+		top_index_ = 0;
+	}
+
 	constexpr size_type size() const {
 		return top_index_;
 	}
