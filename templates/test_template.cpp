@@ -162,6 +162,10 @@ int main() {
             }
 
             // print program output to stderr
+            ofstream result_file("result.txt");
+            result_file << result;
+            result_file.close();
+            
             if (result.size() > 200)
                 result = result.substr(0, 200) + "[...] (output truncated)\n";
             cerr << result << endl;
