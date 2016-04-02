@@ -11,7 +11,10 @@ public:
 	using rvalue = value_type&&;
 	using container = std::vector<value_type>;
 
-	Stack(const size_type max_size) : data_(container(max_size)), top_index_(0) {}
+	Stack(const size_type max_size) : data_(container(max_size)) {
+		clear();
+	}
+
 	Stack() = delete;
 
 	Stack(const Stack&) = default;
