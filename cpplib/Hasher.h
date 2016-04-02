@@ -102,6 +102,14 @@ public:
 		}
 	}
 
+	template<typename U>
+	void hash_vector(const std::vector<U>& vec) {
+		hash[0] = 0;
+		for (int i = 0; i < vec.size(); ++i) {
+			hash[i + 1] = hash[i] * P + vec[i];
+		}
+	}
+
 	T getHash(const int l, const int r) const {
 		return hash[r] - hash[l - 1] * deg[r - l + 1];
 	}
