@@ -20,6 +20,10 @@ public:
 	bool unite(int a, int b);
 	void finalize();
 
+	size_t size() const {
+		return n;
+	}
+
 	int getNumSets() const {
 		return numSets;
 	}
