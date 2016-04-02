@@ -187,7 +187,7 @@ template<class T> std::string toRoman(T n) {
 	const int ValsCount = 13;
 	const int Vals[] = { 1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000 };
 	const char * Digits[] = { "I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M" };
-	string res = "";
+	std::string res = "";
 	int x = ValsCount - 1;
 	while (n) {
 		while (Vals[x] > n) {
@@ -214,6 +214,11 @@ inline uint32_t abs(const uint32_t x) {
 
 inline uint64_t abs(const uint64_t x) {
 	return x;
+}
+
+template<typename T>
+inline bool is_leap_year(const T year) {
+	return year % 400 == 0 || (year % 100 != 0 && (year & 3) == 0);
 }
 
 namespace Random {
