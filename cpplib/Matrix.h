@@ -56,6 +56,15 @@ public:
 		return data_.end();
 	}
 
+	RowStorage get_column(const size_t index) const {
+		RowStorage column;
+		column.reserve(rows_cnt_);
+		for (const auto& row : data_) {
+			column.emplace_back(row[index]);
+		}
+		return column;
+	}
+
 	RowStorage& operator[] (const size_t index) {
 		return data_[index];
 	}
