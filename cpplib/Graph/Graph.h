@@ -42,6 +42,17 @@ public:
 	void dijkstra(int startVertex, ll dist[], int last[] = NULL) const;
 	ll dijkstra(int startVertex, int finishVertex, int path[] = NULL) const;
 
+	size_t find_vertex_with_max_degree() const {
+		size_t result = 0;
+		size_t best = 0;
+		for (int i = 0; i < vertexCount; ++i) {
+			if (umax(best, edges[i].size())) {
+				result = i;
+			}
+		}
+		return result;
+	}
+
 	template<size_t N> void floyd(ll(&dist)[N][N]) const {
 		for (int i = 0; i < vertexCount; ++i) {
 			std::fill_n(dist[i], vertexCount, LINF);
