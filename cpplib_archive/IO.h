@@ -21,9 +21,7 @@ public:
 	IO(const IO&&) = delete;
 	IO& operator=(const IO&&) = delete;
 
-	bool eof() const {
-		return eof_;
-	}
+	bool eof() const;
 
 	inline void shift_char();
 	inline void skipws();

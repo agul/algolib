@@ -2,6 +2,13 @@
 
 extern bool fastIO;
 
+bool IO::eof() const {
+	if (useFastIO) {
+		return eof_;
+	}
+	return pin->eof();
+}
+
 inline void IO::skipws() {
 	while (!eof_ && (current_char_ == ' ' || current_char_ == '\n')) {
 		shift_char();
