@@ -3,31 +3,118 @@
 #include "segment_tree.hpp"
 #include "sparse_table.hpp"
 
-void suffixArrayCyclic(int sa[], const char * s, int n, const int alphabet = 27);
-void suffixArrayCyclic(int sa[], const std::string& s, const int alphabet = 27);
-
-void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, const int alphabet = 27);
-void suffixLCPArrayCyclic(int sa[], int lcp[], const std::string& s, const int alphabet = 27);
-
 class SuffixArray {
 // class for internal functions for suffix array construction
 public:
 
-	static bool lessOrEqual(const int a1, const int a2, const int b1, const int b2);
-	static bool lessOrEqual(const int a1, const int a2, const int a3, const int b1, const int b2, const int b3);
-	static void radixPass(const int* a, int* b, const int * r, const int n, const int alphabet);
-	static void build(const int * s, int* SA, const int n, const int alphabet);
+	static bool lessOrEqual(const int a1, const int a2, const int b1, const int b2)
+		//comparing pairs
+	{
+		return(a1 < b1 || (a1 == b1 && a2 <= b2));
+	}
+
+	static bool lessOrEqual(const int a1, const int a2, const int a3, const int b1, const int b2, const int b3)
+		// comparing triples
+	{
+		return(a1 < b1 || (a1 == b1 && lessOrEqual(a2, a3, b2, b3)));
+	}
+
+	static void radixPass(const int* a, int* b, const int * r, const int n, const int alphabet) {
+		int* cnt = new int[alphabet + 1];
+		std::fill_n(cnt, alphabet + 1, 0);
+		for (int i = 0; i < n; i++) {
+			++cnt[r[a[i]]];
+		}
+		for (int i = 0, sum = 0; i <= alphabet; i++) {
+			int t = cnt[i];
+			cnt[i] = sum;
+			sum += t;
+		}
+		for (int i = 0; i < n; i++) {
+			b[cnt[r[a[i]]]++] = a[i];
+		}
+		delete[] cnt;
+	}
+
+	static void build(const int * s, int* SA, const int n, const int alphabet) {
+		int n0 = (n + 2) / 3, n1 = (n + 1) / 3, n2 = n / 3, n02 = n0 + n2;
+		int* s12 = new int[n02 + 3];
+		s12[n02] = s12[n02 + 1] = s12[n02 + 2] = 0;
+		int* SA12 = new int[n02 + 3];
+		SA12[n02] = SA12[n02 + 1] = SA12[n02 + 2] = 0;
+		int* s0 = new int[n0];
+		int* SA0 = new int[n0];
+		for (int i = 0, j = 0; i < n + (n0 - n1); i++) {
+			if (i % 3) {
+				s12[j++] = i;
+			}
+		}
+		radixPass(s12, SA12, s + 2, n02, alphabet);
+		radixPass(SA12, s12, s + 1, n02, alphabet);
+		radixPass(s12, SA12, s, n02, alphabet);
+		int name = 0, c0 = -1, c1 = -1, c2 = -1;
+		for (int i = 0; i < n02; i++) {
+			if (s[SA12[i]] != c0 || s[SA12[i] + 1] != c1 || s[SA12[i] + 2] != c2) {
+				name++;
+				c0 = s[SA12[i]];
+				c1 = s[SA12[i] + 1];
+				c2 = s[SA12[i] + 2];
+			}
+			s12[SA12[i] / 3 + (SA12[i] % 3 == 1 ? 0 : n0)] = name;
+		}
+		if (name < n02) {
+			build(s12, SA12, n02, name);
+			for (int i = 0; i < n02; i++) {
+				s12[SA12[i]] = i + 1;
+			}
+		}
+		else {
+			for (int i = 0; i < n02; i++) {
+				SA12[s12[i] - 1] = i;
+			}
+		}
+		for (int i = 0, j = 0; i < n02; i++) {
+			if (SA12[i] < n0) {
+				s0[j++] = 3 * SA12[i];
+			}
+		}
+		radixPass(s0, SA0, s, n0, alphabet);
+		for (int p = 0, t = n0 - n1, k = 0; k < n; k++) {
+#define GetI() (SA12[t] < n0 ? SA12[t] * 3 + 1 : (SA12[t] - n0) * 3 + 2)
+			int i = GetI(), j = SA0[p];
+			if (SA12[t] < n0 ?
+				lessOrEqual(s[i], s12[SA12[t] + n0], s[j], s12[j / 3]) :
+				lessOrEqual(s[i], s[i + 1], s12[SA12[t] - n0 + 1], s[j], s[j + 1], s12[j / 3 + n0])
+				)
+			{
+				SA[k] = i;
+				if (++t == n02) {
+					for (k++; p < n0; p++, k++) {
+						SA[k] = SA0[p];
+					}
+				}
+			}
+			else {
+				SA[k] = j;
+				if (++p == n0) {
+					for (k++; t < n02; t++, k++) {
+						SA[k] = GetI();
+					}
+				}
+			}
+		}
+		delete[] s12;
+		delete[] SA12;
+		delete[] SA0;
+		delete[] s0;
+	}
 
 };
-
-void suffixArray(int sa[], const char * s, const int n, const int alphabet = 27);
-void suffixArray(int sa[], const std::string& s, const int alphabet = 27);
 
 void LCPArray(int lcp[], const int sa[], const char * s, const int n);
 void LCPArray(int lcp[], const int sa[], const std::string& s);
 
-
-void suffixArrayCyclic(int sa[], const char * s, int n, const int alphabet)
+void suffixArrayCyclic(int sa[], const char * s, int n, const int alphabet = 27)
 // building suffix array for cyclic shifts, O(n log n)
 // to prevent using cyclic shifts consider n = n + 1; s[n] = 0;
 {
@@ -91,14 +178,14 @@ void suffixArrayCyclic(int sa[], const char * s, int n, const int alphabet)
 	}
 }
 
-void suffixArrayCyclic(int sa[], const std::string& s, const int alphabet)
+void suffixArrayCyclic(int sa[], const std::string& s, const int alphabet = 27)
 // building suffix array for cyclic shifts, O(n log n)
 // to prevent using cyclic shifts consider n = n + 1; s[n] = 0;
 {
 	suffixArrayCyclic(sa, s.c_str(), s.length(), alphabet);
 }
 
-void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, const int alphabet)
+void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, const int alphabet = 27)
 // building suffix and LCP array for cyclic shifts, O(n log^2 n)
 // to prevent using cyclic shifts consider n = n + 1; s[n] = 0;
 {
@@ -205,112 +292,11 @@ void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, cons
 	}
 }
 
-void suffixLCPArrayCyclic(int sa[], int lcp[], const std::string& s, const int alphabet)
+void suffixLCPArrayCyclic(int sa[], int lcp[], const std::string& s, const int alphabet = 27)
 // building suffix and LCP array for cyclic shifts, O(n log^2 n)
 // to prevent using cyclic shifts consider n = n + 1; s[n] = 0;
 {
 	suffixLCPArrayCyclic(sa, lcp, s.c_str(), s.length(), alphabet);
-}
-
-bool SuffixArray::lessOrEqual(const int a1, const int a2, const int b1, const int b2)
-//comparing pairs
-{
-	return(a1 < b1 || (a1 == b1 && a2 <= b2));
-}
-bool SuffixArray::lessOrEqual(const int a1, const int a2, const int a3, const int b1, const int b2, const int b3)
-// comparing triples
-{
-	return(a1 < b1 || (a1 == b1 && lessOrEqual(a2, a3, b2, b3)));
-}
-
-void SuffixArray::radixPass(const int* a, int* b, const int * r, const int n, const int alphabet) {
-	int* cnt = new int[alphabet + 1];
-	std::fill_n(cnt, alphabet + 1, 0);
-	for (int i = 0; i < n; i++) {
-		++cnt[r[a[i]]];
-	}
-	for (int i = 0, sum = 0; i <= alphabet; i++) {
-		int t = cnt[i];
-		cnt[i] = sum;
-		sum += t;
-	}
-	for (int i = 0; i < n; i++) {
-		b[cnt[r[a[i]]]++] = a[i];
-	}
-	delete[] cnt;
-}
-
-void SuffixArray::build(const int * s, int* SA, const int n, const int alphabet) {
-	int n0 = (n + 2) / 3, n1 = (n + 1) / 3, n2 = n / 3, n02 = n0 + n2;
-	int* s12 = new int[n02 + 3];
-	s12[n02] = s12[n02 + 1] = s12[n02 + 2] = 0;
-	int* SA12 = new int[n02 + 3];
-	SA12[n02] = SA12[n02 + 1] = SA12[n02 + 2] = 0;
-	int* s0 = new int[n0];
-	int* SA0 = new int[n0];
-	for (int i = 0, j = 0; i < n + (n0 - n1); i++) {
-		if (i % 3) {
-			s12[j++] = i;
-		}
-	}
-	radixPass(s12, SA12, s + 2, n02, alphabet);
-	radixPass(SA12, s12, s + 1, n02, alphabet);
-	radixPass(s12, SA12, s, n02, alphabet);
-	int name = 0, c0 = -1, c1 = -1, c2 = -1;
-	for (int i = 0; i < n02; i++) {
-		if (s[SA12[i]] != c0 || s[SA12[i] + 1] != c1 || s[SA12[i] + 2] != c2) {
-			name++;
-			c0 = s[SA12[i]];
-			c1 = s[SA12[i] + 1];
-			c2 = s[SA12[i] + 2];
-		}
-		s12[SA12[i] / 3 + (SA12[i] % 3 == 1 ? 0 : n0)] = name;
-	}
-	if (name < n02) {
-		build(s12, SA12, n02, name);
-		for (int i = 0; i < n02; i++) {
-			s12[SA12[i]] = i + 1;
-		}
-	}
-	else {
-		for (int i = 0; i < n02; i++) {
-			SA12[s12[i] - 1] = i;
-		}
-	}
-	for (int i = 0, j = 0; i < n02; i++) {
-		if (SA12[i] < n0) {
-			s0[j++] = 3 * SA12[i];
-		}
-	}
-	radixPass(s0, SA0, s, n0, alphabet);
-	for (int p = 0, t = n0 - n1, k = 0; k < n; k++) {
-#define GetI() (SA12[t] < n0 ? SA12[t] * 3 + 1 : (SA12[t] - n0) * 3 + 2)
-		int i = GetI(), j = SA0[p];
-		if (SA12[t] < n0 ?
-			lessOrEqual(s[i], s12[SA12[t] + n0], s[j], s12[j / 3]) :
-			lessOrEqual(s[i], s[i + 1], s12[SA12[t] - n0 + 1], s[j], s[j + 1], s12[j / 3 + n0])
-			)
-		{
-			SA[k] = i;
-			if (++t == n02) {
-				for (k++; p < n0; p++, k++) {
-					SA[k] = SA0[p];
-				}
-			}
-		}
-		else {
-			SA[k] = j;
-			if (++p == n0) {
-				for (k++; t < n02; t++, k++) {
-					SA[k] = GetI();
-				}
-			}
-		}
-	}
-	delete[] s12;
-	delete[] SA12;
-	delete[] SA0;
-	delete[] s0;
 }
 
 void suffixArray(int sa[], const char * s, const int n, const int alphabet)

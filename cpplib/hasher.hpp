@@ -22,10 +22,29 @@ public:
 		delete[] deg;
 	}
 
-	void hashString(const char * s, int n = 0);
-	void hashString(const std::string& s);
+	void hashString(const char * s, int n = 0)
+		// hash begins at index 1
+	{
+		if (!n) {
+			n = strlen(s);
+		}
+		hash[0] = 0;
+		for (int i = 0; i < n; ++i) {
+			hash[i + 1] = (hash[i] * BASE + s[i]) % MOD;
+		}
+	}
 
-	ll getHash(const int l, const int r) const;
+	void hashString(const std::string& s) {
+		hashString(s.c_str(), s.length());
+	}
+
+	ll getHash(const int l, const int r) const {
+		ll result = (hash[r] - hash[l - 1] * deg[r - l + 1]) % MOD;
+		if (result < 0) {
+			result += MOD;
+		}
+		return result;
+	}
 
 private:
 	SingleHasher();
@@ -140,27 +159,3 @@ private:
 	}
 
 };
-
-void SingleHasher::hashString(const char * s, int n)
-// hash begins at index 1
-{
-	if (!n) {
-		n = strlen(s);
-	}
-	hash[0] = 0;
-	for (int i = 0; i < n; ++i) {
-		hash[i + 1] = (hash[i] * BASE + s[i]) % MOD;
-	}
-}
-
-void SingleHasher::hashString(const std::string& s) {
-	hashString(s.c_str(), s.length());
-}
-
-ll SingleHasher::getHash(const int l, const int r) const {
-	ll result = (hash[r] - hash[l - 1] * deg[r - l + 1]) % MOD;
-	if (result < 0) {
-		result += MOD;
-	}
-	return result;
-}

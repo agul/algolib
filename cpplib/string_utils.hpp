@@ -58,16 +58,7 @@ template<class T> inline std::string toa(const T x)
 	return ret;
 }
 
-void prefixFunction(int p[], const char * s, int n = 0);
-void prefixFunction(int p[], const std::string& s);
-
-void zFunction(int z[], const char * s, int n = 0);
-void zFunction(int z[], const std::string& s);
-
-void countPalindromes(int d1[], int d2[], const char * s, int n = 0);
-void countPalindromes(int d1[], int d2[], const std::string& s);
-
-void prefixFunction(int p[], const char * s, int n) {
+void prefixFunction(int p[], const char * s, int n = 0) {
 	if (!n) {
 		n = strlen(s);
 	}
@@ -88,7 +79,7 @@ void prefixFunction(int p[], const std::string& s) {
 	prefixFunction(p, s.c_str(), s.length());
 }
 
-void zFunction(int z[], const char * s, int n) {
+void zFunction(int z[], const char * s, int n = 0) {
 	if (!n) {
 		n = strlen(s);
 	}
@@ -112,7 +103,7 @@ void zFunction(int z[], const std::string& s) {
 	zFunction(z, s.c_str(), s.length());
 }
 
-void countPalindromes(int d1[], int d2[], const char * s, int n) {
+void countPalindromes(int d1[], int d2[], const char * s, int n = 0) {
 	if (!n) {
 		n = strlen(s);
 	}
