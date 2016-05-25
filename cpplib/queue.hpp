@@ -73,29 +73,29 @@ public:
 		std::swap(tail_index_, rhs.tail_index_);
 	}
 
-	/* bool operator ==(const Queue& rhs) const {
-	return top_index_ == rhs.top_index_ && data_ == rhs.data_;
+	bool operator ==(const Queue& rhs) const {
+		return head_index_ == rhs.head_index_ && tail_index_ == rhs.tail_index_ && data_ == rhs.data_;
 	}
 
 	bool operator !=(const Queue& rhs) const {
-	return !operator==(rhs);
+		return !operator==(rhs);
 	}
 
 	bool operator <(const Queue& rhs) const {
-	return data_ < rhs.data_;
+		return data_ < rhs.data_;
 	}
 
 	bool operator <=(const Queue& rhs) const {
-	return data_ <= rhs.data_;
+		return data_ <= rhs.data_;
 	}
 
 	bool operator >(const Queue& rhs) const {
-	return data_ > rhs.data_;
+		return data_ > rhs.data_;
 	}
 
 	bool operator >=(const Queue& rhs) const {
-	return data_ >= rhs.data_;
-	} */
+		return data_ >= rhs.data_;
+	}
 
 private:
 	container data_;
