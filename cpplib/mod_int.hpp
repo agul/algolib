@@ -17,15 +17,15 @@ public:
 		return value_;
 	}
 
-	bool operator ==(const ModInt& rhs) const {
+	constexpr bool operator ==(const ModInt& rhs) const {
 		return value_ == rhs.value_;
 	}
 
-	bool operator !=(const ModInt& rhs) const {
+	constexpr bool operator !=(const ModInt& rhs) const {
 		return !operator==(rhs);
 	}
 
-	bool operator <(const ModInt& rhs) const {
+	constexpr bool operator <(const ModInt& rhs) const {
 		return value_ < rhs.value_;
 	}
 
