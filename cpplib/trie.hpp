@@ -1,18 +1,51 @@
-#include "Trie.h"
+#pragma once
+#include "Head.h"
 
-void Trie::init() 
+class Trie {
+public:
+
+	class State {
+	public:
+		int cnt;
+		std::unordered_map<char, int> next;
+
+		State() : cnt(0) {}
+		State(const int cnt) : cnt(cnt) {}
+		~State() {
+			next.clear();
+		}
+
+	};
+
+	int sz;
+	std::vector<State> states;
+
+	void init();
+	void clear();
+
+	State addChar(State& state, const char ch, const bool isTerminal = false);
+	int addChar(const int v, const char ch, const bool isTerminal = false);
+
+	State addString(State& state, const char * s, const int n, const bool addSubstrings = false);
+	State addString(State& state, const std::string& s, const bool addSubstrings = false);
+	int addString(int v, const char * s, const int n, const bool addSubstrings = false);
+	int addString(const int v, const std::string& s, const bool addSubstrings = false);
+
+};
+
+void Trie::init()
 // add initial state to trie
 {
 	sz = 1;
 	states.emplace_back(Trie::State());
 }
 
-void Trie::clear() 
+void Trie::clear()
 // delete all states
 {
 	/* for (int i = 0; i < sz; ++i) {
-		states[i].next.clear();
-		states[i].cnt = 0;
+	states[i].next.clear();
+	states[i].cnt = 0;
 	} */
 	states.clear();
 }
@@ -49,7 +82,7 @@ int Trie::addChar(const int v, const char ch, const bool isTerminal)
 	return ret;
 }
 
-Trie::State Trie::addString(Trie::State& state, const char * s, const int n, const bool addSubstrings) 
+Trie::State Trie::addString(Trie::State& state, const char * s, const int n, const bool addSubstrings)
 // extend Trie by one string
 // REQUIRE: all chars in interval [0..alphabet_size]
 {
@@ -67,7 +100,7 @@ Trie::State Trie::addString(Trie::State& state, const std::string& s, const bool
 	return addString(state, s.c_str(), s.length(), addSubstrings);
 }
 
-int Trie::addString(int v, const char * s, const int n, const bool addSubstrings)  
+int Trie::addString(int v, const char * s, const int n, const bool addSubstrings)
 // extend Trie by one string
 // REQUIRE: all chars in interval [0..alphabet_size]
 {

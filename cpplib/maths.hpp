@@ -199,7 +199,12 @@ template<class T> std::string toRoman(T n) {
 	return res;
 }
 
-void calcPowers(ll deg[], ll base, int n);
+void calcPowers(ll deg[], ll base, int n) {
+	deg[0] = 1;
+	for (int i = 1; i <= n; ++i) {
+		deg[i] = deg[i - 1] * base;
+	}
+}
 
 template<class T> void calcPowers(T deg[], T base, int n, T MOD) {
 	deg[0] = 1 % MOD;

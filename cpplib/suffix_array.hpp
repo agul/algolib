@@ -1,6 +1,33 @@
-#include "SuffixArray.h"
+#pragma once
+#include "Head.h"
+#include "segment_tree.hpp"
+#include "sparse_table.hpp"
 
-void suffixArrayCyclic(int sa[], const char * s, int n, const int alphabet) 
+void suffixArrayCyclic(int sa[], const char * s, int n, const int alphabet = 27);
+void suffixArrayCyclic(int sa[], const std::string& s, const int alphabet = 27);
+
+void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, const int alphabet = 27);
+void suffixLCPArrayCyclic(int sa[], int lcp[], const std::string& s, const int alphabet = 27);
+
+class SuffixArray {
+// class for internal functions for suffix array construction
+public:
+
+	static bool lessOrEqual(const int a1, const int a2, const int b1, const int b2);
+	static bool lessOrEqual(const int a1, const int a2, const int a3, const int b1, const int b2, const int b3);
+	static void radixPass(const int* a, int* b, const int * r, const int n, const int alphabet);
+	static void build(const int * s, int* SA, const int n, const int alphabet);
+
+};
+
+void suffixArray(int sa[], const char * s, const int n, const int alphabet = 27);
+void suffixArray(int sa[], const std::string& s, const int alphabet = 27);
+
+void LCPArray(int lcp[], const int sa[], const char * s, const int n);
+void LCPArray(int lcp[], const int sa[], const std::string& s);
+
+
+void suffixArrayCyclic(int sa[], const char * s, int n, const int alphabet)
 // building suffix array for cyclic shifts, O(n log n)
 // to prevent using cyclic shifts consider n = n + 1; s[n] = 0;
 {
@@ -75,7 +102,7 @@ void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, cons
 // building suffix and LCP array for cyclic shifts, O(n log^2 n)
 // to prevent using cyclic shifts consider n = n + 1; s[n] = 0;
 {
-	int *cnt, *c[2], *pn, *lpos, *rpos, *la[2], * indices, * arr;
+	int *cnt, *c[2], *pn, *lpos, *rpos, *la[2], *indices, *arr;
 	auto comparator = [&arr](const int& x, const int& y) {
 		if (x == -1) {
 			return y;
@@ -213,7 +240,7 @@ void SuffixArray::radixPass(const int* a, int* b, const int * r, const int n, co
 	delete[] cnt;
 }
 
-void SuffixArray::build(const int * s, int* SA, const int n, const int alphabet)  {
+void SuffixArray::build(const int * s, int* SA, const int n, const int alphabet) {
 	int n0 = (n + 2) / 3, n1 = (n + 1) / 3, n2 = n / 3, n02 = n0 + n2;
 	int* s12 = new int[n02 + 3];
 	s12[n02] = s12[n02 + 1] = s12[n02 + 2] = 0;
@@ -244,7 +271,8 @@ void SuffixArray::build(const int * s, int* SA, const int n, const int alphabet)
 		for (int i = 0; i < n02; i++) {
 			s12[SA12[i]] = i + 1;
 		}
-	} else {
+	}
+	else {
 		for (int i = 0; i < n02; i++) {
 			SA12[s12[i] - 1] = i;
 		}
@@ -261,15 +289,16 @@ void SuffixArray::build(const int * s, int* SA, const int n, const int alphabet)
 		if (SA12[t] < n0 ?
 			lessOrEqual(s[i], s12[SA12[t] + n0], s[j], s12[j / 3]) :
 			lessOrEqual(s[i], s[i + 1], s12[SA12[t] - n0 + 1], s[j], s[j + 1], s12[j / 3 + n0])
-			) 
+			)
 		{
-			SA[k] = i; 
+			SA[k] = i;
 			if (++t == n02) {
 				for (k++; p < n0; p++, k++) {
 					SA[k] = SA0[p];
 				}
 			}
-		} else {
+		}
+		else {
 			SA[k] = j;
 			if (++p == n0) {
 				for (k++; t < n02; t++, k++) {
