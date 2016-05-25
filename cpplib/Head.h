@@ -134,12 +134,12 @@ inline bool umax(T& a, const T& b) {
 
 namespace std {
 
-	template<typename T, typename U>
-	struct hash<std::pair<T, U>> {
-		std::size_t operator()(const std::pair<T, U>& lhs) const {
-			return lhs.first * 877117 + lhs.second;
-		}
-	};
+template<typename T, typename U>
+struct hash<std::pair<T, U>> {
+	std::size_t operator()(const std::pair<T, U>& lhs) const {
+		return lhs.first * 877117 + lhs.second;
+	}
+};
 
 }
 
@@ -156,3 +156,5 @@ static uint32_t __inline __ctz(uint32_t x) {
 	return r;
 }
 #endif
+
+#include "IO/IO.h"
