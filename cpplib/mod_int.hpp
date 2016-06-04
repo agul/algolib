@@ -5,8 +5,10 @@
 
 #include "maths.hpp"
 
+constexpr const int32_t BASE_MOD = 1000000007;
+
 template<typename T>
-inline T& add_mod(T& a, const T b, const T mod = 1000000007) {
+inline T& add_mod(T& a, const T b, const T mod = BASE_MOD) {
 	if ((a += b) >= mod) {
 		a -= mod;
 	}
@@ -14,7 +16,7 @@ inline T& add_mod(T& a, const T b, const T mod = 1000000007) {
 }
 
 template<typename T>
-inline T& sub_mod(T& a, const T b, const T mod = 1000000007) {
+inline T& sub_mod(T& a, const T b, const T mod = BASE_MOD) {
 	if ((a -= b) < 0) {
 		a += mod;
 	}
@@ -22,12 +24,12 @@ inline T& sub_mod(T& a, const T b, const T mod = 1000000007) {
 }
 
 template<typename T>
-inline T& mul_mod(T& a, const T b, const T mod = 1000000007) {
+inline T& mul_mod(T& a, const T b, const T mod = BASE_MOD) {
 	a = static_cast<ll>(a) * b % mod;
 	return a;
 }
 
-template<typename T, T MOD = 1000000007>
+template<typename T, T MOD = BASE_MOD>
 class ModInt {
 public:
 
