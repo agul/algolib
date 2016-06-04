@@ -99,29 +99,6 @@ inline bool is_equal_to_zero(const T& a) {
 	return a == 0;
 }
 
-
-template<class T> 
-inline T& add_mod(T& a, const T& b, const T& mod = 1000000007) {
-	if ((a += b) >= mod) {
-		a -= mod;
-	}
-	return a;
-}
-
-template<class T> 
-inline T& sub_mod(T& a, const T& b, const T& mod = 1000000007) {
-	if ((a -= b) < 0) {
-		a += mod;
-	}
-	return a;
-}
-
-template<class T>
-inline T& mul_mod(T& a, const T& b, const T& mod = 1000000007) {
-	a = a * b % mod;
-	return a;
-}
-
 template<class T> 
 inline bool umin(T& a, const T& b) {
 	return (b < a ? a = b, true : false);
