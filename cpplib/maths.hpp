@@ -88,8 +88,8 @@ inline T ppow(T a, U b) {
 	return ret;
 }
 
-template<class T>
-inline T ppow(T a, T b, T md) {
+template<typename T, typename U, typename Q>
+inline T ppow(T a, U b, Q md) {
 	ll ret = 1;
 	a %= md;
 	while (b) {
@@ -140,10 +140,11 @@ template<class T> T eulerFunction(T n) {
 	return res;
 }
 
-template<class T> T inverseElement(const T n, const T mod)
+template<typename T, typename U>
+T inverseElement(const T n, const U mod)
 // inverse element for prime mod
 {
-	return ppow(n, mod - 2, mod);
+	return ppow(static_cast<ll>(n), mod - 2, mod);
 }
 
 inline void inverseElementForSegment(int r[], const int mod)
