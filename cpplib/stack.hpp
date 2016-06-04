@@ -1,5 +1,5 @@
 #pragma once
-#include "Head.h"
+#include <vector>
 
 template<typename T>
 class Stack {
