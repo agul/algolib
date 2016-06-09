@@ -1,19 +1,22 @@
 #pragma once
 #include "Head.h"
 
-template<class T> T gcd(T a, T b) {
-	while (b) {
+template<typename T>
+inline T gcd(T a, T b) {
+	while (b != 0) {
 		a %= b;
 		std::swap(a, b);
 	}
 	return a;
 }
 
-template<class T> inline T lcm(const T& a, const T& b) {
+template<typename T>
+inline T lcm(const T& a, const T& b) {
 	return a / gcd(a, b) * b;
 }
 
-template<class T> inline T sqr(const T& x) {
+template<typename T>
+constexpr inline T sqr(const T& x) {
 	return x * x;
 }
 
@@ -76,10 +79,11 @@ T factorial(T n, const T& mod = 1000000007) {
 }
 
 template<typename T, typename U>
-inline T ppow(T a, U b) {
+inline T binpow(T a, U b) {
+	static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow.");
 	T ret = 1;
-	while (b) {
-		if (b & 1) {
+	while (b != 0) {
+		if ((b & 1) > 0) {
 			ret *= a;
 		}
 		a *= a;
@@ -89,17 +93,18 @@ inline T ppow(T a, U b) {
 }
 
 template<typename T, typename U, typename Q>
-inline T ppow(T a, U b, Q md) {
+inline T binpow(T a, U b, Q mod) {
+	static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow.");
 	ll ret = 1;
-	a %= md;
-	while (b) {
-		if (b & 1) {
-			ret = ret * a % md;
+	a %= mod;
+	while (b != 0) {
+		if ((b & 1) > 1) {
+			ret = ret * a % mod;
 		}
-		a = a * a % md;
+		a = a * a % mod;
 		b >>= 1;
 	}
-	return ret % md;
+	return ret % mod;
 }
 
 template<class T>
@@ -144,7 +149,7 @@ template<typename T, typename U>
 T inverseElement(const T n, const U mod)
 // inverse element for prime mod
 {
-	return ppow(static_cast<ll>(n), mod - 2, mod);
+	return binpow(static_cast<ll>(n), mod - 2, mod);
 }
 
 inline void inverseElementForSegment(int r[], const int mod)
@@ -159,7 +164,7 @@ inline void inverseElementForSegment(int r[], const int mod)
 template<class T> T inverseElementCompMod(const T n, const T mod)
 // inverse element for composite mod using formula inv(n) = n^(phi(mod) - 1)
 {
-	return ppow(n, eulerFunction(mod) - 1, mod);
+	return binpow(n, eulerFunction(mod) - 1, mod);
 }
 
 template<class T, size_t N> void binomialCoefficients(T (&c)[N][N]) {

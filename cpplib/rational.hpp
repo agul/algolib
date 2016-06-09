@@ -1,417 +1,251 @@
 #pragma once
 #include "Head.h"
-#include "Maths.h"
-#include "StringUtils.h"
+#include "maths.hpp"
 
-class IO;
+#include <string>
 
-extern IO io;
-
+template<typename T>
 class Rational {
 public:
-	typedef ll TBase;
+	static_assert(std::is_integral<T>::value, "Base type of Rational must be an integral.");
 
-	static const Rational ZERO;
-	static const Rational ONE;
-	static const Rational TWO;
-	static const double EPS;
-
-	TBase a, b;
-
-	Rational() : a(0), b(1) {}
-	Rational(TBase _a) : a(_a), b(1) {}
-	Rational(TBase _a, TBase _b) : a(_a), b(_b) {
-		norm();
+	constexpr Rational() : Rational(0) {}
+	constexpr Rational(const T a) : a_(a), b_(1) {}
+	Rational(const T a, const T b) : a_(a), b_(b) {
+		normalize();
 	}
 
-	operator bool() const {
-		return (a != 0);
+	void swap(Rational& rhs) {
+		std::swap(a_, rhs.a_);
+		std::swap(b_, rhs.b_);
 	}
 
-	operator long long() const {
-		return a / b;
+	constexpr operator bool() const {
+		return a_ != 0;
 	}
 
-	operator long double() const {
-		return (a + 0.) / b;
+	constexpr operator T() const {
+		return to_int();
 	}
 
-	operator string() const {
-		return toa(a) + "/" + toa(b);
+	constexpr operator long double() const {
+		return to_double();
 	}
 
-	bool operator !() const {
-		return !a;
+	std::string to_string() const {
+		return std::to_string(a_) + "/" + std::to_string(b_);
 	}
 
-	bool operator && (const bool x) const {
-		return (a > 0 && x);
+	constexpr bool operator !() const {
+		return a_ == 0;
 	}
 
-	Rational operator - () const {
-		return Rational(-a, b);
+	constexpr Rational operator -() const {
+		return negate();
 	}
 
-	Rational operator + () const {
-		return Rational(a, b);
+	constexpr Rational operator +() const {
+		return{ a_, b_ };
 	}
 
-	Rational& operator ++ () {
-		a += b;
+	Rational& operator ++() {
+		a_ += b_;
 		return *this;
 	}
 
-	Rational operator ++ (int) {
-		a += b;
-		return Rational(a - b, b);
+	Rational operator ++(int) {
+		a_ += b_;
+		return {a_ - b_, b_};
 	}
 
-	Rational& operator -- () {
-		a -= b;
+	Rational& operator --() {
+		a_ -= b_;
 		return *this;
 	}
 
-	Rational operator -- (int) {
-		a -= b;
-		return Rational(a + b, b);
+	Rational operator --(int) {
+		a_ -= b_;
+		return{ a_ + b_, b_ };
 	}
 
-	Rational operator + (const Rational& x) const {
-		return Rational(a * x.b + x.a * b, b * x.b);
+	constexpr Rational add(const Rational& rhs) const {
+		return{ a_ * rhs.b_ + rhs.a_ * b_, b_ * rhs.b_ };
 	}
 
-	Rational operator - (const Rational& x) const {
-		return Rational(a * x.b - x.a * b, b * x.b);
+	constexpr Rational subtract(const Rational& rhs) const {
+		return add(rhs.negate());
 	}
 
-	Rational operator * (const Rational& x) const {
-		return Rational(a * x.a, b * x.b);
+	constexpr Rational multiply(const Rational& rhs) const {
+		return{ a_ * rhs.a_, b_ * rhs.b_ };
 	}
 
-	Rational operator / (const Rational& x) const {
-		return Rational(a * x.b, b * x.a);
+	constexpr Rational divide(const Rational& rhs) const {
+		return{ a_ * rhs.b_, b_ * rhs.a_ };
 	}
 
-	Rational& operator += (const Rational& x) {
-		a = a * x.b + x.a * b;
-		b *= x.b;
-		norm();
+	constexpr Rational operator +(const Rational& rhs) const {
+		return add(rhs);
+	}
+
+	constexpr Rational operator -(const Rational& rhs) const {
+		return subtract(rhs);
+	}
+
+	constexpr Rational operator *(const Rational& rhs) const {
+		return multiply(rhs);
+	}
+
+	constexpr Rational operator /(const Rational& rhs) const {
+		return divide(rhs);
+	}
+
+	Rational& operator +=(const Rational& rhs) {
+		Rational res = add(rhs);
+		swap(res);
 		return *this;
 	}
 
-	Rational& operator -= (const Rational& x) {
-		a = a * x.b - x.a * b;
-		b *= x.b;
-		norm();
+	Rational& operator -=(const Rational& rhs) {
+		Rational res = subtract(rhs);
+		swap(res);
 		return *this;
 	}
 
-	Rational& operator *= (const Rational& x) {
-		a *= x.a;
-		b *= x.b;
-		norm();
+	Rational& operator *=(const Rational& rhs) {
+		Rational res = multiply(rhs);
+		swap(res);
 		return *this;
 	}
 
-	Rational& operator /= (const Rational& x) {
-		a *= x.b;
-		b *= x.a;
-		norm();
+	Rational& operator /=(const Rational& x) {
+		Rational res = divide(rhs);
+		swap(res);
 		return *this;
 	}
 
-	Rational operator + (const int x) const {
-		return Rational(a + static_cast<TBase>(x) * b, b);
+	constexpr friend bool operator ==(const Rational& lhs, const Rational& rhs) {
+		return lhs.a_ == rhs.a_ && lhs.b_ == rhs.b_;
 	}
 
-	Rational operator - (const int x) const {
-		return Rational(a - static_cast<TBase>(x) * b, b);
+	constexpr friend bool operator !=(const Rational& lhs, const Rational& rhs) {
+		return !(lhs == rhs);
 	}
 
-	Rational operator * (const int x) const {
-		return Rational(a * static_cast<TBase>(x), b);
+	constexpr friend bool operator <(const Rational& lhs, const Rational& rhs) {
+		return lhs.a_ * rhs.b_ < lhs.a_ * rhs.b_;
 	}
 
-	Rational operator / (const int x) const {
-		return Rational(a, b * static_cast<TBase>(x));
+	constexpr friend bool operator >(const Rational& lhs, const Rational& rhs) {
+		return rhs < lhs;
 	}
 
-	Rational& operator += (const int x) {
-		a += b * static_cast<TBase>(x);
-		return *this;
+	constexpr friend bool operator <=(const Rational& lhs, const Rational& rhs) {
+		return lhs.a_ * rhs.b_ <= lhs.a_ * rhs.b_;
 	}
 
-	Rational& operator -= (const int x) {
-		a -= b * static_cast<TBase>(x);
-		return *this;
+	constexpr friend bool operator >=(const Rational& lhs, const Rational& rhs) {
+		return rhs <= lhs;
 	}
 
-	Rational& operator *= (const int x) {
-		a *= static_cast<TBase>(x);
-		norm();
-		return *this;
+	friend std::ostream& operator << (std::ostream& out, const Rational& rational) {
+		return out << rational.a_ << " " << rational.b_;
 	}
 
-	Rational& operator /= (const int x) {
-		b *= static_cast<TBase>(x);
-		norm();
-		return *this;
+	friend std::istream& operator >> (std::istream& in, Rational& rational) {
+		in >> rational .a_ >> rational.b_;
+		rational.normalize();
+		return in;
 	}
 
-	Rational operator + (const ll x) const {
-		return Rational(a + static_cast<TBase>(x) * b, b);
-	}
-
-	Rational operator - (const ll x) const {
-		return Rational(a - static_cast<TBase>(x) * b, b);
-	}
-
-	Rational operator * (const ll x) const {
-		return Rational(a * static_cast<TBase>(x), b);
-	}
-
-	Rational operator / (const ll x) const {
-		return Rational(a, b * static_cast<TBase>(x));
-	}
-
-	Rational& operator += (const ll x) {
-		a += b * static_cast<TBase>(x);
-		return *this;
-	}
-
-	Rational& operator -= (const ll x) {
-		a -= b * static_cast<TBase>(x);
-		return *this;
-	}
-
-	Rational& operator *= (const ll x) {
-		a *= static_cast<TBase>(x);
-		norm();
-		return *this;
-	}
-
-	Rational& operator /= (const ll x) {
-		b *= static_cast<TBase>(x);
-		norm();
-		return *this;
-	}
-
-	double operator + (const double x) const {
-		return (a + 0.) / b + x;
-	}
-
-	double operator - (const double x) const {
-		return (a + 0.) / b - x;
-	}
-
-	double operator * (const double x) const {
-		return (a + 0.) / b * x;
-	}
-
-	double operator / (const double x) const {
-		return (a + 0.) / b / x;
-	}
-
-	bool operator == (const Rational& x) const {
-		return (a == x.a && b == x.b);
-	}
-
-	bool operator != (const Rational& x) const {
-		return (a != x.a || b != x.b);
-	}
-
-	bool operator < (const Rational& x) const {
-		return (a * x.b < x.a * b);
-	}
-
-	bool operator >(const Rational& x) const {
-		return (a * x.b > x.a * b);
-	}
-
-	bool operator <= (const Rational& x) const {
-		return (a * x.b <= x.a * b);
-	}
-
-	bool operator >= (const Rational& x) const {
-		return (a * x.b >= x.a * b);
-	}
-
-	bool operator == (const int x) const {
-		return (a == static_cast<TBase>(x) * b);
-	}
-
-	bool operator != (const int x) const {
-		return (a != static_cast<TBase>(x) * b);
-	}
-
-	bool operator < (const int x) const {
-		return (a < static_cast<TBase>(x) * b);
-	}
-
-	bool operator >(const int x) const {
-		return (a > static_cast<TBase>(x) * b);
-	}
-
-	bool operator <= (const int x) const {
-		return (a <= static_cast<TBase>(x) * b);
-	}
-
-	bool operator >= (const int x) const {
-		return (a >= static_cast<TBase>(x) * b);
-	}
-
-	bool operator == (const ll x) const {
-		return (a == static_cast<TBase>(x) * b);
-	}
-
-	bool operator != (const ll x) const {
-		return (a != static_cast<TBase>(x) * b);
-	}
-
-	bool operator < (const ll x) const {
-		return (a < static_cast<TBase>(x) * b);
-	}
-
-	bool operator >(const ll x) const {
-		return (a > static_cast<TBase>(x) * b);
-	}
-
-	bool operator <= (const ll x) const {
-		return (a <= static_cast<TBase>(x) * b);
-	}
-
-	bool operator >= (const ll x) const {
-		return (a >= static_cast<TBase>(x) * b);
-	}
-
-	bool operator == (const double x) const {
-		return (fabs((a + 0.) / b - x) < EPS);
-	}
-
-	bool operator != (const double x) const {
-		return (fabs((a + 0.) / b - x) > EPS);
-	}
-
-	bool operator < (const double x) const {
-		return ((a + 0.) / b + EPS < x);
-	}
-
-	bool operator > (const double x) const {
-		return ((a + 0.) / b > x + EPS);
-	}
-
-	bool operator <= (const double x) const {
-		return ((a + 0.) / b + EPS <= x);
-	}
-
-	bool operator >= (const double x) const {
-		return ((a + 0.) / b >= x + EPS);
-	}
-
-	friend ostream& operator << (ostream &out, Rational& x) {
-		return out << x.a << " " << x.b;
-	}
-
-	friend istream& operator >> (istream &in, Rational& x) {
-		return in >> x.a >> x.b;
-	}
-
-	void norm() {
-		TBase g = gcd(a, b);
-		a /= g;
-		b /= g;
-		if (b < 0) {
-			a = -a;
-			b = -b;
+	void normalize() {
+		const T g = gcd(a_, b_);
+		a_ /= g;
+		b_ /= g;
+		if (b_ < 0) {
+			a_ = -a_;
+			b_ = -b_;
 		}
 	}
 
-	void read() {
-		io >> a >> b;
-		norm();
-	}
-
-	void read(istream &in) {
-		in >> a >> b;
-		norm();
-	}
-
-	void print() const {
-		io << a << " " << b;
-	}
-
-	void print(ostream& out) const {
-		out << a << " " << b;
-	}
-
-	void readSlash() {
+	void read_slash(std::istream& in) {
 		char ch;
-		io >> a >> ch >> b;
-		norm();
+		in >> a_ >> ch >> b_;
+		normalize();
 	}
 
-	void readSlash(istream& in) {
-		char ch;
-		in >> a >> ch >> b;
-		norm();
+	void print_slash(std::ostream& out) const {
+		out << a_ << "/" << b_;
 	}
 
-	void printSlash() const {
-		io << a << "/" << b;
+	constexpr Rational negate() const {
+		return{ -a_, b_ };
 	}
 
-	void printSlash(ostream& out) const {
-		out << a << "/" << b;
+	constexpr Rational abs() const {
+		return a_ < 0 ? Rational(-a_, b_) : Rational(a_, b_);
 	}
 
-	Rational negate() const {
-		return Rational(-a, b);
+	constexpr Rational inverse() const {
+		return{ b_, a_ };
 	}
 
-	Rational abs() const {
-		return (a < 0 ? Rational(-a, b) : Rational(a, b));
+	constexpr int sign() const {
+		return a_ < 0 ? -1 : static_cast<int>(a_ > 0);
 	}
 
-	Rational inverse() const {
-		return Rational(b, a);
+	constexpr long double to_double() const {
+		return static_cast<long double>(a_) / b_;
 	}
 
-	int sign() const {
-		return (a < 0 ? -1 : (a > 0));
+	constexpr T to_int() const {
+		return a_ / b_;
 	}
 
-	double doubleValue() const {
-		return (a + 0.) / b;
+	constexpr T floor() const {
+		return to_int();
 	}
 
-	TBase Floor() const {
-		return a / b;
+	constexpr T ceil() const {
+		return static_cast<T>(ceil(to_double() - EPS));
 	}
 
-	TBase Ceil() const {
-		return static_cast<TBase>(ceil((a + 0.) / b - EPS));
+	constexpr T round() const {
+		const long double cur = to_double();
+		return static_cast<T>(cur < 0 ? ceil(cur - 0.5 - EPS) : floor(cur + 0.5 + EPS));
 	}
 
-	TBase Round() const {
-		double cur = (a + 0.) / b;
-		return static_cast<TBase>((cur < 0 ? ceil(cur - .5 - EPS) : floor(cur + .5 + EPS)));
+	constexpr long double frac() const {
+		return to_double() - to_int();
 	}
 
-	double frac() const {
-		return (a + 0.) / b - a / b;
+	constexpr Rational pow(const ll n) const {
+		return{ binpow(a_, n), binpow(b_, n) };
 	}
 
-	ll hashCode() const {
-		return a * 877117 + b;
-	}
-
-	Rational pow(ll n) const {
-		return Rational(ppow(a, n), ppow(b, n));
-	}
+private:
+	T a_;
+	T b_;
 
 };
 
-const Rational Rational::ZERO = Rational(0);
-const Rational Rational::ONE = Rational(1);
-const Rational Rational::TWO = Rational(2);
-const double Rational::EPS = EPS;
+namespace std {
+
+template<typename T>
+std::string to_string(const Rational<T>& arg) {
+	return arg.to_string();
+}
+
+template<typename T>
+struct hash<Rational<T>> {
+	std::size_t operator()(const Rational<T>& lhs) const {
+		return lhs.a * 877117 + lhs.b;
+	}
+};
+
+template<typename T>
+void swap(Rational<T>& lhs, Rational<T>& rhs) {
+	lhs.swap(rhs);
+}
+
+}
