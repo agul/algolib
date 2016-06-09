@@ -83,7 +83,7 @@ inline T binpow(T a, U b) {
 	static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow.");
 	T ret = 1;
 	while (b != 0) {
-		if ((b & 1) > 0) {
+		if ((b & 1) != 0) {
 			ret *= a;
 		}
 		a *= a;
@@ -98,7 +98,7 @@ inline T binpow(T a, U b, Q mod) {
 	ll ret = 1;
 	a %= mod;
 	while (b != 0) {
-		if ((b & 1) > 1) {
+		if ((b & 1) != 0) {
 			ret = ret * a % mod;
 		}
 		a = a * a % mod;
