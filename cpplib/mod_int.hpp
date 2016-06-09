@@ -142,3 +142,10 @@ private:
 	}
 
 };
+
+namespace std {
+
+template<typename T, T MOD>
+struct is_integral<ModInt<T, MOD>> : std::true_type {};
+
+}
