@@ -1,61 +1,49 @@
 #pragma once
 #include "Head.h"
 
-template<class T> class SparseTableCmp {
+template<typename T>
+class SparseTableCmp {
 public:
-	T ** data;
-	int * logTable;
+	using Comparator = std::function<bool(const T&, const T&)>;
 
-	SparseTableCmp(const int N, const std::function<bool(const T&, const T&)>& less) : N(N), less(less) {
-		logTable = new int[N + 1];
-		logTable[0] = logTable[1] = 0;
-		for (int i = 2; i <= N; ++i) {
-			logTable[i] = logTable[i >> 1] + 1;
+	SparseTableCmp(const size_t size, const Comparator& less) :
+		size_(size), less_(less), log_table_(size + 1, 0) {
+		for (size_t i = 2; i <= size_; ++i) {
+			log_table_[i] = log_table_[i >> 1] + 1;
 		}
-		data = new T*[logTable[N] + 1];
-		for (int i = 0; i <= logTable[N]; ++i) {
-			data[i] = new T[N];
-		}
+		data_.assign(log_table_[size_] + 1, std::vector<size_t>(size_));
 	}
 
-	~SparseTableCmp() {
-		for (int i = 0; i <= logTable[N]; ++i) {
-			delete[] data[i];
-		}
-		delete[] data;
-		delete[] logTable;
+	void set_comparator(const Comparator& less) {
+		less_ = less;
 	}
 
-	void setComparator(const std::function<bool(const T&, const T&)>& cmp) {
-		less = cmp;
-	}
-
-	void build(T a[]) {
-		arr = a;
-		for (int i = 0; i < N; ++i) {
-			data[0][i] = i;
+	void build(const std::vector<T>& vec) {
+		arr_ = &vec;
+		for (size_t i = 0; i < size_; ++i) {
+			data_[0][i] = i;
 		}
-		for (int k = 1, tt = 2; tt < N; ++k, tt <<= 1) {
-			for (int i = 0; i + tt <= N; ++i) {
-				int x = data[k - 1][i];
-				int y = data[k - 1][i + (tt >> 1)];
-				data[k][i] = (less(arr[x], arr[y]) ? x : y);
+		for (size_t level = 1, step = 2; step < size_; ++level, step <<= 1) {
+			for (size_t i = 0; i + step <= size_; ++i) {
+				const size_t x = data_[level - 1][i];
+				const size_t y = data_[level - 1][i + (step >> 1)];
+				data_[level][i] = (less_(arr_->at(x), arr_->at(y)) ? x : y);
 			}
 		}
 	}
 
-	int query(int l, int r) {
-		int k = logTable[r - l];
-		int x = data[k][l];
-		int y = data[k][r - (1 << k) + 1];
-		return (less(arr[x], arr[y]) ? x : y);
+	size_t query(const size_t left, const size_t right) const {
+		const size_t level = log_table_[right - left - 1];
+		const size_t x = data_[level][left];
+		const size_t y = data_[level][right - (1 << level)];
+		return (less_(arr_->at(x), arr_->at(y)) ? x : y);
 	}
 
 private:
-	SparseTableCmp();
-
-	std::function<bool(const T&, const T&)> less;
-	T * arr;
-	int N;
+	std::vector<std::vector<size_t>> data_;
+	std::vector<size_t> log_table_;
+	Comparator less_;
+	const std::vector<T>* arr_;
+	size_t size_;
 
 };
