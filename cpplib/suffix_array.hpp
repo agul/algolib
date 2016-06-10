@@ -1,7 +1,6 @@
 #pragma once
 #include "Head.h"
 #include "segment_tree.hpp"
-#include "sparse_table.hpp"
 
 class SuffixArray {
 // class for internal functions for suffix array construction
