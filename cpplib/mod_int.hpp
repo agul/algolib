@@ -135,7 +135,10 @@ private:
 
 	template<typename U>
 	T normalize(const U value) const {
-		T ret = value % MOD;
+		if (value >= 0 && value < MOD) {
+			return value;
+		}
+		const T ret = value % MOD;
 		if (ret < 0) {
 			return ret + MOD;
 		}
