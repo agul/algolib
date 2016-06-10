@@ -98,7 +98,7 @@ public:
 	using const_reference = const value_type&;
 	using Comparator = std::function<bool(const_reference, const_reference)>;
 
-	CmpStack(const size_type n, const Comparator& cmp = std::less<value_type>()) : stack_(n), cmp_(cmp) {}
+	CmpStack(const size_type n, const Comparator& less = std::less<value_type>()) : stack_(n), less_(less) {}
 
 	constexpr bool empty() const {
 		return stack_.empty();
@@ -110,7 +110,7 @@ public:
 
 	void push(const_reference element) {
 		value_type cur_min = element;
-		if (!stack_.empty() && cmp_(stack_.top().second, cur_min)) {
+		if (!stack_.empty() && less_(stack_.top().second, cur_min)) {
 			cur_min = stack_.top().second;
 		}
 		stack_.push(std::make_pair(element, cur_min));
@@ -126,6 +126,6 @@ public:
 
 private:
 	Stack<std::pair<value_type, value_type>> stack_;
-	Comparator cmp_;
+	Comparator less_;
 
 };

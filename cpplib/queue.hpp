@@ -115,7 +115,7 @@ public:
 	using const_reference = const value_type&;
 	using Comparator = std::function<bool(const_reference, const_reference)>;
 
-	CmpQueue(const size_type n, const Comparator& cmp = std::less<value_type>()) : a_(n, cmp), b_(n, cmp), cmp_(cmp) {}
+	CmpQueue(const size_type n, const Comparator& less = std::less<value_type>()) : a_(n, less), b_(n, less), less_(less) {}
 
 	constexpr bool empty() const {
 		return a_.empty() && b_.empty();
@@ -130,7 +130,7 @@ public:
 		}
 		const value_type a = a_.min_value();
 		const value_type b = b_.min_value();
-		return cmp_(a, b) ? a : b;
+		return less_(a, b) ? a : b;
 	}
 
 	void push(const_reference element) {
@@ -154,5 +154,5 @@ public:
 private:
 	CmpStack<value_type> a_;
 	CmpStack<value_type> b_;
-	Comparator cmp_;
+	Comparator less_;
 };
