@@ -11,6 +11,92 @@ template<typename T = ll, size_t MASK = 0>
 class Graph {
 public:
 
+	using EdgesList = std::vector<size_t>;
+
+	class EdgesHolder {
+	public:
+
+		using BaseConstIterator = EdgesList::const_iterator;
+
+		class Edge {
+		public:
+
+			explicit Edge(const std::vector<size_t>& from, const std::vector<size_t>& to, const std::vector<T>& weight, const size_t index) : 
+				from_(from), to_(to), weight_(weight), index_(index) {}
+
+			size_t from() const {
+				return from_[index_];
+			}
+
+			size_t to() const {
+				return to_[index_];
+			}
+
+			template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) != 0>::type* = nullptr>
+			size_t weight() const {
+				return weight_[index_];
+			}
+
+			size_t id() const {
+				return index_;
+			}
+
+			void set_index(const size_t index) {
+				index_ = index;
+			}
+
+		private:
+			const std::vector<size_t>& from_;
+			const std::vector<size_t>& to_;
+			const std::vector<T>& weight_;
+			size_t index_;
+
+		};
+
+		class ConstIterator : public BaseConstIterator {
+		public:
+			using value_type = Edge;
+
+			explicit ConstIterator(BaseConstIterator it, const std::vector<size_t>& from, const std::vector<size_t>& to, const std::vector<T>& weight) : 
+				BaseConstIterator(it), cur_edge_(from, to, weight, 0) {}
+
+			const value_type* operator->() {
+				return addressof(operator*());
+			}
+
+			const value_type& operator*() {
+				const BaseConstIterator::value_type index = this->BaseConstIterator::operator*();
+				cur_edge_.set_index(index);
+				return cur_edge_;
+			}
+
+		private:
+			Edge cur_edge_;
+
+		};
+
+		using const_iterator = ConstIterator;
+		using value_type = typename ConstIterator::value_type;
+
+		explicit EdgesHolder(const EdgesList& edges, const std::vector<size_t>& from, const std::vector<size_t>& to, const std::vector<T>& weight) : 
+			edges_(edges), from_(from), to_(to), weight_(weight) {}
+
+		const_iterator begin() const {
+			return ConstIterator(edges_.begin(), from_, to_, weight_);
+		}
+
+		const_iterator end() const {
+			return ConstIterator(edges_.end(), from_, to_, weight_);
+		}
+
+	private:
+		const EdgesList& edges_;
+		const std::vector<size_t>& from_;
+		const std::vector<size_t>& to_;
+		const std::vector<T>& weight_;
+
+	};
+
 	Graph() = default;
 
 	virtual ~Graph() {
@@ -24,6 +110,19 @@ public:
 	}
 
 	void clear();
+
+	size_t from(const size_t index) const {
+		return from_[index];
+	}
+
+	size_t to(const size_t index) const {
+		return to_[index];
+	}
+
+	template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) != 0>::type* = nullptr>
+	T weight(const size_t index) const {
+		return weight_[index];
+	}
 
 	template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) == 0>::type* = nullptr>
 	void add_directed_edge(const size_t from, const size_t to) {
@@ -40,6 +139,10 @@ public:
 		return vertex_count_ == 0 || sqr(static_cast<ll>(vertex_count_)) >= (edges_count_ << 4);
 	}
 
+	EdgesHolder edges(const size_t vertex) const {
+		return EdgesHolder(edges_[vertex], from_, to_, weight_);
+	}
+
 	size_t find_vertex_with_max_degree() const;
 
 protected:
@@ -52,7 +155,7 @@ protected:
 	}
 
 public:
-	std::vector<std::vector<size_t>> edges_;
+	std::vector<EdgesList> edges_;
 	std::vector<size_t> from_;
 	std::vector<size_t> to_;
 	std::vector<T> weight_;
