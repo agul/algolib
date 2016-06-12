@@ -1,6 +1,6 @@
 #pragma once
 #include "Head.h"
-#include "IO/IO.h"
+#include "io/IO.h"
 #include "Maths.h"
 
 struct maximal_element_search_tag {};
