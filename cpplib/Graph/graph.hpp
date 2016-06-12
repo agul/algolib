@@ -1,6 +1,7 @@
 #pragma once
 #include "Head.h"
 #include "maths.hpp"
+#include "range/ranges.hpp"
 
 enum GraphType {
 	Weighted = 1
@@ -58,7 +59,7 @@ public:
 			using pointer = const value_type*;
 			using const_reference = const value_type&;
 
-			explicit ConstIterator(BaseConstIterator it, const std::vector<size_t>& from, const std::vector<size_t>& to, const std::vector<T>& weight) : 
+			explicit ConstIterator(BaseConstIterator it, const std::vector<size_t>& from, const std::vector<size_t>& to, const std::vector<T>& weight) :
 				BaseConstIterator(it), cur_edge_(from, to, weight, 0) {}
 
 			pointer operator->() {
@@ -79,7 +80,7 @@ public:
 		using const_iterator = ConstIterator;
 		using value_type = typename ConstIterator::value_type;
 
-		explicit EdgesHolder(const EdgesList& edges, const std::vector<size_t>& from, const std::vector<size_t>& to, const std::vector<T>& weight) : 
+		explicit EdgesHolder(const EdgesList& edges, const std::vector<size_t>& from, const std::vector<size_t>& to, const std::vector<T>& weight) :
 			edges_(edges), from_(from), to_(to), weight_(weight) {}
 
 		const_iterator begin() const {
@@ -108,6 +109,18 @@ public:
 		clear();
 		vertex_count_ = vertex_count;
 		edges_.resize(vertex_count_);
+	}
+
+	IntegerRange<size_t> vertices() const {
+		return range(vertex_count_);
+	}
+
+	IntegerIterator<size_t> begin() const {
+		return vertices().begin();
+	}
+
+	IntegerIterator<size_t> end() const {
+		return vertices().end();
 	}
 
 	void clear();
@@ -175,9 +188,9 @@ void Graph<T, MASK>::clear() {
 
 template<typename T, size_t MASK>
 size_t Graph<T, MASK>::find_vertex_with_max_degree() const {
-	const auto iter = std::max_element(edges_.begin(), edges_.end(), 
-			[](const EdgesList& lhs, const EdgesList& rhs) {
-				return lhs.size() < rhs.size();
-			});
+	const auto iter = std::max_element(edges_.begin(), edges_.end(),
+		[](const EdgesList& lhs, const EdgesList& rhs) {
+		return lhs.size() < rhs.size();
+	});
 	return static_cast<size_t>(std::distance(edges_.begin(), iter));
 }
