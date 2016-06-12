@@ -48,7 +48,7 @@ public:
 
 	};
 
-	class EdgesHolder {
+	class EdgesListHolder {
 	public:
 
 		using BaseConstIterator = EdgesList::const_iterator;
@@ -80,7 +80,7 @@ public:
 		using const_iterator = ConstIterator;
 		using value_type = typename ConstIterator::value_type;
 
-		explicit EdgesHolder(const EdgesList& edges, const std::vector<size_t>& from, const std::vector<size_t>& to, const std::vector<T>& weight) :
+		explicit EdgesListHolder(const EdgesList& edges, const std::vector<size_t>& from, const std::vector<size_t>& to, const std::vector<T>& weight) :
 			edges_(edges), from_(from), to_(to), weight_(weight) {}
 
 		const_iterator begin() const {
@@ -153,8 +153,8 @@ public:
 		return vertex_count_ == 0 || sqr(static_cast<ll>(vertex_count_)) >= (edges_count_ << 4);
 	}
 
-	EdgesHolder edges(const size_t vertex) const {
-		return EdgesHolder(edges_[vertex], from_, to_, weight_);
+	EdgesListHolder edges(const size_t vertex) const {
+		return EdgesListHolder(edges_[vertex], from_, to_, weight_);
 	}
 
 	size_t find_vertex_with_max_degree() const;
