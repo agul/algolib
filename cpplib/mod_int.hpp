@@ -5,7 +5,7 @@
 
 #include "maths.hpp"
 
-constexpr const int32_t BASE_MOD = 1000000007;
+constexpr const int32_t BASE_MOD = 1000000007;  /// caide keep
 
 template<typename T>
 inline T& add_mod(T& a, const T b, const T mod = BASE_MOD) {
