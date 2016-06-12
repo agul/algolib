@@ -3,8 +3,7 @@
 #include "maths.hpp"
 
 enum GraphType {
-	Weighted = 1,
-	Flow = 2
+	Weighted = 1
 };
 
 template<typename T = ll, size_t MASK = 0>
@@ -13,58 +12,60 @@ public:
 
 	using EdgesList = std::vector<size_t>;
 
+	class Edge {
+	public:
+
+		explicit Edge(const std::vector<size_t>& from, const std::vector<size_t>& to, const std::vector<T>& weight, const size_t index) :
+			from_(from), to_(to), weight_(weight), index_(index) {}
+
+		size_t from() const {
+			return from_[index_];
+		}
+
+		size_t to() const {
+			return to_[index_];
+		}
+
+		template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) != 0>::type* = nullptr>
+		size_t weight() const {
+			return weight_[index_];
+		}
+
+		size_t id() const {
+			return index_;
+		}
+
+		void set_index(const size_t index) {
+			index_ = index;
+		}
+
+	private:
+		const std::vector<size_t>& from_;
+		const std::vector<size_t>& to_;
+		const std::vector<T>& weight_;
+		size_t index_;
+
+	};
+
 	class EdgesHolder {
 	public:
 
 		using BaseConstIterator = EdgesList::const_iterator;
 
-		class Edge {
-		public:
-
-			explicit Edge(const std::vector<size_t>& from, const std::vector<size_t>& to, const std::vector<T>& weight, const size_t index) : 
-				from_(from), to_(to), weight_(weight), index_(index) {}
-
-			size_t from() const {
-				return from_[index_];
-			}
-
-			size_t to() const {
-				return to_[index_];
-			}
-
-			template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) != 0>::type* = nullptr>
-			size_t weight() const {
-				return weight_[index_];
-			}
-
-			size_t id() const {
-				return index_;
-			}
-
-			void set_index(const size_t index) {
-				index_ = index;
-			}
-
-		private:
-			const std::vector<size_t>& from_;
-			const std::vector<size_t>& to_;
-			const std::vector<T>& weight_;
-			size_t index_;
-
-		};
-
 		class ConstIterator : public BaseConstIterator {
 		public:
 			using value_type = Edge;
+			using pointer = const value_type*;
+			using const_reference = const value_type&;
 
 			explicit ConstIterator(BaseConstIterator it, const std::vector<size_t>& from, const std::vector<size_t>& to, const std::vector<T>& weight) : 
 				BaseConstIterator(it), cur_edge_(from, to, weight, 0) {}
 
-			const value_type* operator->() {
+			pointer operator->() {
 				return addressof(operator*());
 			}
 
-			const value_type& operator*() {
+			const_reference operator*() {
 				const BaseConstIterator::value_type index = this->BaseConstIterator::operator*();
 				cur_edge_.set_index(index);
 				return cur_edge_;
@@ -145,6 +146,8 @@ public:
 
 	size_t find_vertex_with_max_degree() const;
 
+	bool top_sort_acyclic(std::vector<size_t>& order) const;
+
 protected:
 
 	void push_edge(const size_t from, const size_t to) {
@@ -154,7 +157,7 @@ protected:
 		edges_[from].emplace_back(edge_id);
 	}
 
-public:
+private:
 	std::vector<EdgesList> edges_;
 	std::vector<size_t> from_;
 	std::vector<size_t> to_;
@@ -195,14 +198,15 @@ void Graph<T, MASK>::clear() {
 
 template<typename T, size_t MASK>
 size_t Graph<T, MASK>::find_vertex_with_max_degree() const {
-	const auto iter = std::max_element(edges_.begin(), edges_.end(), [](const std::vector<size_t>& lhs, const std::vector<size_t>& rhs) {
-		return lhs.size() < rhs.size();
-	});
+	const auto iter = std::max_element(edges_.begin(), edges_.end(), 
+			[](const EdgesList& lhs, const EdgesList& rhs) {
+				return lhs.size() < rhs.size();
+			});
 	return static_cast<size_t>(std::distance(edges_.begin(), iter));
 }
 
-/* template<typenamå T, size_t MASK>
-bool Graph::top_sort_acyclic(std::vector<size_t>& order) const
+template<typename T, size_t MASK>
+bool Graph<T, MASK>::top_sort_acyclic(std::vector<size_t>& order) const
 // non-recursive topological sorting, works only for acyclic graphs 
 {
 	order.clear();
@@ -218,8 +222,8 @@ bool Graph::top_sort_acyclic(std::vector<size_t>& order) const
 	size_t head = 0;
 	while (head < order.size()) {
 		const size_t cur_vertex = order[head++];
-		for (const auto& it : edges[cur_vertex]) {
-			const size_t to_vertex = to_[it];
+		for (const auto& it : edges(cur_vertex)) {
+			const size_t to_vertex = it.to();
 			--inbound_degree[to_vertex];
 			if (inbound_degree[to_vertex] == 0) {
 				order.emplace_back(to_vertex);
@@ -227,4 +231,4 @@ bool Graph::top_sort_acyclic(std::vector<size_t>& order) const
 		}
 	}
 	return order.size() == vertex_count_;
-} */
+}
