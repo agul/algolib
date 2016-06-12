@@ -164,34 +164,6 @@ protected:
 
 };
 
-template<typename T = ll, size_t MASK = 0>
-class DirectedGraph : public Graph<T, MASK> {
-public:
-
-	bool top_sort_acyclic(std::vector<size_t>& order) const;
-
-};
-
-template<typename T = ll, size_t MASK = 0>
-class UndirectedGraph : public Graph<T, MASK> {
-public:
-
-	UndirectedGraph() = default;
-
-	template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) == 0>::type* = nullptr>
-	void add_bidirectional_edge(const size_t from, const size_t to) {
-		this->add_directed_edge(from, to);
-		this->add_directed_edge(to, from);
-	}
-
-	template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) != 0>::type* = nullptr>
-	void add_bidirectional_edge(const size_t from, const size_t to, const T weight) {
-		this->add_directed_edge(from, to, weight);
-		this->add_directed_edge(to, from, weight);
-	}
-
-};
-
 template<typename T, size_t MASK>
 void Graph<T, MASK>::clear() {
 	vertex_count_ = 0;
@@ -208,32 +180,4 @@ size_t Graph<T, MASK>::find_vertex_with_max_degree() const {
 				return lhs.size() < rhs.size();
 			});
 	return static_cast<size_t>(std::distance(edges_.begin(), iter));
-}
-
-template<typename T, size_t MASK>
-bool DirectedGraph<T, MASK>::top_sort_acyclic(std::vector<size_t>& order) const
-// non-recursive topological sorting, works only for acyclic graphs 
-{
-	order.clear();
-	std::vector<size_t> inbound_degree(this->vertex_count_, 0);
-	for (const auto& to_vertex : this->to_) {
-		++inbound_degree[to_vertex];
-	}
-	for (size_t i = 0; i < this->vertex_count_; ++i) {
-		if (inbound_degree[i] == 0) {
-			order.emplace_back(i);
-		}
-	}
-	size_t head = 0;
-	while (head < order.size()) {
-		const size_t cur_vertex = order[head++];
-		for (const auto& it : this->edges(cur_vertex)) {
-			const size_t to_vertex = it.to();
-			--inbound_degree[to_vertex];
-			if (inbound_degree[to_vertex] == 0) {
-				order.emplace_back(to_vertex);
-			}
-		}
-	}
-	return order.size() == this->vertex_count_;
 }
