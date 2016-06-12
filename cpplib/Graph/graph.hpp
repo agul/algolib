@@ -146,8 +146,6 @@ public:
 
 	size_t find_vertex_with_max_degree() const;
 
-	bool top_sort_acyclic(std::vector<size_t>& order) const;
-
 protected:
 
 	void push_edge(const size_t from, const size_t to) {
@@ -157,13 +155,20 @@ protected:
 		edges_[from].emplace_back(edge_id);
 	}
 
-private:
 	std::vector<EdgesList> edges_;
 	std::vector<size_t> from_;
 	std::vector<size_t> to_;
 	std::vector<T> weight_;
 
 	size_t vertex_count_;
+
+};
+
+template<typename T = ll, size_t MASK = 0>
+class DirectedGraph : public Graph<T, MASK> {
+public:
+
+	bool top_sort_acyclic(std::vector<size_t>& order) const;
 
 };
 
@@ -206,15 +211,15 @@ size_t Graph<T, MASK>::find_vertex_with_max_degree() const {
 }
 
 template<typename T, size_t MASK>
-bool Graph<T, MASK>::top_sort_acyclic(std::vector<size_t>& order) const
+bool DirectedGraph<T, MASK>::top_sort_acyclic(std::vector<size_t>& order) const
 // non-recursive topological sorting, works only for acyclic graphs 
 {
 	order.clear();
-	std::vector<size_t> inbound_degree(vertex_count_, 0);
-	for (const auto& to_vertex : to_) {
+	std::vector<size_t> inbound_degree(this->vertex_count_, 0);
+	for (const auto& to_vertex : this->to_) {
 		++inbound_degree[to_vertex];
 	}
-	for (size_t i = 0; i < vertex_count_; ++i) {
+	for (size_t i = 0; i < this->vertex_count_; ++i) {
 		if (inbound_degree[i] == 0) {
 			order.emplace_back(i);
 		}
@@ -222,7 +227,7 @@ bool Graph<T, MASK>::top_sort_acyclic(std::vector<size_t>& order) const
 	size_t head = 0;
 	while (head < order.size()) {
 		const size_t cur_vertex = order[head++];
-		for (const auto& it : edges(cur_vertex)) {
+		for (const auto& it : this->edges(cur_vertex)) {
 			const size_t to_vertex = it.to();
 			--inbound_degree[to_vertex];
 			if (inbound_degree[to_vertex] == 0) {
@@ -230,5 +235,5 @@ bool Graph<T, MASK>::top_sort_acyclic(std::vector<size_t>& order) const
 			}
 		}
 	}
-	return order.size() == vertex_count_;
+	return order.size() == this->vertex_count_;
 }
