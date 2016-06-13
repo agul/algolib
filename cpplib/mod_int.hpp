@@ -94,23 +94,23 @@ public:
 
 	ModInt operator ++(int) {
 		const ModInt ret(value_);
-		add_mod(value_, 1, MOD);
+		add_mod(value_, static_cast<T>(1), MOD);
 		return ret;
 	}
 
 	ModInt operator --(int) {
 		const ModInt ret(value_);
-		sub_mod(value_, 1, MOD);
+		sub_mod(value_, static_cast<T>(1), MOD);
 		return ret;
 	}
 
 	ModInt& operator ++() {
-		add_mod(value_, 1, MOD);
+		add_mod(value_, static_cast<T>(1), MOD);
 		return *this;
 	}
 
 	ModInt& operator --() {
-		sub_mod(value_, 1, MOD);
+		sub_mod(value_, static_cast<T>(1), MOD);
 		return *this;
 	}
 
