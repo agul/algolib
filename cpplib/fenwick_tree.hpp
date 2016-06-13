@@ -1,7 +1,9 @@
 #pragma once
-#include "Head.h"
+#include <algorithm>
+#include <cstdlib>
 
-template<class T> class FenwickTreeSum {
+template<typename T>
+class FenwickTreeSum {
 public:
 	T *data;
 	int N;

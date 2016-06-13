@@ -1,5 +1,9 @@
 #pragma once
-#include "Head.h"
+#include <algorithm>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+
 #include "segment_tree.hpp"
 
 class SuffixArray {

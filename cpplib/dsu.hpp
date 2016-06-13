@@ -1,6 +1,8 @@
 #pragma once
-#include "Head.h"
-#include "Maths.h"
+#include <algorithm>
+#include <numeric>
+
+#include "maths.hpp"
 
 class DSU {
 public:

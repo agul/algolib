@@ -1,11 +1,11 @@
 #pragma once
-#include "Head.h"
+#include <algorithm>
 
 #define bitset __MY_BITSET__
 
-template<size_t N> class Bitset {
+template<size_t N>
+class Bitset {
 public:
-
 	static const int BITSET_LENGTH = (N >> 6) + 1;
 	unsigned long long data[BITSET_LENGTH];
 

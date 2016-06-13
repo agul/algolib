@@ -1,5 +1,7 @@
 #pragma once
-#include "Head.h"
+#include <cstring>
+#include <sstream>
+#include <string>
 
 inline char upperCase(const char ch) {
 	return (ch >= 'a' && ch <= 'z') ? ch ^ 32 : ch;

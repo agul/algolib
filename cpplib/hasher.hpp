@@ -1,19 +1,20 @@
 #pragma once
-#include "Head.h"
-#include "Maths.h"
-#include "StringView.h"
+#include <cstdlib>
+
+#include "maths.hpp"
+#include "string_view.hpp"
 
 class SingleHasher {
 public:
 
-	static const ll BASE = 277;
+	static const long long BASE = 277;
 	static const int MOD = 1000000007;
 
-	ll * hash, *deg;
+	long long * hash, *deg;
 
 	SingleHasher(const int n) {
-		hash = new ll[n + 1];
-		deg = new ll[n + 1];
+		hash = new long long[n + 1];
+		deg = new long long[n + 1];
 		calcPowers(deg, BASE, n);
 	}
 
@@ -38,8 +39,8 @@ public:
 		hashString(s.c_str(), s.length());
 	}
 
-	ll getHash(const int l, const int r) const {
-		ll result = (hash[r] - hash[l - 1] * deg[r - l + 1]) % MOD;
+	long long getHash(const int l, const int r) const {
+		long long result = (hash[r] - hash[l - 1] * deg[r - l + 1]) % MOD;
 		if (result < 0) {
 			result += MOD;
 		}
@@ -53,8 +54,8 @@ private:
 
 class DoubleHasher_t {
 public:
-	static const uint32_t MA = static_cast<uint32_t>(1e9) + 7;
-	static const uint32_t MB = static_cast<uint32_t>(1e9) + 9;
+	static const uint MA = static_cast<uint>(1e9) + 7;
+	static const uint MB = static_cast<uint>(1e9) + 9;
 
 	int a, b;
 
@@ -71,11 +72,11 @@ public:
 	}
 
 	DoubleHasher_t operator * (const int x) const {
-		return DoubleHasher_t(((ll)a * x) % MA, ((ll)b * x) % MB);
+		return DoubleHasher_t(((long long)a * x) % MA, ((long long)b * x) % MB);
 	}
 
 	DoubleHasher_t operator * (const DoubleHasher_t &x) const {
-		return DoubleHasher_t(((ll)a * x.a) % MA, ((ll)b * x.b) % MB);
+		return DoubleHasher_t(((long long)a * x.a) % MA, ((long long)b * x.b) % MB);
 	}
 
 	bool operator == (const DoubleHasher_t &x) const {
@@ -86,8 +87,8 @@ public:
 		return a < x.a || (a == x.a && b < x.b);
 	}
 
-	explicit operator ll() const {
-		return (ll)a * MB + b + 1;
+	explicit operator long long() const {
+		return (long long)a * MB + b + 1;
 	}
 
 };

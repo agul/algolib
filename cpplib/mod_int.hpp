@@ -1,11 +1,10 @@
 #pragma once
-#include "Head.h"
-
 #include <iostream>
+#include <type_traits>
 
 #include "maths.hpp"
 
-constexpr const int32_t BASE_MOD = 1000000007;  /// caide keep
+constexpr const int BASE_MOD = 1000000007;  /// caide keep
 
 template<typename T>
 inline T& add_mod(T& a, const T b, const T mod = BASE_MOD) {
@@ -25,7 +24,7 @@ inline T& sub_mod(T& a, const T b, const T mod = BASE_MOD) {
 
 template<typename T>
 inline T& mul_mod(T& a, const T b, const T mod = BASE_MOD) {
-	a = static_cast<ll>(a) * b % mod;
+	a = static_cast<long long>(a) * b % mod;
 	return a;
 }
 
@@ -94,28 +93,28 @@ public:
 
 	ModInt operator ++(int) {
 		const ModInt ret(value_);
-		add_mod(value_, 1, MOD);
+		add_mod(value_, static_cast<T>(1), MOD);
 		return ret;
 	}
 
 	ModInt operator --(int) {
 		const ModInt ret(value_);
-		sub_mod(value_, 1, MOD);
+		sub_mod(value_, static_cast<T>(1), MOD);
 		return ret;
 	}
 
 	ModInt& operator ++() {
-		add_mod(value_, 1, MOD);
+		add_mod(value_, static_cast<T>(1), MOD);
 		return *this;
 	}
 
 	ModInt& operator --() {
-		sub_mod(value_, 1, MOD);
+		sub_mod(value_, static_cast<T>(1), MOD);
 		return *this;
 	}
 
 	constexpr ModInt inverse() const {
-		return{ inverseElement(static_cast<ll>(value_), MOD) };
+		return{ inverseElement(static_cast<long long>(value_), MOD) };
 	}
 
 	friend std::istream& operator >>(std::istream& in, ModInt& rhs) {
