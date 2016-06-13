@@ -1,5 +1,9 @@
 #pragma once
-#include "Head.h"
+#include <algorithm>
+#include <chrono>
+#include <random>
+#include <string>
+#include <type_traits>
 
 template<typename T>
 inline T gcd(T a, T b) {
@@ -205,7 +209,7 @@ template<class T> std::string toRoman(T n) {
 	return res;
 }
 
-void calcPowers(ll deg[], ll base, int n) {
+void calcPowers(long long deg[], long long base, int n) {
 	deg[0] = 1;
 	for (int i = 1; i <= n; ++i) {
 		deg[i] = deg[i - 1] * base;
@@ -239,7 +243,7 @@ namespace Random {
 	}
 
 	static std::mt19937_64 gen(GetRandSeed());
-	static std::uniform_int_distribution<int64_t> distrib(0, std::numeric_limits<int64_t>::max());
+	static std::uniform_int_distribution<long long> distrib(0, std::numeric_limits<long long>::max());
 
 	template<typename T>
 	static T get(T r) {

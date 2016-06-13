@@ -1,8 +1,9 @@
 #pragma once
-#include "Head.h"
-#include "maths.hpp"
-
+#include <functional>
 #include <string>
+#include <type_traits>
+
+#include "maths.hpp"
 
 template<typename T>
 class Rational {

@@ -1,5 +1,6 @@
 #pragma once
-#include "Head.h"
+#include <functional>
+#include <vector>
 
 template<typename T> 
 class SegmentTree {

@@ -1,5 +1,7 @@
 #pragma once
-#include "Head.h"
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 class Trie {
 public:

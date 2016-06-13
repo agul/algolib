@@ -1,7 +1,8 @@
 #pragma once
-#include "Head.h"
-#include "io/IO.h"
-#include "Maths.h"
+#include <vector>
+
+#include "base/helpers.hpp"
+#include "maths.hpp"
 
 struct maximal_element_search_tag {};
 struct prime_modulo_calculations_tag {};

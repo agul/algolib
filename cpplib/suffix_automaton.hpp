@@ -1,5 +1,6 @@
 #pragma once
-#include "Head.h"
+#include <algorithm>
+#include <unordered_map>
 
 class SuffixAutomaton {
 public:

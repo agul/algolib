@@ -1,5 +1,9 @@
 #pragma once
-#include "Head.h"
+#include <algorithm>
+#include <cstdlib>
+#include <queue>
+#include <vector>
+
 #include "maths.hpp"
 
 class Graph {
@@ -10,8 +14,8 @@ public:
 	};
 
 	int *from, *to, *parent;
-	ll *weight;
-	vvi edges;
+	long long *weight;
+	std::vector<std::vector<int>> edges;
 	int maxVertexNum, maxEdgesNum;
 	int vertexCount, edgesCount;
 
@@ -19,7 +23,7 @@ public:
 		from = new int[maxEdgesNum];
 		to = new int[maxEdgesNum];
 		edges.resize(maxVertexNum);
-		weight = (mask & GT_WEIGHTED ? new ll[maxEdgesNum] : NULL);
+		weight = (mask & GT_WEIGHTED ? new long long[maxEdgesNum] : NULL);
 		vertexCount = 0;
 		edgesCount = 0;
 	}
@@ -33,15 +37,12 @@ public:
 	}
 
 	bool isSparse() const {
-		return !vertexCount || sqr(static_cast<ll>(vertexCount)) >= (edgesCount << 4);
+		return !vertexCount || sqr(static_cast<long long>(vertexCount)) >= (edgesCount << 4);
 	}
 
 	void clear(int size = -1) {
 		edgesCount = 0;
-		size = (size == -1 ? sz(edges) : std::min(size, sz(edges)));
-		if (size == -1) {
-			size = sz(edges);
-		}
+		size = (size == -1 ? edges.size() : std::min(size, static_cast<int>(edges.size())));
 		for (int i = 0; i < size; ++i) {
 			edges[i].clear();
 		}

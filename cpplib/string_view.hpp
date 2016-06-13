@@ -1,5 +1,6 @@
 #pragma once
-#include "Head.h"
+#include <cstring>
+#include <string>
 
 class StringView {
 public:
