@@ -1,7 +1,9 @@
 #pragma once
+#include <type_traits>
+
 #include "graph/graph.hpp"
 
-template<typename T = ll, size_t MASK = 0>
+template<typename T = long long, size_t MASK = 0>
 class UndirectedGraph : public Graph<T, MASK> {
 public:
 

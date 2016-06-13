@@ -1,5 +1,8 @@
 #pragma once
-#include "Head.h"
+#include <algorithm>
+#include <type_traits>
+#include <vector>
+
 #include "maths.hpp"
 #include "range/ranges.hpp"
 
@@ -7,7 +10,7 @@ enum GraphType {
 	Weighted = 1
 };
 
-template<typename T = ll, size_t MASK = 0>
+template<typename T = long long, size_t MASK = 0>
 class Graph {
 public:
 
