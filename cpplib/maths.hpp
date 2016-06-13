@@ -49,10 +49,10 @@ inline void eratosthenesSieve(bool prime[], const int n) {
 	for (int i = 4; i < n; i += 2) {
 		prime[i] = false;
 	}
-	for (ll i = 3; i * i < n; i += 2) {
+	for (long long i = 3; i * i < n; i += 2) {
 		if (prime[i]) {
-			ll ii = i << 1;
-			for (ll j = i * i; j < n; j += ii) {
+			long long ii = i << 1;
+			for (long long j = i * i; j < n; j += ii) {
 				prime[j] = false;
 			}
 		}
@@ -75,7 +75,7 @@ inline void primesVector(bool prime[], const int n, int primes[], int& primesCnt
 
 template<class T>
 T factorial(T n, const T& mod = 1000000007) {
-	ll ret = 1;
+	long long ret = 1;
 	for (int i = 2; i <= n; ++i) {
 		ret = (ret * i) % mod;
 	}
@@ -99,7 +99,7 @@ inline T binpow(T a, U b) {
 template<typename T, typename U, typename Q>
 inline T binpow(T a, U b, Q mod) {
 	static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow.");
-	ll ret = 1;
+	long long ret = 1;
 	a %= mod;
 	while (b != 0) {
 		if ((b & 1) != 0) {
@@ -153,7 +153,7 @@ template<typename T, typename U>
 T inverseElement(const T n, const U mod)
 // inverse element for prime mod
 {
-	return binpow(static_cast<ll>(n), mod - 2, mod);
+	return binpow(static_cast<long long>(n), mod - 2, mod);
 }
 
 inline void inverseElementForSegment(int r[], const int mod)
@@ -219,7 +219,7 @@ void calcPowers(long long deg[], long long base, int n) {
 template<class T> void calcPowers(T deg[], T base, int n, T MOD) {
 	deg[0] = 1 % MOD;
 	for (int i = 1; i <= n; ++i) {
-		deg[i] = (ll)deg[i - 1] * base % MOD;
+		deg[i] = (long long)deg[i - 1] * base % MOD;
 	}
 }
 
