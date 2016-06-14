@@ -10,13 +10,13 @@
 #define LLU "%llu"
 #endif
 
-using ll = long long;
-using ull = unsigned long long;
-using uint = unsigned int;
-using pii = std::pair<int, int>;
-using pll = std::pair<ll, ll>;
-using pli = std::pair<ll, int>;
-using vi = std::vector<int>;
-using vvi = std::vector<vi>;
-using vp = std::vector<pii>;
-using ld = long double;
+#define ll long long
+#define ull unsigned long long
+#define uint unsigned int
+#define pii std::pair<int, int>
+#define pll std::pair<ll, ll>
+#define pli std::pair<ll, int>
+#define vi std::vector<int>
+#define vvi std::vector<vi>
+#define vp std::vector<pii>
+#define ld long double
