@@ -19,7 +19,8 @@ public:
 	class Edge {
 	public:
 
-		explicit Edge(const std::vector<size_t>& from, const std::vector<size_t>& to, const std::vector<T>& weight, const size_t index) :
+		explicit Edge(const std::vector<size_t>& from, const std::vector<size_t>& to,
+			const std::vector<T>& weight, const size_t index) :
 			from_(from), to_(to), weight_(weight), index_(index) {}
 
 		size_t from() const {
@@ -51,18 +52,19 @@ public:
 
 	};
 
-	class EdgesListHolder {
+	template<typename Range>
+	class EdgesHolder {
 	public:
 
-		using BaseConstIterator = EdgesList::const_iterator;
-
-		class ConstIterator : public BaseConstIterator {
+		template<typename BaseConstIterator>
+		class EdgeConstIterator : public BaseConstIterator {
 		public:
 			using value_type = Edge;
 			using pointer = const value_type*;
 			using const_reference = const value_type&;
 
-			explicit ConstIterator(BaseConstIterator it, const std::vector<size_t>& from, const std::vector<size_t>& to, const std::vector<T>& weight) :
+			explicit EdgeConstIterator(BaseConstIterator it, const std::vector<size_t>& from,
+				const std::vector<size_t>& to, const std::vector<T>& weight) :
 				BaseConstIterator(it), cur_edge_(from, to, weight, 0) {}
 
 			pointer operator->() {
@@ -70,7 +72,7 @@ public:
 			}
 
 			const_reference operator*() {
-				const BaseConstIterator::value_type index = this->BaseConstIterator::operator*();
+				const typename BaseConstIterator::value_type index = this->BaseConstIterator::operator*();
 				cur_edge_.set_index(index);
 				return cur_edge_;
 			}
@@ -80,22 +82,23 @@ public:
 
 		};
 
-		using const_iterator = ConstIterator;
-		using value_type = typename ConstIterator::value_type;
+		using const_iterator = EdgeConstIterator<typename Range::const_iterator>;
+		using value_type = typename const_iterator::value_type;
 
-		explicit EdgesListHolder(const EdgesList& edges, const std::vector<size_t>& from, const std::vector<size_t>& to, const std::vector<T>& weight) :
-			edges_(edges), from_(from), to_(to), weight_(weight) {}
+		explicit EdgesHolder(const Range& range, const std::vector<size_t>& from,
+			const std::vector<size_t>& to, const std::vector<T>& weight) :
+			range_(range), from_(from), to_(to), weight_(weight) {}
 
 		const_iterator begin() const {
-			return ConstIterator(edges_.begin(), from_, to_, weight_);
+			return const_iterator(range_.begin(), from_, to_, weight_);
 		}
 
 		const_iterator end() const {
-			return ConstIterator(edges_.end(), from_, to_, weight_);
+			return const_iterator(range_.end(), from_, to_, weight_);
 		}
 
 	private:
-		const EdgesList& edges_;
+		const Range& range_;
 		const std::vector<size_t>& from_;
 		const std::vector<size_t>& to_;
 		const std::vector<T>& weight_;
@@ -118,12 +121,20 @@ public:
 		return range(vertex_count_);
 	}
 
-	IntegerIterator<size_t> begin() const {
+	IntegerRange<size_t>::const_iterator begin() const {
 		return vertices().begin();
 	}
 
-	IntegerIterator<size_t> end() const {
+	IntegerRange<size_t>::const_iterator end() const {
 		return vertices().end();
+	}
+
+	EdgesHolder<EdgesList> edges(const size_t vertex) const {
+		return EdgesHolder<EdgesList>(edges_[vertex], from_, to_, weight_);
+	}
+
+	EdgesHolder<IntegerRange<size_t>> edges() const {
+		return EdgesHolder<IntegerRange<size_t>>(range(from_.size()), from_, to_, weight_);
 	}
 
 	void clear();
@@ -154,10 +165,6 @@ public:
 
 	bool is_sparse() const {
 		return vertex_count_ == 0 || sqr(static_cast<ll>(vertex_count_)) >= (edges_count_ << 4);
-	}
-
-	EdgesListHolder edges(const size_t vertex) const {
-		return EdgesListHolder(edges_[vertex], from_, to_, weight_);
 	}
 
 	size_t find_vertex_with_max_degree() const;
