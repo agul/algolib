@@ -18,7 +18,6 @@ public:
 
 	class Edge {
 	public:
-
 		explicit Edge(const std::vector<size_t>& from, const std::vector<size_t>& to,
 			const std::vector<T>& weight, const size_t index) :
 			from_(from), to_(to), weight_(weight), index_(index) {}
@@ -170,7 +169,6 @@ public:
 	size_t find_vertex_with_max_degree() const;
 
 protected:
-
 	void push_edge(const size_t from, const size_t to) {
 		const size_t edge_id = from_.size();
 		from_.emplace_back(from);

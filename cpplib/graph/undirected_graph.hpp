@@ -6,7 +6,6 @@
 template<typename T = long long, size_t MASK = 0>
 class UndirectedGraph : public Graph<T, MASK> {
 public:
-
 	UndirectedGraph() = default;
 
 	template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) == 0>::type* = nullptr>

@@ -6,6 +6,7 @@
 template<typename T = long long, size_t MASK = 0>
 class DirectedGraph : public Graph<T, MASK> {
 public:
+	DirectedGraph() = default;
 
 	bool top_sort_acyclic(std::vector<size_t>& order) const;
 

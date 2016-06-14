@@ -6,7 +6,6 @@
 
 class DSU {
 public:
-	
 	int * p, n, numSets;
 
 	DSU(const int N) {
