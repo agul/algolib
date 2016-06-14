@@ -50,14 +50,16 @@ private:
 template<typename T>
 class IntegerRange {
 public:
+	using const_iterator = IntegerIterator<T>;
+
 	IntegerRange(const T begin, const T end) : begin_(begin), end_(end) {}
 
-	IntegerIterator<T> begin() const {
-		return IntegerIterator<T>(begin_);
+	const_iterator begin() const {
+		return const_iterator(begin_);
 	}
 
-	IntegerIterator<T> end() const {
-		return IntegerIterator<T>(end_);
+	const_iterator end() const {
+		return const_iterator(end_);
 	}
 
 private:
@@ -69,16 +71,17 @@ private:
 template<typename T>
 class ReversedIntegerRange {
 public:
-	using IteratorType = std::reverse_iterator<IntegerIterator<T>>;
+	using const_iterator = IntegerIterator<T>;
+	using reverse_iterator = std::reverse_iterator<const_iterator>;
 
 	ReversedIntegerRange(const T begin, const T end) : begin_(begin), end_(end) {}
 
-	IteratorType begin() const {
-		return IteratorType(IntegerIterator<T>(begin_));
+	reverse_iterator begin() const {
+		return reverse_iterator(const_iterator(begin_));
 	}
 
-	IteratorType end() const {
-		return IteratorType(IntegerIterator<T>(end_));
+	reverse_iterator end() const {
+		return reverse_iterator(const_iterator(end_));
 	}
 
 private:

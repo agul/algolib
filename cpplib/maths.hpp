@@ -39,20 +39,20 @@ template<class T> inline bool isPrime(const T& n)
 	return true;
 }
 
-inline void eratosthenesSieve(bool prime[], const int n) {
-	if (n < 2) {
-		std::fill_n(prime, n, false);
+inline void eratosthenes_sieve(std::vector<bool>& prime) {
+	if (prime.size() < 2) {
+		prime.assign(prime.size(), false);
 		return;
 	}
-	std::fill_n(prime, n, true);
+	prime.assign(prime.size(), true);
 	prime[0] = prime[1] = false;
-	for (int i = 4; i < n; i += 2) {
+	for (size_t i = 4; i < prime.size(); i += 2) {
 		prime[i] = false;
 	}
-	for (long long i = 3; i * i < n; i += 2) {
+	for (size_t i = 3; i * i < prime.size(); i += 2) {
 		if (prime[i]) {
-			long long ii = i << 1;
-			for (long long j = i * i; j < n; j += ii) {
+			const size_t delta = i << 1;
+			for (size_t j = i * i; j < prime.size(); j += delta) {
 				prime[j] = false;
 			}
 		}
