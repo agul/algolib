@@ -61,12 +61,12 @@ public:
 		return value_ > rhs.value_;
 	}
 
-	constexpr ModInt operator +(const ModInt rhs) const {
+	ModInt operator +(const ModInt rhs) const {
 		T x = value_;
 		return{ add_mod(x, rhs.value_, MOD) };
 	}
 
-	constexpr ModInt operator -(const ModInt rhs) const {
+	ModInt operator -(const ModInt rhs) const {
 		T x = value_;
 		return{ sub_mod(x, rhs.value_, MOD) };
 	}
