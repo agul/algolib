@@ -6,15 +6,21 @@
 #include "maths.hpp"
 #include "range/ranges.hpp"
 
-enum GraphType {
-	Weighted = 1
-};
+#include <iostream>
 
 template<typename T = long long, size_t MASK = 0>
 class Graph {
 public:
-
 	using EdgesList = std::vector<size_t>;
+
+	enum Type {
+		Weighted = 1
+	};
+
+	template<size_t MASK>
+	struct is_weighted {
+		static constexpr bool value = (MASK & Type::Weighted) != 0;
+	};
 
 	class Edge {
 	public:
@@ -30,7 +36,7 @@ public:
 			return to_[index_];
 		}
 
-		template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) != 0>::type* = nullptr>
+		template<const size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
 		size_t weight() const {
 			return weight_[index_];
 		}
@@ -93,11 +99,11 @@ public:
 			range_(range), from_(from), to_(to), weight_(weight) {}
 
 		const_iterator begin() const {
-			return const_iterator(range_.begin(), from_, to_, weight_);
+			return const_iterator(range.begin(), from_, to_, weight_);
 		}
 
 		const_iterator end() const {
-			return const_iterator(range_.end(), from_, to_, weight_);
+			return const_iterator(range.end(), from_, to_, weight_);
 		}
 
 	private:
@@ -150,28 +156,28 @@ public:
 		return to_[index];
 	}
 
-	template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) != 0>::type* = nullptr>
+	template<const size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
 	T weight(const size_t index) const {
 		return weight_[index];
 	}
 
-	template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) == 0>::type* = nullptr>
+	template<const size_t Mask = MASK, typename std::enable_if<!is_weighted<Mask>::value>::type* = nullptr>
 	void add_directed_edge(const size_t from, const size_t to) {
 		push_edge(from, to);
 	}
 
-	template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) != 0>::type* = nullptr>
+	template<const size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
 	void add_directed_edge(const size_t from, const size_t to, const T weight) {
 		weight_.emplace_back(weight);
 		push_edge(from, to);
 	}
 
-	template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) == 0>::type* = nullptr>
+	template<const size_t Mask = MASK, typename std::enable_if<!is_weighted<Mask>::value>::type* = nullptr>
 	void add_directed_edge(const Edge& edge) {
 		add_directed_edge(edge.from(), edge.to());
 	}
 
-	template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) != 0>::type* = nullptr>
+	template<const size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
 	void add_directed_edge(const Edge& edge) {
 		add_directed_edge(edge.from(), edge.to(), edge.weight());
 	}
@@ -188,10 +194,6 @@ protected:
 		from_.emplace_back(from);
 		to_.emplace_back(to);
 		edges_[from].emplace_back(edge_id);
-	}
-
-	constexpr bool weighted() const {
-		return (MASK & GraphType::Weighted) != 0;
 	}
 
 	std::vector<EdgesList> edges_;
@@ -220,4 +222,3 @@ size_t Graph<T, MASK>::find_vertex_with_max_degree() const {
 	});
 	return static_cast<size_t>(std::distance(edges_.begin(), iter));
 }
-
