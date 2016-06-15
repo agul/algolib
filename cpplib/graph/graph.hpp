@@ -96,22 +96,19 @@ public:
 
 		explicit EdgesHolder(const Range& range, const std::vector<size_t>& from,
 			const std::vector<size_t>& to, const std::vector<T>& weight) :
-			begin_(range.begin()), end_(range.end()), from_(from), to_(to), weight_(weight) {}
+			begin_(range.begin(), from, to, weight), end_(range.end(), from, to, weight) {}
 
 		const_iterator begin() const {
-			return const_iterator(begin_, from_, to_, weight_);
+			return begin_;
 		}
 
 		const_iterator end() const {
-			return const_iterator(end_, from_, to_, weight_);
+			return end_;
 		}
 
 	private:
-		const typename Range::const_iterator begin_;
-		const typename Range::const_iterator end_;
-		const std::vector<size_t>& from_;
-		const std::vector<size_t>& to_;
-		const std::vector<T>& weight_;
+		const const_iterator begin_;
+		const const_iterator end_;
 
 	};
 
