@@ -156,12 +156,12 @@ T inverseElement(const T n, const U mod)
 	return binpow(static_cast<long long>(n), mod - 2, mod);
 }
 
-inline void inverseElementForSegment(int r[], const int mod)
+inline void inverseElementForSegment(int r[], const int n, const int mod)
 // inverse element for prime mod for numbers [1; mod - 1]
 {
 	r[1] = 1;
-	for (int i = 2; i < mod; ++i) {
-		r[i] = (mod - mod / i * r[mod % i] % mod) % mod;
+	for (int i = 2; i < n; ++i) {
+		r[i] = (mod - static_cast<long long>(mod) / i * r[mod % i] % mod) % mod;
 	}
 }
 
