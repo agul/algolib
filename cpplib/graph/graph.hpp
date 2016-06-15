@@ -43,6 +43,10 @@ public:
 			index_ = index;
 		}
 
+		Edge reversed() const {
+			return Edge(to_, from_, weight_, index_);
+		}
+
 	private:
 		const std::vector<size_t>& from_;
 		const std::vector<size_t>& to_;
@@ -162,6 +166,16 @@ public:
 		push_edge(from, to);
 	}
 
+	template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) == 0>::type* = nullptr>
+	void add_directed_edge(const Edge& edge) {
+		add_directed_edge(edge.from(), edge.to());
+	}
+
+	template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) != 0>::type* = nullptr>
+	void add_directed_edge(const Edge& edge) {
+		add_directed_edge(edge.from(), edge.to(), edge.weight());
+	}
+
 	bool is_sparse() const {
 		return vertex_count_ == 0 || sqr(static_cast<ll>(vertex_count_)) >= (edges_count_ << 4);
 	}
@@ -174,6 +188,10 @@ protected:
 		from_.emplace_back(from);
 		to_.emplace_back(to);
 		edges_[from].emplace_back(edge_id);
+	}
+
+	constexpr bool weighted() const {
+		return (MASK & GraphType::Weighted) != 0;
 	}
 
 	std::vector<EdgesList> edges_;
@@ -202,3 +220,4 @@ size_t Graph<T, MASK>::find_vertex_with_max_degree() const {
 	});
 	return static_cast<size_t>(std::distance(edges_.begin(), iter));
 }
+

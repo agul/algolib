@@ -10,7 +10,24 @@ public:
 
 	bool top_sort_acyclic(std::vector<size_t>& order) const;
 
+	DirectedGraph reversed() const;
+
 };
+
+template<typename T, size_t MASK>
+DirectedGraph<T, MASK> DirectedGraph<T, MASK>::reversed() const {
+	DirectedGraph<T, MASK> result;
+	result.init(vertex_count_);
+	for (const auto& edge : edges()) {
+		if (weighted()) {
+			result.add_directed_edge(it.to(), it.from(), it.weight());
+		}
+		else {
+			result.add_directed_edge(it.to(), it.from());
+		}
+	}
+	return result;
+}
 
 template<typename T, size_t MASK>
 bool DirectedGraph<T, MASK>::top_sort_acyclic(std::vector<size_t>& order) const

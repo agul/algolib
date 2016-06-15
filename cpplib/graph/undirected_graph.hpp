@@ -20,4 +20,14 @@ public:
 		this->add_directed_edge(to, from, weight);
 	}
 
+	template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) == 0>::type* = nullptr>
+	void add_bidirectional_edge(const Edge& edge) {
+		add_bidirectional_edge(edge.from(), edge.to());
+	}
+
+	template<const size_t Mask = MASK, typename std::enable_if<(Mask & GraphType::Weighted) != 0>::type* = nullptr>
+	void add_bidirectional_edge(const Edge& edge) {
+		add_bidirectional_edge(edge.from(), edge.to(), edge.weight());
+	}
+
 };
