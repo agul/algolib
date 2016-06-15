@@ -5,22 +5,23 @@
 
 #include "maths.hpp"
 #include "range/ranges.hpp"
+#include "queue.hpp"
+	
+enum GraphType {
+	Weighted = 1
+};
 
-#include <iostream>
+template<size_t MASK>
+struct is_weighted 
+{
+	/// caide keep
+	static constexpr bool value = (MASK & GraphType::Weighted) != 0;
+};
 
 template<typename T = long long, size_t MASK = 0>
 class Graph {
 public:
 	using EdgesList = std::vector<size_t>;
-
-	enum Type {
-		Weighted = 1
-	};
-
-	template<size_t MASK>
-	struct is_weighted {
-		static constexpr bool value = (MASK & Type::Weighted) != 0;
-	};
 
 	class Edge {
 	public:
@@ -186,6 +187,8 @@ public:
 
 	size_t find_vertex_with_max_degree() const;
 
+	bool is_bipartite(std::vector<size_t>& partition) const;
+
 protected:
 	void push_edge(const size_t from, const size_t to) {
 		const size_t edge_id = from_.size();
@@ -219,4 +222,34 @@ size_t Graph<T, MASK>::find_vertex_with_max_degree() const {
 		return lhs.size() < rhs.size();
 	});
 	return static_cast<size_t>(std::distance(edges_.begin(), iter));
+}
+
+template<typename T, size_t MASK>
+bool Graph<T, MASK>::is_bipartite(std::vector<size_t>& partition) const {
+	const size_t kNone = std::numeric_limits<size_t>::max();
+	partition.assign(vertex_count_, kNone);
+	Queue<size_t> q(vertex_count_);
+	for (size_t i = 0; i < vertex_count_; ++i) {
+		if (partition[i] == kNone) {
+			q.clear();
+			q.push(i);
+			partition[i] = 0;
+			while (!q.empty()) {
+				const size_t vertex = q.pop_front();
+				const size_t color = partition[vertex];
+				for (const auto& it : edges(vertex)) {
+					const size_t to_vertex = it.to();
+					if (partition[to_vertex] == kNone) {
+						partition[to_vertex] = color ^ 1;
+						q.push(to_vertex);
+						continue;
+					}
+					if (partition[to_vertex] == color) {
+						return false;
+					}
+				}
+			}
+		}
+	}
+	return true;
 }

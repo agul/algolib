@@ -21,12 +21,12 @@ public:
 	}
 
 	template<const size_t Mask = MASK, typename std::enable_if<!is_weighted<Mask>::value>::type* = nullptr>
-	void add_bidirectional_edge(const Edge& edge) {
+	void add_bidirectional_edge(const typename Graph<T, MASK>::Edge& edge) {
 		add_bidirectional_edge(edge.from(), edge.to());
 	}
 
 	template<const size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
-	void add_bidirectional_edge(const Edge& edge) {
+	void add_bidirectional_edge(const typename Graph<T, MASK>::Edge& edge) {
 		add_bidirectional_edge(edge.from(), edge.to(), edge.weight());
 	}
 
