@@ -74,6 +74,7 @@ struct MakeVector {
 
 template<typename T>
 struct MakeVector<T, 1> {
+	/// caide keep
 	template<typename R = std::vector<T>>
 	static R make_vector(std::size_t size, const T& value) {
 		return R(size, value);
