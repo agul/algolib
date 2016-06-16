@@ -3,6 +3,7 @@
 #include <type_traits>
 #include <vector>
 
+#include "base/helpers.hpp"
 #include "maths.hpp"
 #include "range/ranges.hpp"
 #include "queue.hpp"
@@ -37,8 +38,8 @@ public:
 			return to_[index_];
 		}
 
-		template<const size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
-		size_t weight() const {
+		template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+		T weight() const {
 			return weight_[index_];
 		}
 
@@ -155,28 +156,33 @@ public:
 		return to_[index];
 	}
 
-	template<const size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
 	T weight(const size_t index) const {
 		return weight_[index];
 	}
 
-	template<const size_t Mask = MASK, typename std::enable_if<!is_weighted<Mask>::value>::type* = nullptr>
+	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+	T weight_infinity() const {
+		return std::numeric_limits<T>::max() / 2;
+	}
+
+	template<size_t Mask = MASK, typename std::enable_if<!is_weighted<Mask>::value>::type* = nullptr>
 	void add_directed_edge(const size_t from, const size_t to) {
 		push_edge(from, to);
 	}
 
-	template<const size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
 	void add_directed_edge(const size_t from, const size_t to, const T weight) {
 		weight_.emplace_back(weight);
 		push_edge(from, to);
 	}
 
-	template<const size_t Mask = MASK, typename std::enable_if<!is_weighted<Mask>::value>::type* = nullptr>
+	template<size_t Mask = MASK, typename std::enable_if<!is_weighted<Mask>::value>::type* = nullptr>
 	void add_directed_edge(const Edge& edge) {
 		add_directed_edge(edge.from(), edge.to());
 	}
 
-	template<const size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
 	void add_directed_edge(const Edge& edge) {
 		add_directed_edge(edge.from(), edge.to(), edge.weight());
 	}
@@ -188,6 +194,25 @@ public:
 	size_t find_vertex_with_max_degree() const;
 
 	bool is_bipartite(std::vector<size_t>& partition) const;
+
+	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+	std::vector<std::vector<T>> floyd() const {
+		auto dist = make_vector<T>(vertex_count_, vertex_count_, weight_infinity());
+		for (const auto v : vertices()) {
+			dist[v][v] = 0;
+		}
+		for (const auto& edge : edges()) {
+			umin(dist[edge.from()][edge.to()], edge.weight());
+		}
+		for (const auto k : vertices()) {
+			for (const auto i : vertices()) {
+				for (const auto j : vertices()) {
+					umin(dist[i][j], dist[i][k] + dist[k][j]);
+				}
+			}
+		}
+		return dist;
+	}
 
 protected:
 	void push_edge(const size_t from, const size_t to) {
