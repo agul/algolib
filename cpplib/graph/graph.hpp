@@ -213,6 +213,36 @@ public:
 		}
 		return dist;
 	}
+	
+	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+	void dijkstra(const size_t start_vertex, std::vector<T>& dist, std::vector<size_t>& last) const {
+		std::vector<bool> used(vertex_count_);
+		dist.resize(vertex_count_, weight_infinity());
+		last.resize(vertex_count_, std::numeric_limits<size_t>::max());
+		dist[start_vertex] = 0;
+		for (size_t iter = 0; iter < vertex_count_; ++iter) {
+			size_t vertex = std::numeric_limits<size_t>::max();
+			T min_dist = weight_infinity();
+			for (const size_t v : vertices()) {
+				if (!used[v] && umin(min_dist, dist[v])) {
+					min_dist = dist[v];
+					vertex = v;
+				}
+			}
+			if (vertex == std::numeric_limits<size_t>::max()) {
+				break;
+			}
+			used[vertex] = true;
+			for (const auto& it : edges(vertex)) {
+				const size_t to_vertex = it.to();
+				const T len = min_dist + it.weight();
+				if (!used[to_vertex] && umin(dist[to_vertex], len)) {
+					dist[to_vertex] = len;
+					last[to_vertex] = it.id();
+				}
+			}
+		}
+	}
 
 protected:
 	void push_edge(const size_t from, const size_t to) {
