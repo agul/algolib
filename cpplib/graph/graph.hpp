@@ -26,7 +26,7 @@ public:
 
 	class Edge {
 	public:
-		explicit Edge(const std::vector<size_t>& from, const std::vector<size_t>& to,
+		constexpr explicit Edge(const std::vector<size_t>& from, const std::vector<size_t>& to,
 			const std::vector<T>& weight, const size_t index) :
 			from_(from), to_(to), weight_(weight), index_(index) {}
 
@@ -43,7 +43,7 @@ public:
 			return weight_[index_];
 		}
 
-		size_t id() const {
+		constexpr size_t id() const {
 			return index_;
 		}
 
@@ -51,7 +51,7 @@ public:
 			index_ = index;
 		}
 
-		Edge reversed() const {
+		constexpr Edge reversed() const {
 			return Edge(to_, from_, weight_, index_);
 		}
 
@@ -74,7 +74,7 @@ public:
 			using pointer = const value_type*;
 			using const_reference = const value_type&;
 
-			explicit EdgeConstIterator(BaseConstIterator it, const std::vector<size_t>& from,
+			constexpr explicit EdgeConstIterator(BaseConstIterator it, const std::vector<size_t>& from,
 				const std::vector<size_t>& to, const std::vector<T>& weight) :
 				BaseConstIterator(it), cur_edge_(from, to, weight, 0) {}
 
@@ -96,16 +96,20 @@ public:
 		using const_iterator = EdgeConstIterator<typename Range::const_iterator>;
 		using value_type = typename const_iterator::value_type;
 
-		explicit EdgesHolder(const Range& range, const std::vector<size_t>& from,
+		constexpr explicit EdgesHolder(const Range& range, const std::vector<size_t>& from,
 			const std::vector<size_t>& to, const std::vector<T>& weight) :
 			begin_(range.begin(), from, to, weight), end_(range.end(), from, to, weight) {}
 
-		const_iterator begin() const {
+		constexpr const_iterator begin() const {
 			return begin_;
 		}
 
-		const_iterator end() const {
+		constexpr const_iterator end() const {
 			return end_;
+		}
+
+		constexpr size_t size() const {
+			return end_ - begin_;
 		}
 
 	private:
@@ -120,14 +124,14 @@ public:
 		clear();
 	}
 
-	void init(const size_t vertex_count) {
+	void init(const size_t vertices_count) {
 		clear();
-		vertex_count_ = vertex_count;
-		edges_.resize(vertex_count_);
+		vertices_count_ = vertices_count;
+		edges_.resize(vertices_count_);
 	}
 
 	IntegerRange<size_t> vertices() const {
-		return range(vertex_count_);
+		return range(vertices_count_);
 	}
 
 	IntegerRange<size_t>::const_iterator begin() const {
@@ -147,6 +151,14 @@ public:
 	}
 
 	void clear();
+
+	size_t vertices_count() const {
+		return vertices_count_;
+	}
+
+	size_t edges_count() const {
+		return from_.size();
+	}
 
 	size_t from(const size_t index) const {
 		return from_[index];
@@ -188,7 +200,7 @@ public:
 	}
 
 	bool is_sparse() const {
-		return vertex_count_ == 0 || sqr(static_cast<ll>(vertex_count_)) >= (edges_count_ << 4);
+		return vertices_count_ == 0 || sqr(static_cast<long long>(vertices_count_)) >= (edges_count() << 4);
 	}
 
 	size_t find_vertex_with_max_degree() const;
@@ -197,7 +209,7 @@ public:
 
 	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
 	std::vector<std::vector<T>> floyd() const {
-		auto dist = make_vector<T>(vertex_count_, vertex_count_, weight_infinity());
+		auto dist = make_vector<T>(vertices_count_, vertices_count_, weight_infinity());
 		for (const auto v : vertices()) {
 			dist[v][v] = 0;
 		}
@@ -215,12 +227,69 @@ public:
 	}
 	
 	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
-	void dijkstra(const size_t start_vertex, std::vector<T>& dist, std::vector<size_t>& last) const {
-		std::vector<bool> used(vertex_count_);
-		dist.resize(vertex_count_, weight_infinity());
-		last.resize(vertex_count_, std::numeric_limits<size_t>::max());
+	void dijkstra(const size_t start_vertex, std::vector<T>* distance, std::vector<size_t>* last_edge = nullptr) const {
+		if (is_sparse() && false) {
+			sparse_dijkstra(start_vertex, distance, last_edge);
+		} else {
+			dense_dijkstra(start_vertex, distance, last_edge);
+		}
+	}
+
+protected:
+	void push_edge(const size_t from, const size_t to) {
+		const size_t edge_id = from_.size();
+		from_.emplace_back(from);
+		to_.emplace_back(to);
+		edges_[from].emplace_back(edge_id);
+	}
+
+	std::vector<EdgesList> edges_;
+	std::vector<size_t> from_;
+	std::vector<size_t> to_;
+	std::vector<T> weight_;
+
+	size_t vertices_count_;
+
+private:
+
+	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+	void sparse_dijkstra(const size_t start_vertex, std::vector<T>* distance, std::vector<size_t>* last_edge) const {
+		std::vector<T> dist(vertices_count_, weight_infinity());
+		std::vector<size_t> last(vertices_count_, std::numeric_limits<size_t>::max());
 		dist[start_vertex] = 0;
-		for (size_t iter = 0; iter < vertex_count_; ++iter) {
+		using QueueNode = std::pair<T, size_t>;
+		std::priority_queue<QueueNode> q;
+		q.emplace(0, start_vertex);
+		while (!q.empty()) {
+			const QueueNode node = q.top();
+			q.pop();
+			const T len = -node.first;
+			const size_t vertex = node.second;
+			if (len > dist[vertex]) {
+				continue;
+			}
+			for (const auto& it : edges(vertex)) {
+				const T new_dist = len + it.weight();
+				const size_t to_vertex = it.to();
+				if (umin(dist[to_vertex], new_dist)) {
+					q.push(std::make_pair(-new_dist, to_vertex));
+					last[to_vertex] = it.id();
+				}
+			}
+		}
+		distance->swap(dist);
+		if (last_edge != nullptr) {
+			last_edge->swap(last);
+		}
+	}
+
+	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+	void dense_dijkstra(const size_t start_vertex, std::vector<T>* distance, std::vector<size_t>* last_edge) const {
+		std::vector<bool> used(vertices_count_);
+		std::vector<T> dist(vertices_count_, weight_infinity());
+		std::vector<size_t> last(vertices_count_, std::numeric_limits<size_t>::max());
+		dist[start_vertex] = 0;
+		for (size_t iter = 0; iter < vertices_count_; ++iter) {
 			size_t vertex = std::numeric_limits<size_t>::max();
 			T min_dist = weight_infinity();
 			for (const size_t v : vertices()) {
@@ -242,28 +311,17 @@ public:
 				}
 			}
 		}
+		distance->swap(dist);
+		if (last_edge != nullptr) {
+			last_edge->swap(last);
+		}
 	}
-
-protected:
-	void push_edge(const size_t from, const size_t to) {
-		const size_t edge_id = from_.size();
-		from_.emplace_back(from);
-		to_.emplace_back(to);
-		edges_[from].emplace_back(edge_id);
-	}
-
-	std::vector<EdgesList> edges_;
-	std::vector<size_t> from_;
-	std::vector<size_t> to_;
-	std::vector<T> weight_;
-
-	size_t vertex_count_;
 
 };
 
 template<typename T, size_t MASK>
 void Graph<T, MASK>::clear() {
-	vertex_count_ = 0;
+	vertices_count_ = 0;
 	edges_.clear();
 	from_.clear();
 	to_.clear();
@@ -282,9 +340,9 @@ size_t Graph<T, MASK>::find_vertex_with_max_degree() const {
 template<typename T, size_t MASK>
 bool Graph<T, MASK>::is_bipartite(std::vector<size_t>& partition) const {
 	const size_t kNone = std::numeric_limits<size_t>::max();
-	partition.assign(vertex_count_, kNone);
-	Queue<size_t> q(vertex_count_);
-	for (size_t i = 0; i < vertex_count_; ++i) {
+	partition.assign(vertices_count_, kNone);
+	Queue<size_t> q(vertices_count_);
+	for (size_t i = 0; i < vertices_count_; ++i) {
 		if (partition[i] == kNone) {
 			q.clear();
 			q.push(i);
