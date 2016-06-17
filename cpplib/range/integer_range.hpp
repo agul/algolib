@@ -6,7 +6,7 @@ class IntegerIterator : public std::iterator<std::input_iterator_tag, T, std::pt
 public:
 	using value_type = T;
 
-	explicit IntegerIterator(const value_type value) : value_(value) {}
+	constexpr explicit IntegerIterator(const value_type value) : value_(value) {}
 
 	IntegerIterator& operator++() {
 		++value_;
@@ -30,16 +30,34 @@ public:
 		return copy;
 	}
 
-	value_type operator*() const {
+	constexpr value_type operator*() const {
 		return value_;
 	}
 
-	bool operator ==(IntegerIterator rhs) const {
+	constexpr bool operator ==(const IntegerIterator rhs) const {
 		return value_ == rhs.value_;
 	}
 
-	bool operator !=(IntegerIterator rhs) const {
+	constexpr bool operator !=(const IntegerIterator rhs) const {
 		return !(*this == rhs);
+	}
+
+	constexpr value_type operator +(const IntegerIterator rhs) const {
+		return value_ + rhs.value_;
+	}
+
+	IntegerIterator& operator +=(const IntegerIterator rhs) const {
+		value_ += rhs.value_;
+		return *this;
+	}
+
+	constexpr value_type operator -(const IntegerIterator rhs) const {
+		return value_ - rhs.value_;
+	}
+
+	IntegerIterator& operator -=(const IntegerIterator rhs) const {
+		value_ -= rhs.value_;
+		return *this;
 	}
 
 private:
@@ -52,14 +70,18 @@ class IntegerRange {
 public:
 	using const_iterator = IntegerIterator<T>;
 
-	IntegerRange(const T begin, const T end) : begin_(begin), end_(end) {}
+	constexpr IntegerRange(const T begin, const T end) : begin_(begin), end_(end) {}
 
-	const_iterator begin() const {
+	constexpr const_iterator begin() const {
 		return const_iterator(begin_);
 	}
 
-	const_iterator end() const {
+	constexpr const_iterator end() const {
 		return const_iterator(end_);
+	}
+
+	constexpr T size() const {
+		return end_ - begin_;
 	}
 
 private:
@@ -74,14 +96,18 @@ public:
 	using const_iterator = IntegerIterator<T>;
 	using reverse_iterator = std::reverse_iterator<const_iterator>;
 
-	ReversedIntegerRange(const T begin, const T end) : begin_(begin), end_(end) {}
+	constexpr ReversedIntegerRange(const T begin, const T end) : begin_(begin), end_(end) {}
 
-	reverse_iterator begin() const {
+	constexpr reverse_iterator begin() const {
 		return reverse_iterator(const_iterator(begin_));
 	}
 
-	reverse_iterator end() const {
+	constexpr reverse_iterator end() const {
 		return reverse_iterator(const_iterator(end_));
+	}
+
+	constexpr T size() const {
+		return end_ - begin_;
 	}
 
 private:
