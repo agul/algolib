@@ -235,6 +235,28 @@ public:
 		}
 	}
 
+	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+	T dijkstra(const size_t start_vertex, const size_t finish_vertex, std::vector<size_t>* path = nullptr) const {
+		if (start_vertex == finish_vertex) {
+			return 0;
+		}
+		std::vector<T> dist;
+		std::vector<size_t> last;
+		dijkstra(start_vertex, &dist, &last);
+		if (path != nullptr) {
+			std::vector<size_t> tmp_path;
+			size_t vertex = finish_vertex;
+			while (vertex != start_vertex) {
+				const size_t edge = last[vertex];
+				tmp_path.emplace_back(edge);
+				vertex = from_[edge];
+			}
+			std::reverse(tmp_path.begin(), tmp_path.end());
+			path->swap(tmp_path);
+		}
+		return dist[finish_vertex];
+	}
+
 protected:
 	void push_edge(const size_t from, const size_t to) {
 		const size_t edge_id = from_.size();
@@ -251,7 +273,6 @@ protected:
 	size_t vertices_count_;
 
 private:
-
 	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
 	void sparse_dijkstra(const size_t start_vertex, std::vector<T>* distance, std::vector<size_t>* last_edge) const {
 		std::vector<T> dist(vertices_count_, weight_infinity());
