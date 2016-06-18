@@ -61,14 +61,13 @@ private:
 
 	bool bfs(const size_t from, const size_t to) {
 		used.assign(used.size(), false);
-		size_t qh = 0, qt = 0;
 		queue.clear();
 		queue.push(from);
 		used[from] = true;
 		while (!queue.empty()) {
 			const size_t vertex = queue.pop_front();
 			for (const size_t id : graph[vertex]) {
-				Edge& edge = edges[id];
+				const Edge& edge = edges[id];
 				if (used[edge.to] || edge.cap == edge.flow) {
 					continue;
 				}
