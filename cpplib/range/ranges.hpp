@@ -5,42 +5,42 @@
 #include "range/integer_range.hpp"
 
 template<typename T>
-IntegerRange<T> range(const T to) {
+constexpr IntegerRange<T> range(const T to) {
 	return IntegerRange<T>(0, to);
 }
 
 template<typename T>
-IntegerRange<T> range(const T from, const T to) {
+constexpr IntegerRange<T> range(const T from, const T to) {
 	return IntegerRange<T>(from, to);
 }
 
 template<typename T>
-IntegerRange<T> inclusiveRange(const T to) {
+constexpr IntegerRange<T> inclusiveRange(const T to) {
 	return IntegerRange<T>(0, to + 1);
 }
 
 template<typename T>
-IntegerRange<T> inclusiveRange(const T from, const T to) {
+constexpr IntegerRange<T> inclusiveRange(const T from, const T to) {
 	return IntegerRange<T>(from, to + 1);
 }
 
 template<typename T>
-ReversedIntegerRange<T> downrange(const T from) {
+constexpr ReversedIntegerRange<T> downrange(const T from) {
 	return ReversedIntegerRange<T>(from, 0);
 }
 
 template<typename T>
-ReversedIntegerRange<T> downrange(const T from, const T to) {
+constexpr ReversedIntegerRange<T> downrange(const T from, const T to) {
 	return ReversedIntegerRange<T>(from, to);
 }
 
 template<typename T>
-ReversedIntegerRange<T> inclusiveDownrange(const T from) {
+constexpr ReversedIntegerRange<T> inclusiveDownrange(const T from) {
 	return ReversedIntegerRange<T>(from + 1, 0);
 }
 
 template<typename T>
-ReversedIntegerRange<T> inclusiveDownrange(const T from, const T to) {
+constexpr ReversedIntegerRange<T> inclusiveDownrange(const T from, const T to) {
 	return ReversedIntegerRange<T>(from + 1, to);
 }
 

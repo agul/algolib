@@ -85,8 +85,8 @@ public:
 	}
 
 private:
-	T begin_;
-	T end_;
+	const T begin_;
+	const T end_;
 
 };
 
@@ -111,7 +111,7 @@ public:
 	}
 
 private:
-	T begin_;
-	T end_;
+	const T begin_;
+	const T end_;
 
 };

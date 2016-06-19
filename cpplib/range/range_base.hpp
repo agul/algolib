@@ -4,24 +4,24 @@
 template<typename T>
 class Range {
 public:
-	Range(T begin, T end) : begin_(std::move(begin)), end_(std::move(end)) {}
+	constexpr Range(T&& begin, T&& end) : begin_(std::move(begin)), end_(std::move(end)) {}
 
-	T begin() const {
+	constexpr T begin() const {
 		return begin_;
 	}
 
-	T end() const {
+	constexpr T end() const {
 		return end_;
 	}
 
 private:
-	T begin_;
-	T end_;
+	const T begin_;
+	const T end_;
 
 };
 
 
 template<typename T>
-Range<T> make_range(T begin, T end) {
+Range<T> make_range(const T begin, const T end) {
 	return Range<T>(begin, end);
 }
