@@ -28,7 +28,7 @@ public:
 		if (x == y) {
 			return false;
 		}
-		if (rand() & 1) {
+		if ((rand() & 1) != 0) {
 			std::swap(x, y);
 		}
 		parent_[x] = y;

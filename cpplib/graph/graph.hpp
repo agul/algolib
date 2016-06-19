@@ -356,8 +356,8 @@ template<typename T, size_t MASK>
 size_t Graph<T, MASK>::find_vertex_with_max_degree() const {
 	const auto iter = std::max_element(edges_.begin(), edges_.end(),
 		[](const EdgesList& lhs, const EdgesList& rhs) {
-		return lhs.size() < rhs.size();
-	});
+			return lhs.size() < rhs.size();
+		});
 	return static_cast<size_t>(std::distance(edges_.begin(), iter));
 }
 
