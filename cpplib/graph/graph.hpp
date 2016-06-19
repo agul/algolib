@@ -203,10 +203,6 @@ public:
 		return vertices_count_ == 0 || sqr(static_cast<long long>(vertices_count_)) >= (edges_count() << 4);
 	}
 
-	size_t find_vertex_with_max_degree() const;
-
-	bool is_bipartite(std::vector<size_t>& partition) const;
-
 	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
 	std::vector<std::vector<T>> floyd() const {
 		auto dist = make_vector<T>(vertices_count_, vertices_count_, weight_infinity());
@@ -257,6 +253,9 @@ public:
 		return dist[finish_vertex];
 	}
 
+	size_t find_vertex_with_max_degree() const;
+
+	bool is_bipartite(std::vector<size_t>& partition) const;
 	void maximal_matching(std::vector<size_t>* match) const;
 
 protected:

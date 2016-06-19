@@ -46,7 +46,7 @@ public:
 		return parent_.size();
 	}
 
-	size_t getNumSets() const {
+	size_t sets_count() const {
 		return sets_count_;
 	}
 
