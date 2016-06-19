@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <numeric>
 
-#include "maths.hpp"
+#include "maths/maths.hpp"
 
 class DSU {
 public:

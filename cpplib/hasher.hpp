@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdlib>
 
-#include "maths.hpp"
+#include "maths/maths.hpp"
 #include "string_view.hpp"
 
 class SingleHasher {

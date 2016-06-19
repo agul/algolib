@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "base/helpers.hpp"
-#include "maths.hpp"
+#include "maths/maths.hpp"
 #include "range/ranges.hpp"
 #include "queue.hpp"
 	
