@@ -76,6 +76,10 @@ public:
 		std::swap(tail_index_, rhs.tail_index_);
 	}
 
+	const container& data() const {
+		return data_;
+	}
+
 	bool operator ==(const Queue& rhs) const {
 		return head_index_ == rhs.head_index_ && tail_index_ == rhs.tail_index_ && data_ == rhs.data_;
 	}

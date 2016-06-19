@@ -60,6 +60,10 @@ public:
 		std::swap(top_index_, rhs.top_index_);
 	}
 
+	const container& data() const {
+		return data_;
+	}
+
 	bool operator ==(const Stack& rhs) const {
 		return top_index_ == rhs.top_index_ && data_ == rhs.data_;
 	}
