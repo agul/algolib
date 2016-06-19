@@ -8,9 +8,15 @@ class DirectedGraph : public Graph<T, MASK> {
 public:
 	DirectedGraph() = default;
 
-	bool top_sort_acyclic(std::vector<size_t>& order) const;
+	bool top_sort_acyclic(std::vector<size_t>* vertex_order = nullptr) const;
+	void top_sort_rec(std::vector<size_t>* vertex_order) const;
 
 	DirectedGraph reversed() const;
+	
+	size_t scc(std::vector<size_t>* vertex_color = nullptr) const;
+
+private:
+	void top_sort_rec_impl(const size_t vertex, std::vector<size_t>& order, std::vector<bool>& used) const;
 
 };
 
@@ -25,7 +31,7 @@ DirectedGraph<T, MASK> DirectedGraph<T, MASK>::reversed() const {
 }
 
 template<typename T, size_t MASK>
-bool DirectedGraph<T, MASK>::top_sort_acyclic(std::vector<size_t>& vertex_order) const
+bool DirectedGraph<T, MASK>::top_sort_acyclic(std::vector<size_t>* vertex_order) const
 // non-recursive topological sorting, works only for acyclic graphs 
 {
 	std::vector<size_t> order;
@@ -49,6 +55,67 @@ bool DirectedGraph<T, MASK>::top_sort_acyclic(std::vector<size_t>& vertex_order)
 			}
 		}
 	}
-	vertex_order->swap(order);
+	if (vertex_order != nullptr) {
+		vertex_order->swap(order);
+	}
 	return order.size() == this->vertices_count_;
+}
+
+template<typename T, size_t MASK>
+void DirectedGraph<T, MASK>::top_sort_rec(std::vector<size_t>* vertex_order) const {
+	std::vector<bool> used(this->vertices_count_, false);
+	std::vector<size_t> order;
+	for (const size_t v : this->vertices()) {
+		if (!used[v]) {
+			top_sort_rec_impl(v, order, used);
+		}
+	}
+	std::reverse(order.begin(), order.end());
+	vertex_order->swap(order);
+}
+
+template<typename T, size_t MASK>
+void DirectedGraph<T, MASK>::top_sort_rec_impl(const size_t vertex, std::vector<size_t>& order, std::vector<bool>& used) const {
+	used[vertex] = true;
+	for (const auto& it : this->edges(vertex)) {
+		const size_t to = it.to();
+		if (!used[to]) {
+			top_sort_rec_impl(to, order, used);
+		}
+	}
+	order.emplace_back(vertex);
+}
+
+template<typename T, size_t MASK>
+size_t DirectedGraph<T, MASK>::scc(std::vector<size_t>* vertex_color) const {
+	const DirectedGraph<T, MASK> rev_graph = reversed();
+	std::vector<size_t> order(this->vertices_count_);
+	top_sort_rec(&order);
+	std::vector<bool> used(this->vertices_count_, false);
+	std::vector<size_t> color(this->vertices_count_);
+	Queue<size_t> queue(this->vertices_count_);
+	size_t components_count = 0;
+	for (const auto& v : order) {
+		if (!used[v]) {
+			queue.clear();
+			queue.push(v);
+			while (!queue.empty()) {
+				const size_t vertex = queue.pop_front();
+				color[vertex] = components_count;
+				used[vertex] = true;
+				for (const auto& it : rev_graph.edges(vertex)) {
+					const size_t to = it.to();
+					if (!used[to]) {
+						used[to] = true;
+						queue.push(to);
+					}
+				}
+			}
+			++components_count;
+		}
+	}
+	if (vertex_color != nullptr) {
+		vertex_color->swap(color);
+	}
+	return components_count;
 }
