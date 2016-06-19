@@ -257,6 +257,8 @@ public:
 		return dist[finish_vertex];
 	}
 
+	void maximal_matching(std::vector<size_t>* match) const;
+
 protected:
 	void push_edge(const size_t from, const size_t to) {
 		const size_t edge_id = from_.size();
@@ -291,10 +293,10 @@ private:
 			}
 			for (const auto& it : edges(vertex)) {
 				const T new_dist = len + it.weight();
-				const size_t to_vertex = it.to();
-				if (umin(dist[to_vertex], new_dist)) {
-					q.push(std::make_pair(-new_dist, to_vertex));
-					last[to_vertex] = it.id();
+				const size_t to = it.to();
+				if (umin(dist[to], new_dist)) {
+					q.push(std::make_pair(-new_dist, to));
+					last[to] = it.id();
 				}
 			}
 		}
@@ -324,11 +326,11 @@ private:
 			}
 			used[vertex] = true;
 			for (const auto& it : edges(vertex)) {
-				const size_t to_vertex = it.to();
+				const size_t to = it.to();
 				const T len = min_dist + it.weight();
-				if (!used[to_vertex] && umin(dist[to_vertex], len)) {
-					dist[to_vertex] = len;
-					last[to_vertex] = it.id();
+				if (!used[to] && umin(dist[to], len)) {
+					dist[to] = len;
+					last[to] = it.id();
 				}
 			}
 		}
@@ -337,6 +339,8 @@ private:
 			last_edge->swap(last);
 		}
 	}
+
+	bool try_kuhn(const size_t vertex, std::vector<bool>& used, std::vector<size_t>& match) const;
 
 };
 
@@ -372,13 +376,13 @@ bool Graph<T, MASK>::is_bipartite(std::vector<size_t>& partition) const {
 				const size_t vertex = q.pop_front();
 				const size_t color = partition[vertex];
 				for (const auto& it : edges(vertex)) {
-					const size_t to_vertex = it.to();
-					if (partition[to_vertex] == kNone) {
-						partition[to_vertex] = color ^ 1;
-						q.push(to_vertex);
+					const size_t to = it.to();
+					if (partition[to] == kNone) {
+						partition[to] = color ^ 1;
+						q.push(to);
 						continue;
 					}
-					if (partition[to_vertex] == color) {
+					if (partition[to] == color) {
 						return false;
 					}
 				}
@@ -386,4 +390,49 @@ bool Graph<T, MASK>::is_bipartite(std::vector<size_t>& partition) const {
 		}
 	}
 	return true;
+}
+
+template<typename T, size_t MASK>
+void Graph<T, MASK>::maximal_matching(std::vector<size_t>* vertex_match) const {
+	std::vector<size_t> match(vertices_count_, std::numeric_limits<size_t>::max());
+	std::vector<bool> matched(vertices_count_, false);
+	for (const size_t v : vertices()) {
+		for (const auto& it : edges(v)) {
+			const size_t to = it.to();
+			if (match[to] == std::numeric_limits<size_t>::max()) {
+				match[to] = v;
+				matched[v] = true;
+				break;
+			}
+		}
+	}
+	std::vector<bool> used;
+	for (const size_t v : vertices()) {
+		if (matched[v]) {
+			continue;
+		}
+		used.assign(vertices_count_, false);
+		try_kuhn(v, used, match);
+	}
+	vertex_match->swap(match);
+}
+
+template<typename T, size_t MASK>
+bool Graph<T, MASK>::try_kuhn(const size_t vertex, std::vector<bool>& used, std::vector<size_t>& match) const {
+	used[vertex] = true;
+	for (const auto& it : edges(vertex)) {
+		const size_t to = it.to();
+		if (match[to] == std::numeric_limits<size_t>::max()) {
+			match[to] = vertex;
+			return true;
+		}
+	}
+	for (const auto& it : edges(vertex)) {
+		const size_t to = it.to();
+		if (!used[match[to]] && try_kuhn(match[to], used, match)) {
+			match[to] = vertex;
+			return true;
+		}
+	}
+	return false;
 }

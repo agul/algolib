@@ -30,8 +30,8 @@ bool DirectedGraph<T, MASK>::top_sort_acyclic(std::vector<size_t>& vertex_order)
 {
 	std::vector<size_t> order;
 	std::vector<size_t> inbound_degree(this->vertices_count_, 0);
-	for (const auto& to_vertex : this->to_) {
-		++inbound_degree[to_vertex];
+	for (const auto& to : this->to_) {
+		++inbound_degree[to];
 	}
 	for (const size_t i : this->vertices()) {
 		if (inbound_degree[i] == 0) {
@@ -42,10 +42,10 @@ bool DirectedGraph<T, MASK>::top_sort_acyclic(std::vector<size_t>& vertex_order)
 	while (head < order.size()) {
 		const size_t cur_vertex = order[head++];
 		for (const auto& it : this->edges(cur_vertex)) {
-			const size_t to_vertex = it.to();
-			--inbound_degree[to_vertex];
-			if (inbound_degree[to_vertex] == 0) {
-				order.emplace_back(to_vertex);
+			const size_t to = it.to();
+			--inbound_degree[to];
+			if (inbound_degree[to] == 0) {
+				order.emplace_back(to);
 			}
 		}
 	}
