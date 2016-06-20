@@ -113,6 +113,18 @@ public:
 		return *this;
 	}
 
+	constexpr ModInt operator +() const {
+		return{ value_ };
+	}
+
+	constexpr ModInt operator -() const {
+		return negate();
+	}
+
+	constexpr ModInt negate() const {
+		return{ -value_ };
+	}
+
 	constexpr ModInt inverse() const {
 		return{ inverseElement(static_cast<long long>(value_), MOD) };
 	}
