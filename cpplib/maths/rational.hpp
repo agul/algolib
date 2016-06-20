@@ -239,8 +239,8 @@ std::string to_string(const Rational<T>& arg) {
 
 template<typename T>
 struct hash<Rational<T>> {
-	std::size_t operator()(const Rational<T>& lhs) const {
-		return lhs.a * 877117 + lhs.b;
+	size_t operator()(const Rational<T>& arg) const {
+		return hash<pair<T, T>>({ arg.a, arg.b });
 	}
 };
 
