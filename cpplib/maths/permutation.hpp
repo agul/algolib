@@ -13,9 +13,9 @@ public:
 	}
 
 	template<typename I>
-	Permutation(I first, I last) : std::vector<T>(first, last) {}
+	Permutation(const I first, const I last) : std::vector<T>(first, last) {}
 
-	Permutation(std::initializer_list<T> list) : std::vector<T>(list) {}
+	Permutation(std::initializer_list<T>&& list) : std::vector<T>(std::move(list)) {}
 
 	void init() {
 		std::iota(this->begin(), this->end(), 0);

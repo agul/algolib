@@ -20,8 +20,7 @@ private:
 
 };
 
-
 template<typename T>
-Range<T> make_range(const T begin, const T end) {
-	return Range<T>(begin, end);
+Range<T> make_range(T&& begin, T&& end) {
+	return Range<T>(std::move(begin), std::move(end));
 }
