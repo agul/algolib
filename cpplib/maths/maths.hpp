@@ -59,18 +59,22 @@ inline void eratosthenes_sieve(std::vector<bool>& prime) {
 	}
 }
 
-inline void primesVector(bool prime[], const int n, int primes[], int& primesCnt) {
+template<typename T>
+inline void primes_vector(const size_t n, std::vector<T>* primes) {
+	std::vector<T> result;
 	if (n < 2) {
-		primesCnt = 0;
+		primes->swap(result);
 		return;
 	}
-	primesCnt = 1;
-	primes[0] = 2;
-	for (int i = 3; i < n; i += 2) {
+	std::vector<bool> prime(n);
+	eratosthenes_sieve(prime);
+	result.emplace_back(2);
+	for (size_t i = 3; i < n; i += 2) {
 		if (prime[i]) {
-			primes[primesCnt++] = i;
+			result.emplace_back(i);
 		}
 	}
+	primes->swap(result);
 }
 
 template<class T>
