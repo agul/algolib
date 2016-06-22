@@ -50,6 +50,10 @@ public:
 		return sets_count_;
 	}
 
+	const std::vector<size_t>& data() const {
+		return parent_;
+	}
+
 private:
 	std::vector<size_t> parent_;
 	size_t sets_count_;
