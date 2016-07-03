@@ -163,7 +163,7 @@ public:
 		return in;
 	}
 
-	friend std::ostream& operator <<(std::ostream& out, Decimal& x) {
+	friend std::ostream& operator <<(std::ostream& out, const Decimal& x) {
 		out << x.value_;
 		return out;
 	}
