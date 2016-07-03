@@ -87,7 +87,7 @@ public:
 		for (size_t i = 0; i < rows_cnt_; i++) {
 			for (size_t k = 0; k < rhs.cols_cnt_; k++) {
 				for (size_t j = 0; j < rhs.rows_cnt_; j++) {
-					add_mod(result[i][k], data_[i][j] * rhs[j][k] % mod_, mod_);
+					result[i][k] += data_[i][j] * rhs[j][k];
 				}
 			}
 		}
