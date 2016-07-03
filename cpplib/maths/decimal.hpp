@@ -6,8 +6,10 @@
 
 class Decimal {
 public:
+	/// caide keep
 	using T = long double;
 
+	/// caide keep
 	constexpr Decimal() : Decimal(0) {}
 	constexpr Decimal(const T value) : value_(value) {}
 
