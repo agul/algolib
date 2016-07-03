@@ -6,7 +6,8 @@
 template<typename T = long long, size_t MASK = 0>
 class DirectedGraph : public Graph<T, MASK> {
 public:
-	DirectedGraph() = default;
+	DirectedGraph() : DirectedGraph(0) {}
+	DirectedGraph(const size_t vertices_count) : Graph<T, MASK>(vertices_count) {}
 
 	bool top_sort_acyclic(std::vector<size_t>* vertex_order = nullptr) const;
 	void top_sort_rec(std::vector<size_t>* vertex_order) const;
