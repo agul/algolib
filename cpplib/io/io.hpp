@@ -20,4 +20,9 @@ std::istream& operator>>(std::istream& in, std::pair<T, U>& rhs) {
 	return in;
 }
 
+void assign_files_input_txt() {
+	freopen("input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+}
+
 }

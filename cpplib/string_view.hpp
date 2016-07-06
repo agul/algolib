@@ -6,6 +6,7 @@ class StringView {
 public:
 	using iterator = const char*;
 
+	/// caide keep
 	constexpr StringView() : data_(nullptr), length_(0) {}
 
 	constexpr StringView(const StringView&) = default;

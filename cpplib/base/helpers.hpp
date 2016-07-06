@@ -92,4 +92,5 @@ auto make_vector(Args... args) -> decltype(MakeVector<T, sizeof...(Args)-1>::mak
 #define Y second
 #define mp std::make_pair
 #define all(a) a.begin(), a.end()
+#define rall(a) a.rbegin(), a.rend()
 #define pb push_back

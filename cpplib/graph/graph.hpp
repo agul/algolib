@@ -118,7 +118,8 @@ public:
 
 	};
 
-	Graph() = default;
+	Graph() : Graph(0) {}
+	Graph(const size_t vertices_count) : vertices_count_(vertices_count), edges_(vertices_count) {}
 
 	virtual ~Graph() {
 		clear();

@@ -136,7 +136,7 @@ public:
 		return in;
 	}
 
-	friend std::ostream& operator <<(std::ostream& out, ModInt& rhs) {
+	friend std::ostream& operator <<(std::ostream& out, const ModInt& rhs) {
 		out << rhs.value_;
 		return out;
 	}
