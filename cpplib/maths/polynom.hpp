@@ -107,18 +107,21 @@ public:
 		return result;
 	}
 
-	void negate() {
-		for (auto& it : this->data()) {
-			it *= -1;
+	Polynom negate() const {
+		Polynom res = *this;
+		for (auto& it : res) {
+			it = -it;
 		}
+		return res;
 	}
 
-private:
+	void reverse() {
+		std::reverse(this->begin(), this->end());
+	}
 
 	void normalize() {
 		while (this->size() > 1 && this->back() == T(0)) {
 			this->pop_back();
 		}
 	}
-
 };
