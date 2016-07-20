@@ -6,7 +6,12 @@
 
 class DSU {
 public:
-	DSU() = default;
+	DSU() : DSU(0) {}
+
+	DSU(const size_t vertices_count) : parent_(vertices_count), sets_count_(vertices_count) {
+		srand(static_cast<uint32_t>(Random::GetRandSeed()));
+		std::iota(parent_.begin(), parent_.end(), 0);
+	}
 
 	void init(const size_t vertices_count) {
 		srand(static_cast<uint32_t>(Random::GetRandSeed()));
