@@ -8,7 +8,7 @@ static constexpr long long LINF = 0x3f3f3f3f3f3f3f3fLL;
 static constexpr int DX[8] = { -1, 0, 1, 0, -1, -1, 1, 1 };
 static constexpr int DY[8] = { 0, 1, 0, -1, -1, 1, 1, -1 };
 
-static constexpr int kDayMonth[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+static constexpr size_t kDayMonth[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 enum class Direction {
 	Up,
