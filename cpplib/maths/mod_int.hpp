@@ -35,10 +35,14 @@ public:
 	/// caide keep
 	constexpr ModInt() : ModInt(0) {}
 
-	template<typename U>
-	constexpr ModInt(const U value) : value_(normalize(value)) {
+	constexpr ModInt(const T value) : value_(value) {
 		static_assert(MOD > 0, "Modulo must be strictly positive.");
 		// static_assert((std::equal<T, int32_t> && mod <= 0x3f3f3f3f) || (std::equal<T, int64_t> && mod <= 0x3f3f3f3f3f3f3f3fLL), "Modulo must be less than half of the max value for typename.");
+	}
+
+	template<typename U>
+	constexpr static ModInt from_integer(const U value) {
+		return{ ModInt::normalize(value) };
 	}
 
 	constexpr T value() const {
@@ -122,17 +126,17 @@ public:
 	}
 
 	constexpr ModInt negate() const {
-		return{ -value_ };
+		return{ normalize(-value_) };
 	}
 
 	constexpr ModInt inverse() const {
-		return{ inverseElement(static_cast<long long>(value_), MOD) };
+		return{ inverse_element(value_, MOD) };
 	}
 
 	friend std::istream& operator >>(std::istream& in, ModInt& rhs) {
 		T x;
 		in >> x;
-		rhs.value = rhs.normalize(x);
+		rhs.value_ = rhs.normalize(x);
 		return in;
 	}
 
@@ -145,7 +149,7 @@ private:
 	T value_;
 
 	template<typename U>
-	T normalize(const U value) const {
+	static T normalize(const U value) {
 		if (value >= 0 && value < MOD) {
 			return value;
 		}

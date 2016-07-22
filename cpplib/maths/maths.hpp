@@ -117,13 +117,13 @@ inline void min_prime_div_vector(std::vector<T>* min_prime_div) {
 	min_prime_div_vector(min_prime_div->size(), min_prime_div);
 }
 
-template<class T>
-T factorial(T n, const T& mod = 1000000007) {
-	long long ret = 1;
+template<typename T>
+T factorial(T n) {
+	T ret = 1;
 	for (int i = 2; i <= n; ++i) {
-		ret = (ret * i) % mod;
+		ret *= i;
 	}
-	return ret % mod;
+	return ret;
 }
 
 template<typename T, typename U>
@@ -155,33 +155,42 @@ inline T binpow(T a, U b, Q mod) {
 	return ret % mod;
 }
 
-template<class T>
-int digitSum(T n) {
-	int res = 0;
-	n = abs(n);
-	while (n) {
-		res += n % 10;
-		n /= 10;
+template<typename T>
+T digit_sum(const T n) {
+	T res = 0;
+	T tmp = abs(n);
+	while (tmp > 0) {
+		res += tmp % 10;
+		tmp /= 10;
 	}
 	return res;
 }
 
-template<class T>
-int digitCount(T n) {
-	int res = 0;
-	n = abs(n);
-	while (n) {
-		++res;
-		n /= 10;
+template<typename T>
+std::vector<size_t> digits(const T n) {
+	if (n == 0) {
+		return{ 0 };
+	}
+	std::vector<size_t> res;
+	T tmp = abs(n);
+	while (tmp > 0) {
+		res.emplace_back(tmp % 10);
+		tmp /= 10;
 	}
 	return res;
 }
 
-template<class T> T eulerFunction(T n) {
+template<typename T>
+size_t digit_count(const T n) {
+	return digits(n).size();
+}
+
+template<typename T>
+T euler_function(T n) {
 	T res = n;
 	for (T i = 2; i * i <= n; ++i) {
-		if (!(n % i)) {
-			while (!(n % i)) {
+		if (n % i == 0) {
+			while (n % i == 0) {
 				n /= i;
 			}
 			res -= res / i;
@@ -194,7 +203,7 @@ template<class T> T eulerFunction(T n) {
 }
 
 template<typename T, typename U>
-T inverseElement(const T n, const U mod)
+T inverse_element(const T n, const U mod)
 // inverse element for prime mod
 {
 	return binpow(static_cast<long long>(n), mod - 2, mod);
@@ -209,10 +218,11 @@ inline void inverseElementForSegment(int r[], const int n, const int mod)
 	}
 }
 
-template<class T> T inverseElementCompMod(const T n, const T mod)
+template<typename T>
+T inverse_element_comp_mod(const T n, const T mod)
 // inverse element for composite mod using formula inv(n) = n^(phi(mod) - 1)
 {
-	return binpow(n, eulerFunction(mod) - 1, mod);
+	return binpow(n, euler_function(mod) - 1, mod);
 }
 
 template<typename T>
@@ -220,7 +230,7 @@ void binomial_coefficients(const size_t n, std::vector<std::vector<T>>* c) {
 	std::vector<std::vector<T>> result(n, std::vector<T>(n));
 	for (size_t i = 0; i < n; ++i) {
 		result[i][0] = 1;
-		result [i][i] = 1;
+		result[i][i] = 1;
 		for (size_t j = 1; j < i; ++j) {
 			result[i][j] = result[i - 1][j - 1] + result[i - 1][j];
 		}
@@ -258,11 +268,6 @@ inline uint32_t abs(const uint32_t x) {
 
 inline uint64_t abs(const uint64_t x) {
 	return x;
-}
-
-template<typename T>
-inline bool is_leap_year(const T year) {
-	return year % 400 == 0 || (year % 100 != 0 && (year & 3) == 0);
 }
 
 namespace Random {

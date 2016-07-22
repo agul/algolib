@@ -82,7 +82,7 @@ public:
 		return cols_cnt_;
 	}
 
-	Matrix operator * (const Matrix& rhs) const {
+	Matrix operator *(const Matrix& rhs) const {
 		Matrix result(rows_cnt_, rhs.cols_cnt_);
 		for (size_t i = 0; i < rows_cnt_; i++) {
 			for (size_t k = 0; k < rhs.cols_cnt_; k++) {
@@ -92,6 +92,27 @@ public:
 			}
 		}
 		return result;
+	}
+
+	Matrix& operator *=(const Matrix& rhs) {
+		Matrix result = operator *(rhs);
+		swap(result);
+		return *this;
+	}
+
+	template<typename U>
+	Matrix binpow(U b) const {
+		static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow.");
+		Matrix ret = identity_matrix(rows_cnt_, cols_cnt_);
+		Matrix a = *this;
+		while (b != 0) {
+			if ((b & 1) != 0) {
+				ret *= a;
+			}
+			a *= a;
+			b >>= 1;
+		}
+		return ret;
 	}
 
 	void swap(Matrix& rhs) {
@@ -115,7 +136,6 @@ private:
 	T mod_;
 
 	DataStorage data_;
-
 };
 
 template <typename T>
