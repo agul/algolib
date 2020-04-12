@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <vector>
 
-#include "range/integer_range.hpp"
+#include "../range/integer_range.hpp"
 
 template<typename T>
 constexpr IntegerRange<T> range(const T to) {

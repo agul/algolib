@@ -2,7 +2,7 @@
 #include <functional>
 #include <iostream>
 
-#include "maths/safe_double.hpp"
+#include "../maths/safe_double.hpp"
 
 class Decimal {
 public:

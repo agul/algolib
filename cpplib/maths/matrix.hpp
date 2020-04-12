@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 
-#include "base/helpers.hpp"
-#include "maths/maths.hpp"
+#include "../base/helpers.hpp"
+#include "../maths/maths.hpp"
 
 struct maximal_element_search_tag {};
 struct prime_modulo_calculations_tag {};

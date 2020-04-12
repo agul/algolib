@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-#include "graph/graph.hpp"
+#include "../graph/graph.hpp"
 
 template<typename T = long long, size_t MASK = 0>
 class DirectedGraph : public Graph<T, MASK> {

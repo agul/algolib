@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-#include "graph/undirected_graph.hpp"
+#include "../graph/undirected_graph.hpp"
 
 class GraphBridges {
 public:

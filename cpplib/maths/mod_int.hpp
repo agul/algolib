@@ -2,7 +2,7 @@
 #include <iostream>
 #include <type_traits>
 
-#include "maths/maths.hpp"
+#include "../maths/maths.hpp"
 
 constexpr const int BASE_MOD = 1000000007;  /// caide keep
 
