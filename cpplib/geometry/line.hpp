@@ -38,6 +38,15 @@ public:
 		return vector_type(b, -a);
 	}
 
+	constexpr decimal_point_type point_a() const {
+		return decimal_point_type(0, static_cast<decimal_type>(-c_) / b_);
+	}
+
+	constexpr decimal_point_type point_b() const {
+		constexpr const value_type x = 100;
+		return decimal_point_type(x, static_cast<decimal_type>(-c_ - a_ * x) / b_);
+	}
+
 	void normalize() {
 		if (std::is_integral<value_type>::value) {
 			if (a_ < 0) {

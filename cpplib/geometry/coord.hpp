@@ -42,13 +42,13 @@ public:
 		return subtract(rhs);
 	}
 
-	Coord2D& operator +=(const Coord2D& rhs) const {
+	Coord2D& operator +=(const Coord2D& rhs) {
 		x += rhs.x;
 		y += rhs.y;
 		return *this;
 	}
 
-	Coord2D& operator -=(const Coord2D& rhs) const {
+	Coord2D& operator -=(const Coord2D& rhs) {
 		x -= rhs.x;
 		y -= rhs.y;
 		return *this;
@@ -70,6 +70,14 @@ public:
 		if (index == 1) {
 			return y;
 		}
+	}
+
+	bool operator == (const Coord2D& rhs) const {
+		return x == rhs.x && y == rhs.y;
+	}
+
+	bool operator < (const Coord2D& rhs) const {
+		return x < rhs.x || (x == rhs.x && y < rhs.y);
 	}
 
 	/// caide keep

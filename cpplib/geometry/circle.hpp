@@ -1,4 +1,5 @@
 #pragma once
+#include "geometry/line.hpp"
 #include "geometry/point_vector.hpp"
 #include "maths/decimal.hpp"
 #include "maths/maths.hpp"
@@ -15,6 +16,8 @@ public:
 	/// caide keep
 	using point_type = Point2D<value_type, square_type, decimal_type>;
 	/// caide keep
+	using line_type = Line<value_type, square_type, decimal_type>;
+	/// caide keep
 	using vector_type = Vector2D<value_type, square_type, decimal_type>;
 	/// caide keep
 	using decimal_point_type = typename point_type::decimal_point_type;
@@ -25,7 +28,7 @@ public:
 	constexpr Circle() : Circle({ 0, 0 }, 0) {}
 	constexpr Circle(const point_type& center, const value_type radius) : center_(center), radius_(radius) {}
 
-	size_t intersect(const point_type& A, const point_type& B, decimal_point_type& M, decimal_point_type& N) const {
+	size_t intersect(const line_type& line, decimal_point_type& M, decimal_point_type& N) const {
 		const decimal_type h = center_.dist(A, B);
 		if (static_cast<decimal_type>(radius_) < h) {
 			return 0;

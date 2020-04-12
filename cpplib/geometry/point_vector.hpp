@@ -58,14 +58,18 @@ public:
 		return subtract(rhs);
 	}
 
-	Point& operator +=(const Point& rhs) const {
+	Point& operator +=(const Point& rhs) {
 		Coord::operator +=(rhs);
 		return *this;
 	}
 
-	Point& operator -=(const Point& rhs) const {
+	Point& operator -=(const Point& rhs) {
 		Coord::operator -=(rhs);
 		return *this;
+	}
+
+	square_type squared_dist(const Point& rhs) const {
+		return Coord::squared_dist(rhs);
 	}
 
 	decimal_type dist(const Point& rhs) const {
