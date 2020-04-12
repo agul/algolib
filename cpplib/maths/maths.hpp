@@ -73,7 +73,7 @@ inline void primes_vector(const size_t n, std::vector<T>* primes) {
 		return;
 	}
 	std::vector<bool> prime(n);
-	eratosthenes_sieve(prime);
+	eratosthenes_sieve(&prime);
 	result.emplace_back(2);
 	for (size_t i = 3; i < n; i += 2) {
 		if (prime[i]) {

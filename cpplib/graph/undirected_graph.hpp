@@ -34,18 +34,18 @@ public:
 
 	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
 	T minimal_spanning_tree(std::vector<size_t>* mst = nullptr) const {
-		std::vector<size_t> graph_edges(edges_count());
+		std::vector<size_t> graph_edges(this->edges_count());
 		std::iota(graph_edges.begin(), graph_edges.end(), 0);
 		std::sort(graph_edges.begin(), graph_edges.end(), [&](const size_t& lhs, const size_t& rhs) {
-			return weight(lhs) < weight(rhs);
+			return this->weight(lhs) < this->weight(rhs);
 		});
 		DSU dsu;
-		dsu.init(vertices_count_);
+		dsu.init(this->vertices_count_);
 		T total_weight = 0;
 		std::vector<size_t> tree;
 		for (const auto& it : graph_edges) {
-			if (dsu.unite(from(it), to(it))) {
-				total_weight += weight(it);
+			if (dsu.unite(this->from(it), this->to(it))) {
+				total_weight += this->weight(it);
 				tree.emplace_back(it);
 			}
 		}
@@ -62,8 +62,8 @@ public:
 template<typename T, size_t MASK>
 bool UndirectedGraph<T, MASK>::is_connected() const {
 	DSU dsu;
-	dsu.init(vertices_count_);
-	for (const auto& it : edges()) {
+	dsu.init(this->vertices_count_);
+	for (const auto& it : this->edges()) {
 		dsu.unite(it.from(), it.to());
 	}
 	return dsu.sets_count() == 1;
