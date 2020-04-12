@@ -169,6 +169,10 @@ public:
 		return to_[index];
 	}
 
+	Edge operator [](const size_t index) const {
+		return Edge(from, to, weight, index);
+	}
+
 	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
 	T weight(const size_t index) const {
 		return weight_[index];
@@ -259,6 +263,8 @@ public:
 	bool is_bipartite(std::vector<size_t>& partition) const;
 	void maximal_matching(std::vector<size_t>* match) const;
 
+	bool try_kuhn(const size_t vertex, std::vector<bool>& used, std::vector<size_t>& match) const;
+
 protected:
 	void push_edge(const size_t from, const size_t to) {
 		const size_t edge_id = from_.size();
@@ -339,8 +345,6 @@ private:
 			last_edge->swap(last);
 		}
 	}
-
-	bool try_kuhn(const size_t vertex, std::vector<bool>& used, std::vector<size_t>& match) const;
 
 };
 
@@ -424,6 +428,7 @@ bool Graph<T, MASK>::try_kuhn(const size_t vertex, std::vector<bool>& used, std:
 		const size_t to = it.to();
 		if (match[to] == std::numeric_limits<size_t>::max()) {
 			match[to] = vertex;
+			match[vertex] = to;
 			return true;
 		}
 	}
@@ -431,6 +436,7 @@ bool Graph<T, MASK>::try_kuhn(const size_t vertex, std::vector<bool>& used, std:
 		const size_t to = it.to();
 		if (!used[match[to]] && try_kuhn(match[to], used, match)) {
 			match[to] = vertex;
+			match[vertex] = to;
 			return true;
 		}
 	}
