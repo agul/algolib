@@ -15,7 +15,7 @@ public:
 	SingleHasher(const int n) {
 		hash = new long long[n + 1];
 		deg = new long long[n + 1];
-		calcPowers(deg, BASE, n);
+		calc_powers(deg, BASE, n);
 	}
 
 	~SingleHasher() {
@@ -54,8 +54,8 @@ private:
 
 class DoubleHasher_t {
 public:
-	static const uint MA = static_cast<uint>(1e9) + 7;
-	static const uint MB = static_cast<uint>(1e9) + 9;
+	static const uint32_t MA = static_cast<uint32_t>(1e9) + 7;
+	static const uint32_t MB = static_cast<uint32_t>(1e9) + 9;
 
 	int a, b;
 
@@ -93,7 +93,8 @@ public:
 
 };
 
-template<class T> class Hasher {
+template<class T>
+class Hasher {
 public:
 
 	T * deg, * hash;
