@@ -101,6 +101,14 @@ public:
 		return divide(rhs);
 	}
 
+	constexpr T a() const {
+		return a_;
+	}
+
+	constexpr T b() const {
+		return b_;
+	}
+
 	Rational& operator +=(const Rational& rhs) {
 		Rational res = add(rhs);
 		swap(res);
@@ -134,7 +142,7 @@ public:
 	}
 
 	constexpr friend bool operator <(const Rational& lhs, const Rational& rhs) {
-		return lhs.a_ * rhs.b_ < lhs.a_ * rhs.b_;
+		return lhs.a_ * rhs.b_ < rhs.a_ * lhs.b_;
 	}
 
 	constexpr friend bool operator >(const Rational& lhs, const Rational& rhs) {
@@ -142,7 +150,7 @@ public:
 	}
 
 	constexpr friend bool operator <=(const Rational& lhs, const Rational& rhs) {
-		return lhs.a_ * rhs.b_ <= lhs.a_ * rhs.b_;
+		return lhs.a_ * rhs.b_ <= rhs.a_ * lhs.b_;
 	}
 
 	constexpr friend bool operator >=(const Rational& lhs, const Rational& rhs) {
