@@ -10,7 +10,7 @@ static constexpr int DY[8] = { 0, 1, 0, -1, -1, 1, 1, -1 };
 
 static constexpr size_t kDayMonth[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-enum class Direction {
+enum Direction : uint8_t {
 	Up,
 	Right,
 	Down,
@@ -26,5 +26,6 @@ enum class Direction {
 	NorthWest = UpLeft,
 	NorthEast = UpRight,
 	SouthEast = DownRight,
-	SouthWest = DownLeft
+	SouthWest = DownLeft,
+	Unknown = 255
 };
