@@ -30,9 +30,9 @@
 #include <vector>
 #pragma hdrstop
 
-#include "../base/constants.hpp"
-#include "../base/helpers.hpp"
-#include "../base/safe_integral_hash.hpp"
-#include "../base/typedefs.hpp"
-#include "../io/io.hpp"
-#include "../range/ranges.hpp"
+#include "base/constants.hpp"
+#include "base/helpers.hpp"
+#include "base/safe_integral_hash.hpp"
+#include "base/typedefs.hpp"
+#include "io/io.hpp"
+#include "range/ranges.hpp"
