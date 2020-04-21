@@ -1,8 +1,6 @@
 #pragma once
 #include <algorithm>
 
-#define bitset __MY_BITSET__
-
 template<size_t N>
 class Bitset {
 public:
@@ -169,5 +167,3 @@ public:
 	}
 
 };
-
-#undef bitset
