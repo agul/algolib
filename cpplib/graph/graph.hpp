@@ -229,7 +229,7 @@ public:
 	
 	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
 	void dijkstra(const size_t start_vertex, std::vector<T>* distance, std::vector<size_t>* last_edge = nullptr) const {
-		if (is_sparse() && false) {
+		if (is_sparse()) {
 			sparse_dijkstra(start_vertex, distance, last_edge);
 		} else {
 			dense_dijkstra(start_vertex, distance, last_edge);
