@@ -3,7 +3,7 @@
 #include <string>
 #include <type_traits>
 
-#include "../maths/maths.hpp"
+#include "maths/maths.hpp"
 
 template<typename T>
 class Rational {

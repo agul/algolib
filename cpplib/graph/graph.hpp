@@ -3,10 +3,10 @@
 #include <type_traits>
 #include <vector>
 
-#include "../base/helpers.hpp"
-#include "../maths/maths.hpp"
-#include "../range/ranges.hpp"
-#include "../queue.hpp"
+#include "base/helpers.hpp"
+#include "maths/maths.hpp"
+#include "range/ranges.hpp"
+#include "queue.hpp"
 	
 enum GraphType {
 	Weighted = 1

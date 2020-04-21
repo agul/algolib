@@ -4,7 +4,7 @@
 #include <limits>
 #include <vector>
 
-#include "../queue.hpp"
+#include "queue.hpp"
 
 template<typename T>
 class DinicFlow {
