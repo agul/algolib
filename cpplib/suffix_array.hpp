@@ -4,7 +4,7 @@
 #include <cstring>
 #include <string>
 
-#include "segment_tree.hpp"
+#include "segment_tree/bottom_up_segment_tree.hpp"
 
 class SuffixArray {
 // class for internal functions for suffix array construction
@@ -199,7 +199,7 @@ void suffixLCPArrayCyclic(int sa[], int lcp[], const char * s, const int n, cons
 		}
 		return (y == -1 || arr[x] < arr[y] ? x : y);
 	};
-	static SegmentTree<int> tree(n, comparator, -1);
+	static BottomUpSegmentTree<int> tree(n, comparator, -1);
 	cnt = new int[std::max(255, n)];
 	pn = new int[n];
 	lpos = new int[n];

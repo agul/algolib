@@ -3,31 +3,29 @@
 #include <vector>
 
 template<typename T> 
-class SegmentTree {
+class BottomUpSegmentTree {
 public:
+	using functor_type = std::function<T(const T&, const T&)>;
 
-	/* enum Type {
-		NONE,
-		INCREMENT, // Increment updates on a segment.
-
-	}; */
-
-	SegmentTree(const size_t N, const std::function<const T(const T&, const T&)>& pred, const T& neutral_ = static_cast<T>(0)) : N_(N), pred_(pred), neutral_(neutral_) {
+	BottomUpSegmentTree(const size_t N, const functor_type& pred, const T& neutral_ = T(0)) :
+			pred_(pred),
+			N_(N),
+			neutral_(neutral_) {
 		offset_ = 1 << (31 - clz(N) + ((N & (N - 1)) == 0 ? 0 : 1));
 		size_ = offset_ << 1;
 		data_.resize(size_);
 		init();
 	}
 
-	SegmentTree() = delete;
+	BottomUpSegmentTree() = delete;
 
-	SegmentTree(SegmentTree&) = default;
-	SegmentTree(SegmentTree&&) = default;
+	BottomUpSegmentTree(BottomUpSegmentTree&) = default;
+	BottomUpSegmentTree(BottomUpSegmentTree&&) = default;
 
-	SegmentTree& operator =(SegmentTree&) = default;
-	SegmentTree& operator =(SegmentTree&&) = default;
+	BottomUpSegmentTree& operator =(BottomUpSegmentTree&) = default;
+	BottomUpSegmentTree& operator =(BottomUpSegmentTree&&) = default;
 
-	~SegmentTree() = default;
+	~BottomUpSegmentTree() = default;
 
 	constexpr size_t offset() const {
 		return offset_;
@@ -83,7 +81,7 @@ public:
 
 private:
 	std::vector<T> data_;
-	const std::function<const T(const T&, const T&)> pred_;
+	const functor_type pred_;
 	const T neutral_;
 	size_t offset_;
 	size_t size_;
