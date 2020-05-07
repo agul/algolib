@@ -19,21 +19,31 @@ inline bool is_digit(const char ch) {
 	return std::isdigit(ch);
 }
 
-inline char to_upper(const char ch) {
-	return is_upper(ch) ? ch : ch ^ 32;
+template<typename T>
+inline T to_upper(T);
+
+template<typename T>
+inline T to_lower(T);
+
+template<>
+inline char to_upper<char>(const char ch) {
+	return is_lower(ch) ? ch ^ 32 : ch;
 }
 
-inline char to_lower(const char ch) {
-	return is_lower(ch) ? ch : ch ^ 32;
+template<>
+inline char to_lower<char>(const char ch) {
+	return is_upper(ch) ? ch ^ 32 : ch;
 }
 
-inline std::string to_upper(std::string s) {
-	std::transform(s.begin(), s.end(), s.begin(), to_upper);
+template<>
+inline std::string to_upper<std::string>(std::string s) {
+	std::transform(s.begin(), s.end(), s.begin(), to_upper<char>);
 	return s;
 }
 
-inline std::string to_lower(std::string s) {
-	std::transform(s.begin(), s.end(), s.begin(), to_lower);
+template<>
+inline std::string to_lower<std::string>(std::string s) {
+	std::transform(s.begin(), s.end(), s.begin(), to_lower<char>);
 	return s;
 }
 
