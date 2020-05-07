@@ -1,5 +1,5 @@
 #pragma once
-#include "stack.hpp"
+#include "containers/stack/stack.hpp"
 
 #include <functional>
 #include <vector>
