@@ -1,5 +1,6 @@
 #pragma once
 #include <chrono>
+#include <limits>
 #include <random>
 
 namespace Random {
@@ -8,21 +9,21 @@ static std::chrono::system_clock::rep current_timestamp() {
 	return std::chrono::system_clock::now().time_since_epoch().count();
 }
 
-static std::chrono::system_clock::rep get_rand_seed() {
-	return current_timestamp();
+static uint64_t get_rand_seed() {
+	return static_cast<uint64_t>(current_timestamp());
 }
 
-static std::mt19937_64 gen(get_rand_seed());
-static std::uniform_int_distribution<long long> distrib(0, std::numeric_limits<long long>::max());
-
-template<typename T>
-static T get(const T r) {
-	return distrib(gen) % r;
-}
+static std::mt19937_64 engine(get_rand_seed());
+static std::uniform_int_distribution<uint64_t> distribution(0, std::numeric_limits<uint64_t>::max());
 
 template<typename T>
-static T get(const T l, const T r) {
-	return get(r - l + 1) + l;
+static T get(const T right) {
+	return distribution(engine) % right;
 }
 
+template<typename T>
+static T get(const T left, const T right) {
+	return get(right - left + 1) + left;
 }
+
+}  // namespace Random
