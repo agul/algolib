@@ -23,15 +23,16 @@ constexpr inline T sqr(const T& x) {
 	return x * x;
 }
 
-template<class T> inline bool isPrime(const T& n)
-// Straightforward checking in O(sqrt(N))
+template<typename T>
+inline bool is_prime(const T& n)
+// Straightforward check in O(sqrt(N))
 {
 	if (n < 2) {
 		return false;
 	}
-	T kk = (T)sqrt(n + 0.);
-	for (T i = 2; i <= kk; ++i) {
-		if (!(n % i)) {
+	const T floored_square_root = static_cast<T>(sqrt(n));
+	for (T i = 2; i <= floored_square_root; ++i) {
+		if (n % i == 0) {
 			return false;
 		}
 	}
