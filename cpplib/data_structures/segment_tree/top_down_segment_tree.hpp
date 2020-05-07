@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-#include "segment_tree/base_segment_tree.hpp"
+#include "base_segment_tree.hpp"
 
 template<typename T, typename Merge, typename Update, typename ApplyUpdate, typename MergeUpdates>
 class TopDownSegmentTree : public BaseSegmentTree<T, Merge> {
