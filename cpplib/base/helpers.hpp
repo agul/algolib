@@ -7,6 +7,9 @@
 #include <vector>
 
 #include "base/constants.hpp"
+#include "hash/safe_integral_hash.hpp"
+#include "hash/std_pair_hash.hpp"
+#include "maths/is_equal_to_zero.hpp"
 
 #ifdef _MSC_VER
 #include <intrin.h>
@@ -18,14 +21,6 @@
 #define clz(a) __builtin_clz(a)
 #define ctz(a) __builtin_ctz(a)
 #endif
-
-template<typename T>
-inline bool is_equal_to_zero(const T& a) {
-	if (std::is_floating_point<T>()) {
-		return abs(a) < EPS;
-	}
-	return a == 0;
-}
 
 template<typename T>
 inline bool umin(T& a, const T& b) {
