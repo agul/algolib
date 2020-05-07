@@ -2,7 +2,7 @@
 #include <cstdlib>
 
 #include "maths/maths.hpp"
-#include "string_view.hpp"
+#include "string/string_view.hpp"
 
 class SingleHasher {
 public:
