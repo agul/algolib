@@ -1,8 +1,6 @@
 #pragma once
 #include <algorithm>
-#include <chrono>
 #include <numeric>
-#include <random>
 #include <string>
 #include <type_traits>
 
@@ -269,24 +267,3 @@ inline uint32_t abs(const uint32_t x) {
 inline uint64_t abs(const uint64_t x) {
 	return x;
 }
-
-namespace Random {
-
-	static std::chrono::system_clock::rep GetRandSeed() {
-		return std::chrono::system_clock::now().time_since_epoch().count();
-	}
-
-	static std::mt19937_64 gen(GetRandSeed());
-	static std::uniform_int_distribution<long long> distrib(0, std::numeric_limits<long long>::max());
-
-	template<typename T>
-	static T get(T r) {
-		return distrib(gen) % r;
-	}
-
-	template<typename T>
-	static T get(T l, T r) {
-		return get(r - l + 1) + l;
-	}
-
-};

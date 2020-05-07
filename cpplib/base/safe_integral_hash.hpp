@@ -4,10 +4,12 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "maths/random.hpp"
+
 template<typename T, typename std::enable_if<std::is_integral<T>::value>::type* = nullptr>
 class SafeIntegralHash {
 public:
-	const T kRandomValue = static_cast<T>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+	const T kRandomValue = static_cast<T>(Random::current_timestamp());
 
 	T operator ()(const T& value) const {
 		return value ^ kRandomValue;

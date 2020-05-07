@@ -2,19 +2,19 @@
 #include <algorithm>
 #include <numeric>
 
-#include "maths/maths.hpp"
+#include "maths/random.hpp"
 
 class DSU {
 public:
 	DSU() : DSU(0) {}
 
 	DSU(const size_t vertices_count) : parent_(vertices_count), sets_count_(vertices_count) {
-		srand(static_cast<uint32_t>(Random::GetRandSeed()));
+		srand(static_cast<uint32_t>(Random::get_rand_seed()));
 		std::iota(parent_.begin(), parent_.end(), 0);
 	}
 
 	void init(const size_t vertices_count) {
-		srand(static_cast<uint32_t>(Random::GetRandSeed()));
+		srand(static_cast<uint32_t>(Random::get_rand_seed()));
 		parent_.resize(vertices_count);
 		std::iota(parent_.begin(), parent_.end(), 0);
 		sets_count_ = vertices_count;
