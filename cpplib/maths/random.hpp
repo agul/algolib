@@ -39,7 +39,7 @@ inline T get(const T from, const T to) {
 	return get(to - from) + from;
 }
 
-template<typename T = uint64_t>
+template<typename T = int32_t>
 inline T get() {
 	return get(static_cast<T>(0), std::numeric_limits<T>::max());
 }
