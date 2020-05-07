@@ -1,29 +1,20 @@
 #pragma once
-#include "containers/stack/stack.hpp"
-
-#include <functional>
+#include <utility>
 #include <vector>
 
 template<typename T>
 class Queue {
 public:
 	using value_type = T;
-	using size_type = size_t;
+	using size_type = std::size_t;
 	using reference = value_type&;
 	using const_reference = const value_type&;
 	using rvalue = value_type&&;
 	using container = std::vector<value_type>;
 
-	Queue(const size_type max_size) : data_(container(max_size)) {
+	explicit Queue(const size_type max_size) : data_(container(max_size)) {
 		clear();
 	}
-
-	Queue() = delete;
-
-	Queue(const Queue&) = default;
-	Queue& operator =(const Queue&) = default;
-	Queue(Queue&&) = default;
-	Queue& operator =(Queue&&) = default;
 
 	reference front() {
 		return data_[head_index_];
@@ -109,54 +100,4 @@ private:
 	size_type head_index_;
 	size_type tail_index_;
 
-};
-
-template<typename T>
-class CmpQueue {
-public:
-	using value_type = T;
-	using size_type = size_t;
-	using const_reference = const value_type&;
-	using Comparator = std::function<bool(const_reference, const_reference)>;
-
-	CmpQueue(const size_type n, const Comparator& less = std::less<value_type>()) : a_(n, less), b_(n, less), less_(less) {}
-
-	constexpr bool empty() const {
-		return a_.empty() && b_.empty();
-	}
-
-	value_type min_value() const {
-		if (a_.empty()) {
-			return b_.min_value();
-		}
-		if (b_.empty()) {
-			return a_.min_value();
-		}
-		const value_type a = a_.min_value();
-		const value_type b = b_.min_value();
-		return less_(a, b) ? a : b;
-	}
-
-	void push(const_reference element) {
-		a_.push(element);
-	}
-
-	value_type pop() {
-		if (b_.empty()) {
-			while (!a_.empty()) {
-				b_.push(a_.pop());
-			}
-		}
-		return b_.pop();
-	}
-
-	void clear() {
-		a_.clear();
-		b_.clear();
-	}
-
-private:
-	CmpStack<value_type> a_;
-	CmpStack<value_type> b_;
-	Comparator less_;
 };

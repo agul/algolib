@@ -1,27 +1,20 @@
 #pragma once
-#include <functional>
+#include <utility>
 #include <vector>
 
 template<typename T>
 class Stack {
 public:
 	using value_type = T;
-	using size_type = size_t;
+	using size_type = std::size_t;
 	using reference = value_type&;
 	using const_reference = const value_type&;
 	using rvalue = value_type&&;
 	using container = std::vector<value_type>;
 
-	Stack(const size_type max_size) : data_(container(max_size)) {
+	explicit Stack(const size_type max_size) : data_(container(max_size)) {
 		clear();
 	}
-
-	Stack() = delete;
-
-	Stack(const Stack&) = default;
-	Stack& operator =(const Stack&) = default;
-	Stack(Stack&&) = default;
-	Stack& operator =(Stack&&) = default;
 
 	reference top() {
 		return data_[top_index_ - 1];
@@ -91,45 +84,5 @@ public:
 private:
 	container data_;
 	size_type top_index_;
-
-};
-
-template<typename T>
-class CmpStack {
-public:
-	using value_type = T;
-	using size_type = size_t;
-	using const_reference = const value_type&;
-	using Comparator = std::function<bool(const_reference, const_reference)>;
-
-	CmpStack(const size_type n, const Comparator& less = std::less<value_type>()) : stack_(n), less_(less) {}
-
-	constexpr bool empty() const {
-		return stack_.empty();
-	}
-
-	value_type min_value() const {
-		return stack_.empty() ? 0 : stack_.top().second;
-	}
-
-	void push(const_reference element) {
-		value_type cur_min = element;
-		if (!stack_.empty() && less_(stack_.top().second, cur_min)) {
-			cur_min = stack_.top().second;
-		}
-		stack_.push(std::make_pair(element, cur_min));
-	}
-
-	value_type pop() {
-		return stack_.pop().first;
-	}
-
-	void clear() {
-		stack_.clear();
-	}
-
-private:
-	Stack<std::pair<value_type, value_type>> stack_;
-	Comparator less_;
 
 };
