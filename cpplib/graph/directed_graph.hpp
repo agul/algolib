@@ -24,8 +24,7 @@ private:
 
 template<typename T, size_t MASK>
 DirectedGraph<T, MASK> DirectedGraph<T, MASK>::reversed() const {
-	DirectedGraph<T, MASK> result;
-	result.init(this->vertices_count_);
+	DirectedGraph<T, MASK> result(this->vertices_count_);
 	for (const auto& edge : this->edges()) {
 		result.add_directed_edge(edge.reversed());
 	}

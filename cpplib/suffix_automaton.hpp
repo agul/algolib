@@ -26,6 +26,7 @@ public:
 
 	SuffixAutomaton(const int n) {
 		states = new State[n << 1];
+		init();
 	}
 
 	~SuffixAutomaton() {

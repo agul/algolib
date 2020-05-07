@@ -44,6 +44,10 @@ public:
 		size_t cnt_;
 	};
 
+	Trie() {
+		init();
+	}
+
 	void init() {
 		states_.resize(1);
 	}
