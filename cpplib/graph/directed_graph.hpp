@@ -9,6 +9,7 @@ public:
 	DirectedGraph() : DirectedGraph(0) {}
 	DirectedGraph(const size_t vertices_count) : Graph<T, MASK>(vertices_count) {}
 
+	bool is_acyclic() const;
 	bool top_sort_acyclic(std::vector<size_t>* vertex_order = nullptr) const;
 	void top_sort_rec(std::vector<size_t>* vertex_order) const;
 
@@ -29,6 +30,11 @@ DirectedGraph<T, MASK> DirectedGraph<T, MASK>::reversed() const {
 		result.add_directed_edge(edge.reversed());
 	}
 	return result;
+}
+
+template<typename T, size_t MASK>
+bool DirectedGraph<T, MASK>::is_acyclic() const {
+	return this->top_sort_acyclic();
 }
 
 template<typename T, size_t MASK>
@@ -56,10 +62,11 @@ bool DirectedGraph<T, MASK>::top_sort_acyclic(std::vector<size_t>* vertex_order)
 			}
 		}
 	}
+	const bool result = (order.size() == this->vertices_count_);
 	if (vertex_order != nullptr) {
 		vertex_order->swap(order);
 	}
-	return order.size() == this->vertices_count_;
+	return result;
 }
 
 template<typename T, size_t MASK>
