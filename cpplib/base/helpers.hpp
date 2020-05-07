@@ -37,17 +37,6 @@ inline bool umax(T& a, const T& b) {
 	return (a < b ? a = b, true : false);
 }
 
-namespace std {
-
-template<typename T, typename U>
-struct hash<std::pair<T, U>> {
-	std::size_t operator()(const std::pair<T, U>& lhs) const {
-		return lhs.first * 877117 + lhs.second;
-	}
-};
-
-}
-
 #ifdef _MSC_VER
 static uint32_t __inline __clz(uint32_t x) {
 	unsigned long r = 0;
