@@ -24,7 +24,7 @@ namespace oaht
 	public:		
 		const node<_Key, _Value> UNDEFINED;
 
-		hash_map(size_t capacity) : capacity(capacity), size(0), UNDEFINED(node<_Key, _Value>()) {
+		explicit hash_map(size_t capacity) : capacity(capacity), size(0), UNDEFINED(node<_Key, _Value>()) {
 			nodes = new node<_Key, _Value>[capacity];
 
 			for (size_t i = 0; i < capacity; i++)

@@ -6,7 +6,7 @@
 class LCA {
 public:
 	template<typename T, size_t MASK>
-	LCA(const UndirectedGraph<T, MASK>& graph) : up_(graph.vertices_count()), tin_(graph.vertices_count()),
+	explicit LCA(const UndirectedGraph<T, MASK>& graph) : up_(graph.vertices_count()), tin_(graph.vertices_count()),
 		tout_(graph.vertices_count()), timer_(0) {
 		log_ = 1;
 		while ((1 << log_) <= graph.vertices_count()) {

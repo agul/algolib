@@ -119,7 +119,8 @@ public:
 	};
 
 	Graph() : Graph(0) {}
-	Graph(const size_t vertices_count) {
+
+	explicit Graph(const size_t vertices_count) {
 		init(vertices_count);
 	}
 

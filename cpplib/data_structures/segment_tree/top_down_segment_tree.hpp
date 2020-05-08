@@ -8,7 +8,7 @@ class TopDownSegmentTree : public BaseSegmentTree<T, Merge> {
 public:
 	using Base = BaseSegmentTree<T, Merge>;
 
-	TopDownSegmentTree(
+	explicit TopDownSegmentTree(
 			const size_t N,
 			const T& default_value = T(0),
 			const Merge& merge = Merge(),

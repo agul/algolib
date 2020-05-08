@@ -4,7 +4,7 @@
 template<typename T, typename Merge>
 class BaseSegmentTree {
 public:
-	BaseSegmentTree(
+	explicit BaseSegmentTree(
 			const size_t N,
 			const T& default_value = T(0),
 			const Merge& merge = Merge()

@@ -8,7 +8,8 @@ template<typename T = long long, size_t MASK = 0>
 class UndirectedGraph : public Graph<T, MASK> {
 public:
 	UndirectedGraph() : UndirectedGraph(0) {}
-	UndirectedGraph(const size_t vertices_count) : Graph<T, MASK>(vertices_count) {}
+
+	explicit UndirectedGraph(const size_t vertices_count) : Graph<T, MASK>(vertices_count) {}
 
 	template<size_t Mask = MASK, typename std::enable_if<!is_weighted<Mask>::value>::type* = nullptr>
 	void add_bidirectional_edge(const size_t from, const size_t to) {

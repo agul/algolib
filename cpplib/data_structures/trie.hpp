@@ -13,7 +13,8 @@ public:
 		using container = std::unordered_map<char, size_t>;
 
 		State() : State(0) {}
-		State(const size_t cnt) : cnt_(cnt) {}
+
+		explicit State(const size_t cnt) : cnt_(cnt) {}
 
 		const container& next() const {
 			return next_;

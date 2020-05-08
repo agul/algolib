@@ -12,7 +12,7 @@ public:
 
 	long long * hash, *deg;
 
-	SingleHasher(const int n) {
+	explicit SingleHasher(const int n) {
 		hash = new long long[n + 1];
 		deg = new long long[n + 1];
 		calc_powers(deg, BASE, n);
@@ -101,7 +101,7 @@ public:
 	int P;
 	StringView str;
 
-	Hasher(const int n, const int P = std::max(rand(), 307)) : P(P) {
+	explicit Hasher(const int n, const int P = std::max(rand(), 307)) : P(P) {
 		hash = new T[n + 1];
 		deg = new T[n + 1];
 		deg[0] = 1;

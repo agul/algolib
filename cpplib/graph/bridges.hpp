@@ -6,7 +6,7 @@
 class GraphBridges {
 public:
 	template<typename T, size_t MASK>
-	GraphBridges(const UndirectedGraph<T, MASK>& graph) : fup_(graph.vertices_count()),
+	explicit GraphBridges(const UndirectedGraph<T, MASK>& graph) : fup_(graph.vertices_count()),
 		tin_(graph.vertices_count()), used_(graph.vertices_count()), timer_(0) {
 		find_bridges(graph);
 	}

@@ -8,7 +8,7 @@ public:
 	T *data;
 	int N;
 
-	FenwickTreeSum(const int N) : N(N) {
+	explicit FenwickTreeSum(const int N) : N(N) {
 		data = new T[N];
 		std::fill_n(data, N, 0);
 	}

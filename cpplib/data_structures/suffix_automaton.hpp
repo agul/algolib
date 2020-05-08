@@ -24,7 +24,7 @@ public:
 	State * states;
 	int sz, last;
 
-	SuffixAutomaton(const int n) {
+	explicit SuffixAutomaton(const int n) {
 		states = new State[n << 1];
 		init();
 	}
