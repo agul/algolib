@@ -42,53 +42,47 @@ inline T random_big_prime(const T from = 1000000000, const T to = INF) {
 	return random_prime(from, to);
 }
 
-inline void eratosthenes_sieve(const size_t n, std::vector<bool>* prime) {
+inline std::vector<bool> eratosthenes_sieve(const size_t n) {
 	if (n < 2) {
-		prime->assign(n, false);
-		return;
+		return std::vector<bool>(n, false);
 	}
-	std::vector<bool> result(n, true);
-	result[0] = result[1] = false;
+	std::vector<bool> prime(n, true);
+	prime[0] = false;
+	prime[1] = false;
 	for (size_t i = 4; i < n; i += 2) {
-		result[i] = false;
+		prime[i] = false;
 	}
 	for (size_t i = 3; i * i < n; i += 2) {
-		if (result[i]) {
-			const size_t delta = i << 1;
+		if (prime[i]) {
+			const size_t delta = i * 2;
 			for (size_t j = i * i; j < n; j += delta) {
-				result[j] = false;
+				prime[j] = false;
 			}
 		}
 	}
-	prime->swap(result);
+	return prime;
 }
 
-inline void eratosthenes_sieve(std::vector<bool>* prime) {
-	eratosthenes_sieve(prime->size(), prime);
-}
-
-template<typename T>
-inline void primes_vector(const size_t n, std::vector<T>* primes) {
-	std::vector<T> result;
+template<typename T = uint32_t>
+inline std::vector<T> primes_vector(const size_t n) {
 	if (n < 2) {
-		primes->swap(result);
-		return;
+		return {};
 	}
-	std::vector<bool> prime(n);
-	eratosthenes_sieve(&prime);
-	result.emplace_back(2);
+	const std::vector<bool> prime = eratosthenes_sieve(n);
+	std::vector<T> result = {2};
 	for (size_t i = 3; i < n; i += 2) {
 		if (prime[i]) {
 			result.emplace_back(i);
 		}
 	}
-	primes->swap(result);
+	return result;
 }
 
-template<typename T>
-inline void min_prime_div_vector(const size_t n, std::vector<T>* min_prime_div) {
+template<typename T = uint32_t>
+inline std::vector<T> min_prime_div_vector(const size_t n) {
 	std::vector<T> result(n, 0);
-	result[0] = result[1] = 1;
+	result[0] = 1;
+	result[1] = 1;
 	for (size_t i = 2; i < n; i += 2) {
 		result[i] = 2;
 	}
@@ -96,7 +90,7 @@ inline void min_prime_div_vector(const size_t n, std::vector<T>* min_prime_div) 
 	while (index * index < n) {
 		if (result[index] == 0) {
 			result[index] = index;
-			const size_t delta = index << 1;
+			const size_t delta = index * 2;
 			for (size_t j = index * index; j < n; j += delta) {
 				if (result[j] == 0) {
 					result[j] = index;
@@ -111,10 +105,5 @@ inline void min_prime_div_vector(const size_t n, std::vector<T>* min_prime_div) 
 		}
 		++index;
 	}
-	min_prime_div->swap(result);
-}
-
-template<typename T>
-inline void min_prime_div_vector(std::vector<T>* min_prime_div) {
-	min_prime_div_vector(min_prime_div->size(), min_prime_div);
+	return result;
 }
