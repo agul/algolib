@@ -58,8 +58,9 @@ std::vector<std::string> vec_splitter(std::string s) {
 	s += ',';
 	std::vector<std::string> res;
 	while (!s.empty()) {
-		res.push_back(s.substr(0, s.find(',')));
-		s = s.substr(s.find(',') + 1);
+		const size_t pos = s.find(',');
+		res.emplace_back(s.substr(0, pos));
+		s = s.substr(pos + 1);
 	}
 	return res;
 }
