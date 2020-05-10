@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <string>
 #include <type_traits>
 
 #include "maths/maths.hpp"
@@ -133,6 +134,10 @@ public:
 		return{ inverse_element(value_, MOD) };
 	}
 
+	std::string str() const {
+		return std::to_string(value_);
+	}
+
 	friend std::istream& operator >>(std::istream& in, ModInt& rhs) {
 		T x;
 		in >> x;
@@ -170,4 +175,9 @@ struct is_integral<ModInt<T, MOD>> : std::true_type {};
 template<typename T, T MOD>
 struct is_arithmetic<ModInt<T, MOD>> : std::true_type {};
 
+}
+
+template<typename T, T MOD>
+std::string to_string(const ModInt<T, MOD>& val) {
+	return val.str();
 }
