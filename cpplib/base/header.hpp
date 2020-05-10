@@ -1,5 +1,5 @@
 /**
- *  This solution uses prewritten code library cpplib
+ *  This solution uses cpplib (prewritten code library)
  *  More info: https://github.com/agul/algolib/tree/master/cpplib
  */
 
