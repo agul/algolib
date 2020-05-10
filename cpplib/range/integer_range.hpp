@@ -89,29 +89,3 @@ private:
 	T end_;
 
 };
-
-template<typename T>
-class ReversedIntegerRange {
-public:
-	using const_iterator = IntegerIterator<T>;
-	using reverse_iterator = std::reverse_iterator<const_iterator>;
-
-	constexpr ReversedIntegerRange(const T begin, const T end) : begin_(begin), end_(end) {}
-
-	constexpr reverse_iterator begin() const {
-		return reverse_iterator(const_iterator(begin_));
-	}
-
-	constexpr reverse_iterator end() const {
-		return reverse_iterator(const_iterator(end_));
-	}
-
-	constexpr T size() const {
-		return end_ - begin_;
-	}
-
-private:
-	T begin_;
-	T end_;
-
-};

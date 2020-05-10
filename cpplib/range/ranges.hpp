@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "range/integer_range.hpp"
+#include "range/reversed_range.hpp"
 
 template<typename T>
 constexpr IntegerRange<T> range(const T to) {
@@ -25,23 +26,23 @@ constexpr IntegerRange<T> inclusiveRange(const T from, const T to) {
 }
 
 template<typename T>
-constexpr ReversedIntegerRange<T> downrange(const T from) {
-	return ReversedIntegerRange<T>(from, 0);
+constexpr ReversedRange<IntegerRange<T>> downrange(const T from) {
+	return reversed(range(from));
 }
 
 template<typename T>
-constexpr ReversedIntegerRange<T> downrange(const T from, const T to) {
-	return ReversedIntegerRange<T>(from, to);
+constexpr ReversedRange<IntegerRange<T>> downrange(const T from, const T to) {
+	return reversed(range(to, from));
 }
 
 template<typename T>
-constexpr ReversedIntegerRange<T> inclusiveDownrange(const T from) {
-	return ReversedIntegerRange<T>(from + 1, 0);
+constexpr ReversedRange<IntegerRange<T>> inclusiveDownrange(const T from) {
+	return reversed(range(from + 1));
 }
 
 template<typename T>
-constexpr ReversedIntegerRange<T> inclusiveDownrange(const T from, const T to) {
-	return ReversedIntegerRange<T>(from + 1, to);
+constexpr ReversedRange<IntegerRange<T>> inclusiveDownrange(const T from, const T to) {
+	return reversed(range(to, from + 1));
 }
 
 template<typename R>
@@ -114,11 +115,5 @@ R sorted(R range) {
 template<typename R, typename Comp>
 R sorted(R range, Comp comp) {
 	sort(range, comp);
-	return range;
-}
-
-template<typename R>
-R reversed(R range) {
-	reverse(range);
 	return range;
 }
