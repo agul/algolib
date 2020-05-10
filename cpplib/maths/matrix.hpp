@@ -262,6 +262,7 @@ void Matrix<T>::swap_cols(const size_t i, const size_t j) {
 template<typename T>
 void Matrix<T>::shuffle_rows() {
 	DataStorage tmp;
+	tmp.reserve(rows_cnt_);
 	std::vector<size_t> indices(rows_cnt_);
 	for (size_t i = 0; i < rows_cnt_; ++i) {
 		indices[i] = i;
