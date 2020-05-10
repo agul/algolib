@@ -99,6 +99,12 @@ void unique(std::vector<T>& range) {
 	range.erase(std::unique(range.begin(), range.end()), range.end());
 }
 
+template<typename T>
+void dedup(std::vector<T>& range) {
+	sort(range);
+	unique(range);
+}
+
 template<typename R>
 R sorted(R range) {
 	sort(range);
