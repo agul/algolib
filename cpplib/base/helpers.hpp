@@ -80,10 +80,7 @@ inline size_t get_days_in_month(const size_t month, const size_t year) {
 }
 
 #define fill(a, x) memset(a, x, sizeof(a))
-#define sz(a) ((int)a.size())
 #define X first
 #define Y second
-#define mp std::make_pair
 #define all(a) a.begin(), a.end()
 #define rall(a) a.rbegin(), a.rend()
-#define pb push_back
