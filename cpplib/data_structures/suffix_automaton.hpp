@@ -96,7 +96,4 @@ public:
 		delete[] val;
 	}
 
-private:
-	SuffixAutomaton();
-
 };

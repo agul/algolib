@@ -47,9 +47,6 @@ public:
 		return result;
 	}
 
-private:
-	SingleHasher();
-
 };
 
 class DoubleHasher_t {

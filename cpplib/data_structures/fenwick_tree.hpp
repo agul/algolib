@@ -52,10 +52,6 @@ public:
 		}
 		return query(r) - query(l - 1);
 	}
-
-private:
-	FenwickTreeSum();
-
 };
 
 template<class T> class FenwickTreeSumRangeUpdates {
@@ -116,8 +112,6 @@ public:
 	}
 
 private:
-	FenwickTreeSumRangeUpdates();
-
 	void _update(int at, const T updMul, const T updAdd) {
 		while (at < N) {
 			mul[at] += updMul;
