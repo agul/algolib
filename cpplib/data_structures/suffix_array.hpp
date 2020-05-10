@@ -4,7 +4,7 @@
 #include <cstring>
 #include <string>
 
-#include "data_structures/segment_tree/bottom_up_segment_tree.hpp"
+#include "segment_tree/bottom_up_segment_tree.hpp"
 
 class SuffixArray {
 // class for internal functions for suffix array construction

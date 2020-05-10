@@ -6,10 +6,10 @@
 #include <utility>
 #include <vector>
 
-#include "base/constants.hpp"
 #include "hash/safe_integral_hash.hpp"
 #include "hash/std_pair_hash.hpp"
 #include "maths/is_equal_to_zero.hpp"
+#include "constants.hpp"
 
 #ifdef _MSC_VER
 #include <intrin.h>

@@ -2,7 +2,7 @@
 #include <cmath>
 #include <vector>
 
-#include "maths/random.hpp"
+#include "random.hpp"
 
 template<typename T>
 inline bool is_prime(const T& n)

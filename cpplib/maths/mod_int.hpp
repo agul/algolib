@@ -3,7 +3,7 @@
 #include <string>
 #include <type_traits>
 
-#include "maths/maths.hpp"
+#include "maths.hpp"
 
 constexpr const int BASE_MOD = 1000000007;  /// caide keep
 

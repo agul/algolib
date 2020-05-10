@@ -2,8 +2,8 @@
 #include <algorithm>
 #include <vector>
 
-#include "range/integer_range.hpp"
-#include "range/reversed_range.hpp"
+#include "integer_range.hpp"
+#include "reversed_range.hpp"
 
 template<typename T>
 constexpr IntegerRange<T> range(const T to) {
