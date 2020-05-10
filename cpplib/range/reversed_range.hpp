@@ -8,7 +8,7 @@ public:
 	using const_iterator = typename std::decay<T>::type::const_iterator;
 	using reverse_iterator = std::reverse_iterator<const_iterator>;
 
-	explicit constexpr ReversedRange(T& iterable) : begin_(iterable.begin()), end_(iterable.end()) {}
+	explicit constexpr ReversedRange(const T& iterable) : begin_(iterable.begin()), end_(iterable.end()) {}
 
 	constexpr reverse_iterator begin() const {
 		return reverse_iterator(end_);
