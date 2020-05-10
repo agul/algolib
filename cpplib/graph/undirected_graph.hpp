@@ -56,7 +56,6 @@ public:
 	}
 
 	bool is_connected() const;
-
 };
 
 template<typename T, size_t MASK>

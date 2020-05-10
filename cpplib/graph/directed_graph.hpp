@@ -20,7 +20,6 @@ public:
 
 private:
 	void top_sort_rec_impl(const size_t vertex, std::vector<size_t>& order, std::vector<bool>& used) const;
-
 };
 
 template<typename T, size_t MASK>

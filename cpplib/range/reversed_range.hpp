@@ -21,7 +21,6 @@ public:
 private:
 	const_iterator begin_;
 	const_iterator end_;
-
 };
 
 template<typename T>

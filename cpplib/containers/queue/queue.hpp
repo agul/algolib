@@ -99,5 +99,4 @@ private:
 	container data_;
 	size_type head_index_;
 	size_type tail_index_;
-
 };

@@ -86,5 +86,4 @@ private:
 	size_t offset_;
 	size_t size_;
 	size_t N_;
-
 };

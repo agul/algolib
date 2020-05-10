@@ -40,5 +40,4 @@ public:
 private:
 	Stack<std::pair<value_type, value_type>> stack_;
 	const Cmp cmp_;
-
 };

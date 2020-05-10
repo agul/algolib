@@ -50,5 +50,4 @@ private:
 	CmpStack<value_type, Cmp> a_;
 	CmpStack<value_type, Cmp> b_;
 	const Cmp cmp_;
-
 };

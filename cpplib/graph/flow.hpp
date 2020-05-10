@@ -104,5 +104,4 @@ private:
 	std::vector<size_t> pointer;
 	std::vector<T> dist;
 	std::vector<bool> used;
-
 };

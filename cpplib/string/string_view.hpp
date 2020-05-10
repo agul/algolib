@@ -88,7 +88,6 @@ public:
 private:
 	const char* data_;
 	size_t length_;
-
 };
 
 bool operator ==(const StringView& lhs, const StringView& rhs) {

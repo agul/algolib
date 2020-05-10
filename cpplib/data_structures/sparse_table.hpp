@@ -46,5 +46,4 @@ private:
 	Comparator less_;
 	const std::vector<T>* arr_;
 	size_t size_;
-
 };

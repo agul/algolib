@@ -170,7 +170,6 @@ public:
 
 private:
 	T value_;
-
 };
 
 namespace std {

@@ -60,13 +60,11 @@ public:
 		const std::vector<size_t>& to_;
 		const std::vector<T>& weight_;
 		size_t index_;
-
 	};
 
 	template<typename Range>
 	class EdgesHolder {
 	public:
-
 		template<typename BaseConstIterator>
 		class EdgeConstIterator : public BaseConstIterator {
 		public:
@@ -90,7 +88,6 @@ public:
 
 		private:
 			Edge cur_edge_;
-
 		};
 
 		using const_iterator = EdgeConstIterator<typename Range::const_iterator>;
@@ -115,7 +112,6 @@ public:
 	private:
 		const const_iterator begin_;
 		const const_iterator end_;
-
 	};
 
 	Graph() : Graph(0) {}

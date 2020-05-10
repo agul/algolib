@@ -84,5 +84,4 @@ public:
 private:
 	container data_;
 	size_type top_index_;
-
 };

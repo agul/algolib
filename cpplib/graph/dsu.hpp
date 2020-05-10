@@ -62,5 +62,4 @@ public:
 private:
 	std::vector<size_type> parent_;
 	size_type sets_count_;
-
 };

@@ -68,9 +68,6 @@ protected:
 	size_t size_;
 
 	std::vector<T> data_;
-
 	const Merge merge_;
-
 	const T default_value_;
-	
 };

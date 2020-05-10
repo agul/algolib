@@ -24,5 +24,4 @@ public:
 private:
 	T begin_;
 	T end_;
-
 };

@@ -34,5 +34,4 @@ public:
 
 private:
 	size_t n_;
-
 };

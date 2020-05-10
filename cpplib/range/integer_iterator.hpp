@@ -63,5 +63,4 @@ public:
 
 private:
 	value_type value_;
-
 };
