@@ -161,11 +161,23 @@ template<class T> std::string toRoman(T n) {
 }
 
 template<typename T>
-void calc_powers(std::vector<T>& deg, const T base) {
-	deg[0] = 1;
-	for (size_t i = 1; i < deg.size(); ++i) {
-		deg[i] = deg[i - 1] * base;
+std::vector<T> calc_powers(const T base, const size_t n) {
+	std::vector<T> powers(n + 1);
+	powers[0] = 1;
+	for (size_t i = 1; i < powers.size(); ++i) {
+		powers[i] = powers[i - 1] * base;
 	}
+	return powers;
+}
+
+template<typename T>
+std::vector<T> calc_factorial(const size_t n) {
+	std::vector<T> factorial(n + 1);
+	factorial[0] = 1;
+	for (size_t i = 1; i < factorial.size(); ++i) {
+		factorial[i] = factorial[i - 1] * i;
+	}
+	return factorial;
 }
 
 inline uint32_t abs(const uint32_t x) {
