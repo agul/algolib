@@ -1,3 +1,8 @@
+/**
+ *  This solution uses prewritten code library cpplib
+ *  More info: https://github.com/agul/algolib/tree/master/cpplib
+ */
+
 #pragma once
 #pragma comment(linker, "/STACK:66777216")
 #pragma warning(disable : 4996)
