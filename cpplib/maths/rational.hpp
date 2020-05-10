@@ -256,4 +256,4 @@ void swap(Rational<T>& lhs, Rational<T>& rhs) {
 	lhs.swap(rhs);
 }
 
-}
+}  // namespace std

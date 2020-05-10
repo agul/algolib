@@ -208,4 +208,4 @@ struct hash<Decimal> {
 	}
 };
 
-}
+}  // namespace std

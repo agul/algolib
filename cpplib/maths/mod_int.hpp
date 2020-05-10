@@ -175,7 +175,7 @@ struct is_integral<ModInt<T, MOD>> : std::true_type {};
 template<typename T, T MOD>
 struct is_arithmetic<ModInt<T, MOD>> : std::true_type {};
 
-}
+}  // namespace std
 
 template<typename T, T MOD>
 std::string to_string(const ModInt<T, MOD>& val) {
