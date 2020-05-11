@@ -92,6 +92,23 @@ size_t digit_count(const T n) {
 }
 
 template<typename T>
+std::vector<T> divisors_vector(const T n) {
+	const auto approximate_divisors_count = static_cast<size_t>(cbrt(n));
+	std::vector<T> ans;
+	ans.reserve(approximate_divisors_count);
+	const auto floored_square_root = static_cast<T>(sqrt(n));
+	for (T i = 1; i <= floored_square_root; ++i) {
+		if (n % i == 0) {
+			ans.emplace_back(i);
+			if (n / i != i) {
+				ans.emplace_back(n / i);
+			}
+		}
+	}
+	return ans;
+}
+
+template<typename T>
 T euler_function(T n) {
 	T res = n;
 	for (T i = 2; i * i <= n; ++i) {
