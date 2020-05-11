@@ -138,6 +138,11 @@ public:
 		return std::to_string(value_);
 	}
 
+	template<typename C>
+	C as() const {
+		return static_cast<C>(value_);
+	}
+
 	friend std::istream& operator >>(std::istream& in, ModInt& rhs) {
 		T x;
 		in >> x;
