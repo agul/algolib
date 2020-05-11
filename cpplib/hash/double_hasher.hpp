@@ -7,11 +7,11 @@
 template<typename T>
 class DoubleHasher {
 public:
-	static const uint32_t MA = static_cast<uint32_t>(1e9) + 7;
-	static const uint32_t MB = static_cast<uint32_t>(1e9) + 9;
+	static const uint32_t AMOD = static_cast<uint32_t>(1e9) + 7;
+	static const uint32_t BMOD = static_cast<uint32_t>(1e9) + 9;
 
-	using a_integer_type = ModInt<T, MA>;
-	using b_integer_type = ModInt<T, MB>;
+	using a_integer_type = ModInt<T, AMOD>;
+	using b_integer_type = ModInt<T, BMOD>;
 
 	DoubleHasher() : DoubleHasher(0) {}
 	DoubleHasher(const T x) : DoubleHasher(x, x) {}
@@ -43,7 +43,7 @@ public:
 	}
 
 	explicit operator long long() const {
-		return a.template as<int64_t>() * MB + b.template as<int64_t>() + 1;
+		return a.template as<int64_t>() * BMOD + b.template as<int64_t>() + 1;
 	}
 
 	std::string str() const {
