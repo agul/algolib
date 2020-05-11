@@ -4,51 +4,11 @@
 #include "maths/maths.hpp"
 #include "string/string_view.hpp"
 
-class DoubleHasher_t {
-public:
-	static const uint32_t MA = static_cast<uint32_t>(1e9) + 7;
-	static const uint32_t MB = static_cast<uint32_t>(1e9) + 9;
-
-	int a, b;
-
-	DoubleHasher_t() {}
-	DoubleHasher_t(const int x) : a(x), b(x) {}
-	DoubleHasher_t(const int a, const int b) : a(a), b(b) {}
-
-	DoubleHasher_t operator + (const DoubleHasher_t &x) const {
-		return DoubleHasher_t((a + x.a) % MA, (b + x.b) % MB);
-	}
-
-	DoubleHasher_t operator - (const DoubleHasher_t &x) const {
-		return DoubleHasher_t((a + MA - x.a) % MA, (b + MB - x.b) % MB);
-	}
-
-	DoubleHasher_t operator * (const int x) const {
-		return DoubleHasher_t(((long long)a * x) % MA, ((long long)b * x) % MB);
-	}
-
-	DoubleHasher_t operator * (const DoubleHasher_t &x) const {
-		return DoubleHasher_t(((long long)a * x.a) % MA, ((long long)b * x.b) % MB);
-	}
-
-	bool operator == (const DoubleHasher_t &x) const {
-		return a == x.a && b == x.b;
-	}
-
-	bool operator < (const DoubleHasher_t& x) {
-		return a < x.a || (a == x.a && b < x.b);
-	}
-
-	explicit operator long long() const {
-		return (long long)a * MB + b + 1;
-	}
-
-};
+#include "double_hasher.hpp"
 
 template<class T>
 class Hasher {
 public:
-
 	T * deg, * hash;
 	int P;
 	StringView str;
