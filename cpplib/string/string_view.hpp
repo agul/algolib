@@ -35,6 +35,10 @@ public:
 		return length_;
 	}
 
+	constexpr size_t size() const {
+		return length_;
+	}
+
 	constexpr bool empty() const {
 		return length_ == 0;
 	}
