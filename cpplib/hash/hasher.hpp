@@ -52,8 +52,9 @@ public:
 	T * deg, * hash;
 	int P;
 	StringView str;
+	int n;
 
-	explicit Hasher(const int n, const int P = std::max(rand(), 307)) : P(P) {
+	explicit Hasher(const int n, const int P = std::max(rand(), 307)) : n(n), P(P) {
 		hash = new T[n + 1];
 		deg = new T[n + 1];
 		deg[0] = 1;
@@ -88,7 +89,7 @@ public:
 	}
 
 	int lcp(const int i, const int j) const {
-		int L = 0, R = n - max(i, j);
+		int L = 0, R = n - std::max(i, j) + 1;
 		while (L < R) {
 			int M = (L + R + 1) >> 1;
 			if (getHash(i, i + M - 1) == getHash(j, j + M - 1)) {
@@ -108,7 +109,7 @@ private:
 	Hasher();
 
 	int cmpSubstrings(int a, int b) const {
-		int LEN = n - max(a, b), L = lcp(a, b);
+		int LEN = n - std::max(a, b), L = lcp(a, b);
 		return L < LEN ? (int)str[a + L] - str[b + L] : b - a;
 	}
 
