@@ -4,51 +4,6 @@
 #include "maths/maths.hpp"
 #include "string/string_view.hpp"
 
-class SingleHasher {
-public:
-
-	static const long long BASE = 277;
-	static const int MOD = 1000000007;
-
-	long long * hash, *deg;
-
-	explicit SingleHasher(const int n) {
-		hash = new long long[n + 1];
-		deg = new long long[n + 1];
-		calc_powers(deg, BASE, n);
-	}
-
-	~SingleHasher() {
-		delete[] hash;
-		delete[] deg;
-	}
-
-	void hashString(const char * s, int n = 0)
-		// hash begins at index 1
-	{
-		if (!n) {
-			n = strlen(s);
-		}
-		hash[0] = 0;
-		for (int i = 0; i < n; ++i) {
-			hash[i + 1] = (hash[i] * BASE + s[i]) % MOD;
-		}
-	}
-
-	void hashString(const std::string& s) {
-		hashString(s.c_str(), s.length());
-	}
-
-	long long getHash(const int l, const int r) const {
-		long long result = (hash[r] - hash[l - 1] * deg[r - l + 1]) % MOD;
-		if (result < 0) {
-			result += MOD;
-		}
-		return result;
-	}
-
-};
-
 class DoubleHasher_t {
 public:
 	static const uint32_t MA = static_cast<uint32_t>(1e9) + 7;
