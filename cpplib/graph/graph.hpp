@@ -6,7 +6,7 @@
 #include "base/helpers.hpp"
 #include "maths/maths.hpp"
 #include "range/ranges.hpp"
-#include "containers/queue/queue.hpp"
+#include "collections/queue/queue.hpp"
 	
 enum GraphType {
 	Weighted = 1
