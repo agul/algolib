@@ -107,3 +107,39 @@ inline std::vector<T> min_prime_div_vector(const size_t n) {
 	}
 	return result;
 }
+
+template<typename T, typename size_type = std::size_t>
+std::vector<std::pair<T, size_type>> get_prime_divisors_vector(const T n, const std::vector<T>& min_prime_div_vector) {
+	std::vector<std::pair<T, size_type>> prime_divisors;
+	T cur = n;
+	while (cur > 1) {
+		const T min_div = min_prime_div_vector[cur];
+		if (!prime_divisors.empty() && prime_divisors.back().first == min_div) {
+			++prime_divisors.back().second;
+		} else {
+			prime_divisors.emplace_back(min_div, 1);
+		}
+		cur /= min_div;
+	}
+	return prime_divisors;
+}
+
+template<typename T, typename size_type = std::size_t>
+std::vector<std::pair<T, size_type>> get_prime_divisors_vector(const T n) {
+	std::vector<std::pair<T, size_type>> prime_divisors;
+	T cur = n;
+	for (T i = 2; static_cast<int64_t>(i) * i <= cur; ++i) {
+		if (cur % i == 0) {
+			size_type degree = 0;
+			while (cur % i == 0) {
+				++degree;
+				cur /= i;
+			}
+			prime_divisors.emplace_back(i, degree);
+		}
+	}
+	if (cur > 1) {
+		prime_divisors.emplace_back(cur, 1);
+	}
+	return prime_divisors;
+}
