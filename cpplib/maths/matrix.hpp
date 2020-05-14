@@ -201,9 +201,9 @@ public:
 private:
 	size_type rows_cnt_;
 	size_type cols_cnt_;
-	value_type mod_;
-
 	matrix_container_type data_;
+
+	value_type mod_;
 };
 
 template <typename T>
