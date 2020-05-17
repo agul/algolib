@@ -29,7 +29,7 @@ public:
 			mod_(mod)
 	{}
 
-	explicit Matrix(const std::initializer_list<std::initializer_list<value_type>>& initializer_list, const value_type mod = 1000000007) :
+	Matrix(const std::initializer_list<std::initializer_list<value_type>>& initializer_list, const value_type mod = 1000000007) :
 			rows_cnt_(initializer_list.size()),
 			cols_cnt_(0),
 			mod_(mod)
@@ -48,7 +48,7 @@ public:
 	}
 
 	template<typename U>
-	Matrix(const Matrix<U>& matrix) :
+	explicit Matrix(const Matrix<U>& matrix) :
 			rows_cnt_(matrix.rows_cnt()),
 			cols_cnt_(matrix.cols_cnt()),
 			data_(matrix.rows_cnt(), vector_container_type(matrix.cols_cnt()))
@@ -150,7 +150,7 @@ public:
 		return cols_cnt_;
 	}
 
-	Matrix operator *(const Matrix& rhs) const {
+	Matrix multiply(const Matrix& rhs) const {
 		Matrix result(rows_cnt_, rhs.cols_cnt_);
 		for (size_type i = 0; i < rows_cnt_; i++) {
 			for (size_type k = 0; k < rhs.cols_cnt_; k++) {
@@ -162,8 +162,12 @@ public:
 		return result;
 	}
 
+	Matrix operator *(const Matrix& rhs) const {
+		return multiply(rhs);
+	}
+
 	Matrix& operator *=(const Matrix& rhs) {
-		Matrix result = operator *(rhs);
+		Matrix result = multiply(rhs);
 		swap(result);
 		return *this;
 	}
