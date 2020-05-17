@@ -79,7 +79,6 @@ inline size_t get_days_in_month(const size_t month, const size_t year) {
 	return kDayMonth[month] + (month == 1 && is_leap_year(year) ? 1 : 0);
 }
 
-#define fill(a, x) memset(a, x, sizeof(a))
 #define X first
 #define Y second
 #define all(a) a.begin(), a.end()
