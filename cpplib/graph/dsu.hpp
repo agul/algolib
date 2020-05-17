@@ -41,10 +41,11 @@ public:
 		return true;
 	}
 
-	void finalize() {
+	DSU& finalize() {
 		for (auto& it : parent_) {
 			it = find_set(it);
 		}
+		return *this;
 	}
 
 	size_type size() const {

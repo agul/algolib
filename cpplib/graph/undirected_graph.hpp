@@ -55,14 +55,20 @@ public:
 		return total_weight;
 	}
 
-	bool is_connected() const;
-};
-
-template<typename T, size_t MASK>
-bool UndirectedGraph<T, MASK>::is_connected() const {
-	DSU dsu(this->vertices_count_);
-	for (const auto& it : this->edges()) {
-		dsu.unite(it.from(), it.to());
+	bool is_connected() const {
+		return build_dsu().sets_count() == 1;
 	}
-	return dsu.sets_count() == 1;
-}
+
+	std::vector<size_t> labelled_components() const {
+		return build_dsu().finalize().data();
+	}
+
+private:
+	DSU build_dsu() const {
+		DSU dsu(this->vertices_count_);
+		for (const auto& it : this->edges()) {
+			dsu.unite(it.from(), it.to());
+		}
+		return dsu;
+	}
+};
