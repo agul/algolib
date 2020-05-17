@@ -6,7 +6,7 @@
 #include <vector>
 
 
-TEST(Ranges, Range) {
+TEST(Ranges, range) {
 	const auto a = range(5);
 	EXPECT_EQ(std::vector<int>(a.begin(), a.end()), std::vector<int>({0, 1, 2, 3, 4}));
 
@@ -20,7 +20,7 @@ TEST(Ranges, Range) {
 	EXPECT_EQ(std::vector<int>(d.begin(), d.end()), std::vector<int>({-5, -4, -3, -2, -1, 0, 1}));
 }
 
-TEST(Ranges, InclusiveRange) {
+TEST(Ranges, inclusive_range) {
 	const auto a = inclusiveRange(4);
 	EXPECT_EQ(std::vector<int>(a.begin(), a.end()), std::vector<int>({0, 1, 2, 3, 4}));
 
@@ -34,7 +34,7 @@ TEST(Ranges, InclusiveRange) {
 	EXPECT_EQ(std::vector<int>(d.begin(), d.end()), std::vector<int>({-5, -4, -3, -2, -1, 0, 1, 2}));
 }
 
-TEST(Ranges, Downrange) {
+TEST(Ranges, downrange) {
 	const auto a = downrange(5);
 	EXPECT_EQ(std::vector<int>(a.begin(), a.end()), std::vector<int>({4, 3, 2, 1, 0}));
 
@@ -48,7 +48,7 @@ TEST(Ranges, Downrange) {
 	EXPECT_EQ(std::vector<int>(d.begin(), d.end()), std::vector<int>({1, 0, -1, -2, -3, -4, -5}));
 }
 
-TEST(Ranges, InclusiveDownrange) {
+TEST(Ranges, inclusive_downrange) {
 	const auto a = inclusiveDownrange(5);
 	EXPECT_EQ(std::vector<int>(a.begin(), a.end()), std::vector<int>({5, 4, 3, 2, 1, 0}));
 
@@ -62,7 +62,7 @@ TEST(Ranges, InclusiveDownrange) {
 	EXPECT_EQ(std::vector<int>(d.begin(), d.end()), std::vector<int>({2, 1, 0, -1, -2, -3, -4, -5}));
 }
 
-TEST(Ranges, Reversed) {
+TEST(Ranges, reversed) {
 	const auto a = reversed(range(3));
 	EXPECT_EQ(std::vector<int>(a.begin(), a.end()), std::vector<int>({2, 1, 0}));
 

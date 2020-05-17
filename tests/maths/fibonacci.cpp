@@ -3,7 +3,7 @@
 #include "maths/fibonacci.hpp"
 #include "maths/mod_int.hpp"
 
-TEST(Fibonacci, GetNthFibonacci) {
+TEST(Fibonacci, get_nth_fibonacci) {
 	EXPECT_EQ(get_nth_fibonacci<int32_t>(0), 1);
 	EXPECT_EQ(get_nth_fibonacci<int32_t>(1), 1);
 
@@ -17,7 +17,7 @@ TEST(Fibonacci, GetNthFibonacci) {
 	}
 }
 
-TEST(Fibonacci, GetNthFibonacciModular) {
+TEST(Fibonacci, get_nth_fibonacci_modular) {
 	using Int = ModInt<int, 1000000007>;
 
 	EXPECT_EQ(get_nth_fibonacci<Int>(998), 589888339);
