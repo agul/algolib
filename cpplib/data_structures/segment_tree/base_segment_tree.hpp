@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 
+#include "maths/bits.hpp"
+
 template<typename T, typename Merge>
 class BaseSegmentTree {
 public:
@@ -22,7 +24,7 @@ public:
 	{}
 
 	static constexpr size_type calculate_offset(const size_type N) {
-		return 1 << (31 - clz(N) + ((N & (N - 1)) == 0 ? 0 : 1));
+		return bit_ceil(N);
 	}
 
 	constexpr size_type offset() const {

@@ -2,6 +2,8 @@
 #include <functional>
 #include <vector>
 
+#include "maths/bits.hpp"
+
 template<typename T> 
 class BottomUpSegmentTree {
 public:
@@ -11,7 +13,7 @@ public:
 			pred_(pred),
 			N_(N),
 			neutral_(neutral_) {
-		offset_ = 1 << (31 - clz(N) + ((N & (N - 1)) == 0 ? 0 : 1));
+		offset_ = bit_ceil(N);
 		size_ = offset_ << 1;
 		data_.resize(size_);
 		init();
