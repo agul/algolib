@@ -1,3 +1,15 @@
 ### `DSU`
 Used and tested at:
 - 2020-05-11 = **[Codeforces 691D](https://codeforces.com/contest/691/problem/D)** (https://github.com/agul/contest-tasks/blob/master/DSvopiVPerestanovke.cpp)
+
+### `UndirectedGraph::labelled_components()` (using `DSU`)
+Used and tested at:
+- 2020-05-17 = **[Codeforces 1354E](https://codeforces.com/contest/1354/problem/E)** (https://github.com/agul/contest-tasks/blob/master/ERaskraskaGrafa.cpp)
+
+### `Graph::is_bipartite()`
+Used and tested at:
+- 2020-05-17 = **[Codeforces 1354E](https://codeforces.com/contest/1354/problem/E)** (https://github.com/agul/contest-tasks/blob/master/ERaskraskaGrafa.cpp)
+
+### `LCA`
+Used and tested at:
+- 2020-05-24 = **[Codechef CHEFTRIP](https://www.codechef.com/problems/CHEFTRIP)** (https://github.com/agul/contest-tasks/blob/master/ChefinaOnATrip.cpp)
