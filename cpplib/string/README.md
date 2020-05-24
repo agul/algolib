@@ -7,6 +7,7 @@ Used and tested at:
 ### `z_function`
 Used and tested at:
 - 2020-05-08 = **[ACMP 1161](https://acmp.ru/asp/do/index.asp?main=task&id_course=2&id_section=18&id_topic=42&id_problem=281)** (https://github.com/agul/contest-tasks/blob/master/ZFunktsiya.cpp)
+- 2020-05-24 = **[Codechef CHEFSHIP](https://www.codechef.com/problems/CHEFSHIP)** (https://github.com/agul/contest-tasks/blob/master/ChefChefinaAndTheirFriendship.cpp)
 
 ### `count_palindromes`
 Used and tested at:
