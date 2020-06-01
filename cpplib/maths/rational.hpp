@@ -46,7 +46,7 @@ public:
 	}
 
 	constexpr Rational operator +() const {
-		return{ a_, b_ };
+		return {a_, b_};
 	}
 
 	Rational& operator ++() {
@@ -66,11 +66,11 @@ public:
 
 	Rational operator --(int) {
 		a_ -= b_;
-		return{ a_ + b_, b_ };
+		return {a_ + b_, b_};
 	}
 
 	constexpr Rational add(const Rational& rhs) const {
-		return{ a_ * rhs.b_ + rhs.a_ * b_, b_ * rhs.b_ };
+		return {a_ * rhs.b_ + rhs.a_ * b_, b_ * rhs.b_};
 	}
 
 	constexpr Rational subtract(const Rational& rhs) const {
@@ -78,11 +78,11 @@ public:
 	}
 
 	constexpr Rational multiply(const Rational& rhs) const {
-		return{ a_ * rhs.a_, b_ * rhs.b_ };
+		return {a_ * rhs.a_, b_ * rhs.b_};
 	}
 
 	constexpr Rational divide(const Rational& rhs) const {
-		return{ a_ * rhs.b_, b_ * rhs.a_ };
+		return {a_ * rhs.b_, b_ * rhs.a_};
 	}
 
 	constexpr Rational operator +(const Rational& rhs) const {
@@ -127,7 +127,7 @@ public:
 		return *this;
 	}
 
-	Rational& operator /=(const Rational& x) {
+	Rational& operator /=(const Rational& rhs) {
 		Rational res = divide(rhs);
 		swap(res);
 		return *this;
@@ -158,7 +158,7 @@ public:
 	}
 
 	friend std::ostream& operator << (std::ostream& out, const Rational& rational) {
-		return out << rational.a_ << " " << rational.b_;
+		return out << rational.to_string();
 	}
 
 	friend std::istream& operator >> (std::istream& in, Rational& rational) {
@@ -188,7 +188,7 @@ public:
 	}
 
 	constexpr Rational negate() const {
-		return{ -a_, b_ };
+		return {-a_, b_};
 	}
 
 	constexpr Rational abs() const {
@@ -196,7 +196,7 @@ public:
 	}
 
 	constexpr Rational inverse() const {
-		return{ b_, a_ };
+		return {b_, a_};
 	}
 
 	constexpr int sign() const {
@@ -229,7 +229,7 @@ public:
 	}
 
 	constexpr Rational pow(const ll n) const {
-		return{ binpow(a_, n), binpow(b_, n) };
+		return {binpow(a_, n), binpow(b_, n)};
 	}
 
 private:
@@ -254,6 +254,11 @@ struct hash<Rational<T>> {
 template<typename T>
 void swap(Rational<T>& lhs, Rational<T>& rhs) {
 	lhs.swap(rhs);
+}
+
+template<typename T>
+Rational<T> abs(const Rational<T>& arg) {
+	return arg.abs();
 }
 
 }  // namespace std
