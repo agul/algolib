@@ -19,16 +19,6 @@ public:
 		init();
 	}
 
-	BottomUpSegmentTree() = delete;
-
-	BottomUpSegmentTree(BottomUpSegmentTree&) = default;
-	BottomUpSegmentTree(BottomUpSegmentTree&&) = default;
-
-	BottomUpSegmentTree& operator =(BottomUpSegmentTree&) = default;
-	BottomUpSegmentTree& operator =(BottomUpSegmentTree&&) = default;
-
-	~BottomUpSegmentTree() = default;
-
 	constexpr size_t offset() const {
 		return offset_;
 	}
