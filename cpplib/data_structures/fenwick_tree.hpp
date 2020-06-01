@@ -1,57 +1,67 @@
 #pragma once
 #include <algorithm>
 #include <cstdlib>
+#include <vector>
 
 template<typename T>
 class FenwickTreeSum {
 public:
-	T *data;
-	int N;
+	using value_type = T;
+	using size_type = std::size_t;
+	using container_type = std::vector<value_type>;
 
-	explicit FenwickTreeSum(const int N) : N(N) {
-		data = new T[N];
-		std::fill_n(data, N, 0);
-	}
+	explicit FenwickTreeSum(const size_type n) : size_(n), data_(n, 0) {}
 
-	~FenwickTreeSum() {
-		delete[] data;
-	}
-
-	void clear() {
-		std::fill_n(data, N, 0);
-	}
-
-	void setSize(const int n) {
-		N = n;
-	}
-
-	void build(T a[], const int n) {
-		N = n;
-		for (int i = 0; i < N; ++i) {
+	explicit FenwickTreeSum(const std::vector<value_type>& a) : size_(a.size()) {
+		for (size_type i = 0; i < size_; ++i) {
 			inc(i, a[i]);
 		}
 	}
 
-	void inc(int v, const T delta) {
-		for (; v < N; v = (v | (v + 1))) {
-			data[v] += delta;
+	void clear() {
+		data_.assign(size_, 0);
+	}
+
+	size_type size() const {
+		return size_;
+	}
+
+	container_type& data() {
+		return data_;
+	}
+
+	const container_type& data() const {
+		return data_;
+	}
+
+	void inc(int v, const value_type delta) {
+		for (; v < size_; v = (v | (v + 1))) {
+			data_[v] += delta;
 		}
 	}
 
-	T query(int v) const {
-		T res = 0;
+	value_type query(int v) const
+	// returns sum for range [0, index]
+	{
+		value_type res = 0;
 		for (; v >= 0; v = (v & (v + 1)) - 1) {
-			res += data[v];
+			res += data_[v];
 		}
 		return res;
 	}
 
-	T query(const int l, const int r) const {
-		if (r < l) {
+	value_type query(const int left, const int right) const
+	// returns sum for range [left, right]
+	{
+		if (right < left) {
 			return 0;
 		}
-		return query(r) - query(l - 1);
+		return query(right) - query(left - 1);
 	}
+
+private:
+	size_type size_;
+	container_type data_;
 };
 
 template<class T> class FenwickTreeSumRangeUpdates {
