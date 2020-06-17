@@ -160,3 +160,8 @@ template<typename T, typename std::enable_if<!std::is_unsigned<T>::value>::type*
 constexpr size_t bit_width(const T value) noexcept {
 	return bit_width(static_cast<typename std::make_unsigned<T>::type>(value));
 }
+
+template<typename T, typename std::enable_if<std::is_integral<T>::value>::type* = nullptr>
+constexpr bool test_bit(const T mask, const std::size_t bit_id) noexcept {
+	return mask & (T{1} << bit_id);
+}
