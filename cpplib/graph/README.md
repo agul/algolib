@@ -13,3 +13,7 @@ Used and tested at:
 ### `LCA`
 Used and tested at:
 - 2020-05-24 = **[Codechef CHEFTRIP](https://www.codechef.com/problems/CHEFTRIP)** (https://github.com/agul/contest-tasks/blob/master/ChefinaOnATrip.cpp)
+- 2020-06-13 = **[Codeforces 1364D](https://codeforces.com/contest/1364/problem/D)** (https://github.com/agul/contest-tasks/blob/master/DPosledneeSledstvieYekhaba.cpp)
+
+### `UndirectedGraph::minimal_spanning_tree()` (using `DSU`)
+- 2020-06-13 = **[Codeforces 1364D](https://codeforces.com/contest/1364/problem/D)** (https://github.com/agul/contest-tasks/blob/master/DPosledneeSledstvieYekhaba.cpp)
