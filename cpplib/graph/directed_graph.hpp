@@ -14,6 +14,8 @@ public:
 	bool top_sort_acyclic(std::vector<size_t>* vertex_order = nullptr) const;
 	void top_sort_rec(std::vector<size_t>* vertex_order) const;
 
+	bool solve_2_sat(std::vector<size_t>* component_id = nullptr) const;
+
 	DirectedGraph reversed() const;
 	
 	size_t scc(std::vector<size_t>* vertex_color = nullptr) const;
@@ -34,6 +36,47 @@ DirectedGraph<T, MASK> DirectedGraph<T, MASK>::reversed() const {
 template<typename T, size_t MASK>
 bool DirectedGraph<T, MASK>::is_acyclic() const {
 	return this->top_sort_acyclic();
+}
+
+template<typename T, size_t MASK>
+bool DirectedGraph<T, MASK>::solve_2_sat(std::vector<size_t>* component_id) const
+// requires graph with 2N vertices:
+// each initial vertex should be duplicated as v -> (v * 2, v * 2 + 1) as (v, !v)
+// returns false if the 2-SAT problem has no solution
+{
+    std::vector<size_t> order;
+    this->top_sort_rec(&order);
+
+    std::vector<size_t> component(this->vertices_count_, std::numeric_limits<size_t>::max());
+    const auto reversed = this->reversed();
+    std::function<void(size_t, size_t)> dfs = [&reversed, &dfs, &component](const size_t v, const size_t component_id) {
+        component[v] = component_id;
+        for (const auto& edge : reversed.edges(v)) {
+            const size_t to = edge.to();
+            if (component[to] == std::numeric_limits<size_t>::max()) {
+                dfs(to, component_id);
+            }
+        }
+    };
+
+    size_t components_count = 0;
+    for (const size_t v : order) {
+        if (component[v] == std::numeric_limits<size_t>::max()) {
+            dfs(v, components_count++);
+        }
+    }
+
+    bool result = true;
+    for (const size_t v : this->vertices()) {
+        if (component[v] == component[v ^ 1]) {
+            result = false;
+            break;
+        }
+    }
+    if (component_id != nullptr) {
+        component_id->swap(component);
+    }
+    return result;
 }
 
 template<typename T, size_t MASK>
