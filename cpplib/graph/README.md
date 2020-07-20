@@ -17,3 +17,6 @@ Used and tested at:
 
 ### `UndirectedGraph::minimal_spanning_tree()` (using `DSU`)
 - 2020-06-13 = **[Codeforces 1364D](https://codeforces.com/contest/1364/problem/D)** (https://github.com/agul/contest-tasks/blob/master/DPosledneeSledstvieYekhaba.cpp)
+
+### `DirectedGraph::solve_2_sat()` (using `DirectedGraph::top_sort_rec()`)
+- 2020-07-17 = **[Codeforces 1385G](https://codeforces.com/contest/1385/problem/G)** (https://github.com/agul/contest-tasks/blob/master/GPerevorotiStolbtsov.cpp)
