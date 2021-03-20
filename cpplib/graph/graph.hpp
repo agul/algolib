@@ -150,6 +150,10 @@ public:
 		return EdgesHolder<IntegerRange<size_t>>(range(from_.size()), from_, to_, weight_);
 	}
 
+	const std::vector<size_t>& edges_list(const size_t vertex) const {
+	    return edges_[vertex];
+	}
+
 	void clear();
 
 	size_t vertices_count() const {
@@ -169,7 +173,7 @@ public:
 	}
 
 	Edge operator [](const size_t index) const {
-		return Edge(from, to, weight, index);
+		return Edge(from_, to_, weight_, index);
 	}
 
 	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
