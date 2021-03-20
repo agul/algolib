@@ -3,3 +3,8 @@ submission*
 vs_common.props
 include
 *build*
+CMakeFiles
+*.vcxproj
+*.vcxproj.*
+*.sln
+*.cmake
