@@ -15,18 +15,18 @@ inline T gcd(T a, T b) {
 
 template<typename T>
 inline T lcm(const T& a, const T& b) {
-	return a / gcd(a, b) * b;
+    return a / gcd(a, b) * b;
 }
 
 template<typename T>
 constexpr inline T sqr(const T& x) {
-	return x * x;
+    return x * x;
 }
 
 template<typename T>
-T factorial(T n) {
+T factorial(const size_t n) {
 	T ret = 1;
-	for (int i = 2; i <= n; ++i) {
+	for (size_t i = 2; i <= n; ++i) {
 		ret *= i;
 	}
 	return ret;
@@ -34,7 +34,7 @@ T factorial(T n) {
 
 template<typename T, typename U>
 inline T binpow(T a, U b) {
-	static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow.");
+	static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow().");
 	T ret = 1;
 	while (b != 0) {
 		if ((b & 1) != 0) {
@@ -48,7 +48,7 @@ inline T binpow(T a, U b) {
 
 template<typename T, typename U, typename Q>
 inline T binpow(T a, U b, Q mod) {
-	static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow.");
+	static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow().");
 	long long ret = 1;
 	a %= mod;
 	while (b != 0) {
@@ -93,7 +93,7 @@ size_t digit_count(const T n) {
 
 template<typename T>
 std::vector<T> divisors_vector(const T n) {
-	const auto approximate_divisors_count = static_cast<size_t>(cbrt(n));
+	const auto approximate_divisors_count = static_cast<size_t>(std::cbrt(n));
 	std::vector<T> ans;
 	ans.reserve(approximate_divisors_count);
 	const auto floored_square_root = static_cast<T>(sqrt(n));
