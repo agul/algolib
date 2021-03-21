@@ -54,3 +54,10 @@ inline uint8_t to_digit(const char ch)
 	return ch - '0';
 }
 
+bool starts_with(const std::string& s, const std::string& t) {
+    return s.length() >= t.length() && s.compare(0, t.length(), t) == 0;
+}
+
+bool ends_with(const std::string& s, const std::string& t) {
+    return s.length() >= t.length() && s.compare(s.length() - t.length(), t.length(), t) == 0;
+}
