@@ -1,8 +1,6 @@
 #pragma once
 #include <algorithm>
-#include <chrono>
 #include <numeric>
-#include <random>
 #include <string>
 #include <type_traits>
 
@@ -17,110 +15,92 @@ inline T gcd(T a, T b) {
 
 template<typename T>
 inline T lcm(const T& a, const T& b) {
-	return a / gcd(a, b) * b;
+    return a / gcd(a, b) * b;
 }
 
 template<typename T>
 constexpr inline T sqr(const T& x) {
-	return x * x;
-}
-
-template<class T> inline bool isPrime(const T& n)
-// Straightforward checking in O(sqrt(N))
-{
-	if (n < 2) {
-		return false;
-	}
-	T kk = (T)sqrt(n + 0.);
-	for (T i = 2; i <= kk; ++i) {
-		if (!(n % i)) {
-			return false;
-		}
-	}
-	return true;
-}
-
-inline void eratosthenes_sieve(const size_t n, std::vector<bool>* prime) {
-	if (n < 2) {
-		prime->assign(n, false);
-		return;
-	}
-	std::vector<bool> result(n, true);
-	result[0] = result[1] = false;
-	for (size_t i = 4; i < n; i += 2) {
-		result[i] = false;
-	}
-	for (size_t i = 3; i * i < n; i += 2) {
-		if (result[i]) {
-			const size_t delta = i << 1;
-			for (size_t j = i * i; j < n; j += delta) {
-				result[j] = false;
-			}
-		}
-	}
-	prime->swap(result);
-}
-
-inline void eratosthenes_sieve(std::vector<bool>* prime) {
-	eratosthenes_sieve(prime->size(), prime);
+    return x * x;
 }
 
 template<typename T>
-inline void primes_vector(const size_t n, std::vector<T>* primes) {
-	std::vector<T> result;
-	if (n < 2) {
-		primes->swap(result);
-		return;
-	}
-	std::vector<bool> prime(n);
-	eratosthenes_sieve(prime);
-	result.emplace_back(2);
-	for (size_t i = 3; i < n; i += 2) {
-		if (prime[i]) {
-			result.emplace_back(i);
-		}
-	}
-	primes->swap(result);
+T extended_gcd(const T a, const T b, T& x, T& y) {
+    if (a == 0) {
+        x = 0;
+        y = 1;
+        return b;
+    }
+    const T p = b / a;
+    const T g = extended_gcd(b - p * a, a, y, x);
+    x -= p * y;
+    return g;
+}
+
+// |x|, |y| <= max(|a|, |b|, |c|)
+template<typename T>
+bool solve_diophantine(const T a, const T b, const T c, T& x, T& y, T& g) {
+    if (a == 0 && b == 0) {
+        if (c == 0) {
+            x = 0;
+            y = 0;
+            g = 0;
+            return true;
+        }
+        return false;
+    }
+    if (a == 0) {
+        if (c % b == 0) {
+            x = 0;
+            y = c / b;
+            g = std::abs(b);
+            return true;
+        }
+        return false;
+    }
+    if (b == 0) {
+        if (c % a == 0) {
+            x = c / a;
+            y = 0;
+            g = std::abs(a);
+            return true;
+        }
+        return false;
+    }
+    g = extended_gcd(a, b, x, y);
+    if (c % g != 0) {
+        return false;
+    }
+    T adjusted_c = c;
+    const T dx = adjusted_c / a;
+    adjusted_c -= dx * a;
+    const T dy = adjusted_c / b;
+    adjusted_c -= dy * b;
+    x = dx + static_cast<T>(static_cast<__int128>(x) * (adjusted_c / g) % b);
+    y = dy + static_cast<T>(static_cast<__int128>(y) * (adjusted_c / g) % a);
+    g = std::abs(g);
+    return true;
+}
+
+template<typename T, typename std::enable_if<std::is_floating_point<T>::value>::type* = nullptr>
+size_t solve_quadratic_equation(const T a, const T b, const T c, T& x1, T& x2) {
+    const T D = sqr(b) - 4 * a * c;
+    if (D < -EPS) {
+        return 0;
+    }
+    if (is_equal_to_zero(D)) {
+        const T x = -b / (a * 2);
+        x1 = x;
+        return 1;
+    }
+    x1 = (-b + std::sqrt(D)) / (a * 2);
+    x2 = (-b - std::sqrt(D)) / (a * 2);
+    return 2;
 }
 
 template<typename T>
-inline void min_prime_div_vector(const size_t n, std::vector<T>* min_prime_div) {
-	std::vector<T> result(n, 0);
-	result[0] = result[1] = 1;
-	for (size_t i = 2; i < n; i += 2) {
-		result[i] = 2;
-	}
-	size_t index = 3;
-	while (index * index < n) {
-		if (result[index] == 0) {
-			result[index] = index;
-			const size_t delta = index << 1;
-			for (size_t j = index * index; j < n; j += delta) {
-				if (result[j] == 0) {
-					result[j] = index;
-				}
-			}
-		}
-		index += 2;
-	}
-	while (index < n) {
-		if (result[index] == 0) {
-			result[index] = index;
-		}
-		++index;
-	}
-	min_prime_div->swap(result);
-}
-
-template<typename T>
-inline void min_prime_div_vector(std::vector<T>* min_prime_div) {
-	min_prime_div_vector(min_prime_div->size(), min_prime_div);
-}
-
-template<typename T>
-T factorial(T n) {
+T factorial(const size_t n) {
 	T ret = 1;
-	for (int i = 2; i <= n; ++i) {
+	for (size_t i = 2; i <= n; ++i) {
 		ret *= i;
 	}
 	return ret;
@@ -128,7 +108,7 @@ T factorial(T n) {
 
 template<typename T, typename U>
 inline T binpow(T a, U b) {
-	static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow.");
+	static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow().");
 	T ret = 1;
 	while (b != 0) {
 		if ((b & 1) != 0) {
@@ -142,7 +122,7 @@ inline T binpow(T a, U b) {
 
 template<typename T, typename U, typename Q>
 inline T binpow(T a, U b, Q mod) {
-	static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow.");
+	static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow().");
 	long long ret = 1;
 	a %= mod;
 	while (b != 0) {
@@ -183,6 +163,64 @@ std::vector<size_t> digits(const T n) {
 template<typename T>
 size_t digit_count(const T n) {
 	return digits(n).size();
+}
+
+template<typename T>
+std::vector<T> divisors_vector(const T n) {
+	const auto approximate_divisors_count = static_cast<size_t>(std::cbrt(n));
+	std::vector<T> ans;
+	ans.reserve(approximate_divisors_count);
+	const auto floored_square_root = static_cast<T>(sqrt(n));
+	for (T i = 1; i <= floored_square_root; ++i) {
+		if (n % i == 0) {
+			ans.emplace_back(i);
+			if (n / i != i) {
+				ans.emplace_back(n / i);
+			}
+		}
+	}
+	return ans;
+}
+
+template<typename T, typename size_type = std::size_t>
+std::vector<T> divisors_vector(const std::vector<std::pair<T, size_type>>& prime_divisors, const bool sorted = false) {
+    static std::vector<T> buffer;
+
+    size_t divisors_count = 1;
+    for (const auto& prime_divisor : prime_divisors) {
+        divisors_count *= prime_divisor.second + 1;
+    }
+
+    std::vector<T> factors = {1};
+    factors.reserve(divisors_count);
+    if (sorted) {
+        buffer.resize(divisors_count);
+    }
+
+    for (const auto& prime_divisor : prime_divisors) {
+        const T prime_div = prime_divisor.first;
+        const size_t exponent = prime_divisor.second;
+
+        const size_t prev_size = factors.size();
+        for (size_t i = 0; i < exponent * prev_size; ++i) {
+            factors.emplace_back(factors[factors.size() - prev_size] * prime_div);
+        }
+
+        if (sorted && factors[prev_size - 1] > prime_div) {
+            for (size_t section = prev_size; section < factors.size(); section *= 2) {
+                for (size_t i = 0; i + section < factors.size(); i += 2 * section) {
+                    const size_t length = std::min(2 * section, factors.size() - i);
+                    std::merge(factors.cbegin() + i,
+                               factors.cbegin() + i + section,
+                               factors.cbegin() + i + section,
+                               factors.cbegin() + i + length,
+                               buffer.begin());
+                    std::copy(buffer.cbegin(), buffer.cbegin() + length, factors.begin() + i);
+                }
+            }
+        }
+    }
+    return factors;
 }
 
 template<typename T>
@@ -255,11 +293,23 @@ template<class T> std::string toRoman(T n) {
 }
 
 template<typename T>
-void calc_powers(std::vector<T>& deg, const T base) {
-	deg[0] = 1;
-	for (size_t i = 1; i < deg.size(); ++i) {
-		deg[i] = deg[i - 1] * base;
+std::vector<T> calc_powers(const T base, const size_t n) {
+	std::vector<T> powers(n + 1);
+	powers[0] = 1;
+	for (size_t i = 1; i < powers.size(); ++i) {
+		powers[i] = powers[i - 1] * base;
 	}
+	return powers;
+}
+
+template<typename T>
+std::vector<T> calc_factorial(const size_t n) {
+	std::vector<T> factorial(n + 1);
+	factorial[0] = 1;
+	for (size_t i = 1; i < factorial.size(); ++i) {
+		factorial[i] = factorial[i - 1] * i;
+	}
+	return factorial;
 }
 
 inline uint32_t abs(const uint32_t x) {
@@ -269,24 +319,3 @@ inline uint32_t abs(const uint32_t x) {
 inline uint64_t abs(const uint64_t x) {
 	return x;
 }
-
-namespace Random {
-
-	static std::chrono::system_clock::rep GetRandSeed() {
-		return std::chrono::system_clock::now().time_since_epoch().count();
-	}
-
-	static std::mt19937_64 gen(GetRandSeed());
-	static std::uniform_int_distribution<long long> distrib(0, std::numeric_limits<long long>::max());
-
-	template<typename T>
-	static T get(T r) {
-		return distrib(gen) % r;
-	}
-
-	template<typename T>
-	static T get(T l, T r) {
-		return get(r - l + 1) + l;
-	}
-
-};

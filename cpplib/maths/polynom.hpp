@@ -10,6 +10,11 @@ public:
 
 	explicit Polynom(const size_type degree) : std::vector<T>(degree + 1) {}
 
+	template<typename I>
+	Polynom(const I first, const I last) : std::vector<T>(first, last) {}
+
+	Polynom(std::initializer_list<T>&& list) : std::vector<T>(std::move(list)) {}
+
 	constexpr size_type degree() const {
 		return this->size() - 1;
 	}

@@ -2,7 +2,7 @@
 #include <functional>
 #include <iostream>
 
-#include "maths/safe_double.hpp"
+#include "safe_double.hpp"
 
 class Decimal {
 public:
@@ -172,7 +172,6 @@ public:
 
 private:
 	T value_;
-
 };
 
 namespace std {
@@ -211,4 +210,4 @@ struct hash<Decimal> {
 	}
 };
 
-}
+}  // namespace std

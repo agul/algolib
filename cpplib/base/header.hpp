@@ -1,3 +1,8 @@
+/**
+ *  This solution uses cpplib (prewritten code library)
+ *  More info: https://github.com/agul/algolib/tree/master/cpplib
+ */
+
 #pragma once
 #pragma comment(linker, "/STACK:66777216")
 #pragma warning(disable : 4996)
@@ -30,8 +35,9 @@
 #include <vector>
 #pragma hdrstop
 
-#include "base/constants.hpp"
-#include "base/helpers.hpp"
-#include "base/typedefs.hpp"
+#include "io/debug_output.hpp"
 #include "io/io.hpp"
 #include "range/ranges.hpp"
+#include "constants.hpp"
+#include "helpers.hpp"
+#include "typedefs.hpp"

@@ -4,7 +4,7 @@
 #include <limits>
 #include <vector>
 
-#include "queue.hpp"
+#include "collections/queue/queue.hpp"
 
 template<typename T>
 class DinicFlow {
@@ -19,7 +19,7 @@ public:
 		T flow;
 	};
 
-	DinicFlow(const size_t n) : graph(n), queue(n), pointer(n), dist(n), used(n) {}
+	explicit DinicFlow(const size_t n) : graph(n), queue(n), pointer(n), dist(n), used(n) {}
 
 	void add_directed_edge(const size_t from, const size_t to, const T capacity) {
 		return add_bidirectional_edge(from, to, capacity, 0);
@@ -104,5 +104,4 @@ private:
 	std::vector<size_t> pointer;
 	std::vector<T> dist;
 	std::vector<bool> used;
-
 };

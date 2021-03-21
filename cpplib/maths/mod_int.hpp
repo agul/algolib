@@ -1,13 +1,14 @@
 #pragma once
 #include <iostream>
+#include <string>
 #include <type_traits>
 
-#include "maths/maths.hpp"
+#include "maths.hpp"
 
-constexpr const int BASE_MOD = 1000000007;  /// caide keep
+constexpr const int kBaseModulo = 1000000007;  /// caide keep
 
 template<typename T>
-inline T& add_mod(T& a, const T b, const T mod = BASE_MOD) {
+inline T& add_mod(T& a, const T b, const T mod = kBaseModulo) {
 	if ((a += b) >= mod) {
 		a -= mod;
 	}
@@ -15,7 +16,7 @@ inline T& add_mod(T& a, const T b, const T mod = BASE_MOD) {
 }
 
 template<typename T>
-inline T& sub_mod(T& a, const T b, const T mod = BASE_MOD) {
+inline T& sub_mod(T& a, const T b, const T mod = kBaseModulo) {
 	if ((a -= b) < 0) {
 		a += mod;
 	}
@@ -23,30 +24,35 @@ inline T& sub_mod(T& a, const T b, const T mod = BASE_MOD) {
 }
 
 template<typename T>
-inline T& mul_mod(T& a, const T b, const T mod = BASE_MOD) {
+inline T& mul_mod(T& a, const T b, const T mod = kBaseModulo) {
 	a = static_cast<long long>(a) * b % mod;
 	return a;
 }
 
-template<typename T, T MOD = BASE_MOD>
+template<typename T, T MOD = kBaseModulo>
 class ModInt {
 public:
+	using value_type = T;
 
 	/// caide keep
 	constexpr ModInt() : ModInt(0) {}
 
-	constexpr ModInt(const T value) : value_(value) {
+	constexpr ModInt(const value_type value) : value_(value) {
 		static_assert(MOD > 0, "Modulo must be strictly positive.");
-		// static_assert((std::equal<T, int32_t> && mod <= 0x3f3f3f3f) || (std::equal<T, int64_t> && mod <= 0x3f3f3f3f3f3f3f3fLL), "Modulo must be less than half of the max value for typename.");
+		// static_assert((std::equal<value_type, int32_t> && MOD <= 0x3f3f3f3f) || (std::equal<value_type, int64_t> && MOD <= 0x3f3f3f3f3f3f3f3fLL), "Modulo must be less than half of the max value for typename.");
 	}
 
 	template<typename U>
 	constexpr static ModInt from_integer(const U value) {
-		return{ ModInt::normalize(value) };
+		return {ModInt::normalize(value)};
 	}
 
-	constexpr T value() const {
+	constexpr value_type value() const {
 		return value_;
+	}
+
+	constexpr value_type mod() const {
+		return MOD;
 	}
 
 	constexpr bool operator ==(const ModInt rhs) const {
@@ -66,18 +72,18 @@ public:
 	}
 
 	ModInt operator +(const ModInt rhs) const {
-		T x = value_;
-		return{ add_mod(x, rhs.value_, MOD) };
+		value_type x = value_;
+		return {add_mod(x, rhs.value_, MOD)};
 	}
 
 	ModInt operator -(const ModInt rhs) const {
-		T x = value_;
-		return{ sub_mod(x, rhs.value_, MOD) };
+		value_type x = value_;
+		return {sub_mod(x, rhs.value_, MOD)};
 	}
 
 	ModInt operator *(const ModInt rhs) const {
-		T x = value_;
-		return{ mul_mod(x, rhs.value_, MOD) };
+		value_type x = value_;
+		return {mul_mod(x, rhs.value_, MOD)};
 	}
 
 	ModInt& operator +=(const ModInt rhs) {
@@ -97,23 +103,23 @@ public:
 
 	ModInt operator ++(int) {
 		const ModInt ret(value_);
-		add_mod(value_, static_cast<T>(1), MOD);
+		add_mod(value_, static_cast<value_type>(1), MOD);
 		return ret;
 	}
 
 	ModInt operator --(int) {
 		const ModInt ret(value_);
-		sub_mod(value_, static_cast<T>(1), MOD);
+		sub_mod(value_, static_cast<value_type>(1), MOD);
 		return ret;
 	}
 
 	ModInt& operator ++() {
-		add_mod(value_, static_cast<T>(1), MOD);
+		add_mod(value_, static_cast<value_type>(1), MOD);
 		return *this;
 	}
 
 	ModInt& operator --() {
-		sub_mod(value_, static_cast<T>(1), MOD);
+		sub_mod(value_, static_cast<value_type>(1), MOD);
 		return *this;
 	}
 
@@ -126,17 +132,26 @@ public:
 	}
 
 	constexpr ModInt negate() const {
-		return{ normalize(-value_) };
+		return {ModInt::normalize(-value_)};
 	}
 
 	constexpr ModInt inverse() const {
-		return{ inverse_element(value_, MOD) };
+		return {inverse_element(value_, MOD)};
+	}
+
+	std::string str() const {
+		return std::to_string(value_);
+	}
+
+	template<typename C>
+	C as() const {
+		return static_cast<C>(value_);
 	}
 
 	friend std::istream& operator >>(std::istream& in, ModInt& rhs) {
-		T x;
+		value_type x;
 		in >> x;
-		rhs.value_ = rhs.normalize(x);
+		rhs.value_ = ModInt::normalize(x);
 		return in;
 	}
 
@@ -146,14 +161,14 @@ public:
 	}
 
 private:
-	T value_;
+	value_type value_;
 
 	template<typename U>
-	static T normalize(const U value) {
+	static value_type normalize(const U value) {
 		if (value >= 0 && value < MOD) {
 			return value;
 		}
-		const T ret = value % MOD;
+		const value_type ret = value % MOD;
 		if (ret < 0) {
 			return ret + MOD;
 		}
@@ -170,4 +185,9 @@ struct is_integral<ModInt<T, MOD>> : std::true_type {};
 template<typename T, T MOD>
 struct is_arithmetic<ModInt<T, MOD>> : std::true_type {};
 
+}  // namespace std
+
+template<typename T, T MOD>
+std::string to_string(const ModInt<T, MOD>& val) {
+	return val.str();
 }

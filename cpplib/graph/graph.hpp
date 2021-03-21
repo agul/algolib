@@ -6,7 +6,7 @@
 #include "base/helpers.hpp"
 #include "maths/maths.hpp"
 #include "range/ranges.hpp"
-#include "queue.hpp"
+#include "collections/queue/queue.hpp"
 	
 enum GraphType {
 	Weighted = 1
@@ -60,13 +60,11 @@ public:
 		const std::vector<size_t>& to_;
 		const std::vector<T>& weight_;
 		size_t index_;
-
 	};
 
 	template<typename Range>
 	class EdgesHolder {
 	public:
-
 		template<typename BaseConstIterator>
 		class EdgeConstIterator : public BaseConstIterator {
 		public:
@@ -90,7 +88,6 @@ public:
 
 		private:
 			Edge cur_edge_;
-
 		};
 
 		using const_iterator = EdgeConstIterator<typename Range::const_iterator>;
@@ -115,11 +112,13 @@ public:
 	private:
 		const const_iterator begin_;
 		const const_iterator end_;
-
 	};
 
 	Graph() : Graph(0) {}
-	Graph(const size_t vertices_count) : vertices_count_(vertices_count), edges_(vertices_count) {}
+
+	explicit Graph(const size_t vertices_count) {
+		init(vertices_count);
+	}
 
 	virtual ~Graph() {
 		clear();
@@ -151,6 +150,10 @@ public:
 		return EdgesHolder<IntegerRange<size_t>>(range(from_.size()), from_, to_, weight_);
 	}
 
+	const std::vector<size_t>& edges_list(const size_t vertex) const {
+	    return edges_[vertex];
+	}
+
 	void clear();
 
 	size_t vertices_count() const {
@@ -167,6 +170,10 @@ public:
 
 	size_t to(const size_t index) const {
 		return to_[index];
+	}
+
+	Edge operator [](const size_t index) const {
+		return Edge(from_, to_, weight_, index);
 	}
 
 	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
@@ -225,7 +232,7 @@ public:
 	
 	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
 	void dijkstra(const size_t start_vertex, std::vector<T>* distance, std::vector<size_t>* last_edge = nullptr) const {
-		if (is_sparse() && false) {
+		if (is_sparse()) {
 			sparse_dijkstra(start_vertex, distance, last_edge);
 		} else {
 			dense_dijkstra(start_vertex, distance, last_edge);
@@ -258,6 +265,8 @@ public:
 
 	bool is_bipartite(std::vector<size_t>& partition) const;
 	void maximal_matching(std::vector<size_t>* match) const;
+
+	bool try_kuhn(const size_t vertex, std::vector<bool>& used, std::vector<size_t>& match) const;
 
 protected:
 	void push_edge(const size_t from, const size_t to) {
@@ -339,8 +348,6 @@ private:
 			last_edge->swap(last);
 		}
 	}
-
-	bool try_kuhn(const size_t vertex, std::vector<bool>& used, std::vector<size_t>& match) const;
 
 };
 
@@ -424,6 +431,7 @@ bool Graph<T, MASK>::try_kuhn(const size_t vertex, std::vector<bool>& used, std:
 		const size_t to = it.to();
 		if (match[to] == std::numeric_limits<size_t>::max()) {
 			match[to] = vertex;
+			match[vertex] = to;
 			return true;
 		}
 	}
@@ -431,6 +439,7 @@ bool Graph<T, MASK>::try_kuhn(const size_t vertex, std::vector<bool>& used, std:
 		const size_t to = it.to();
 		if (!used[match[to]] && try_kuhn(match[to], used, match)) {
 			match[to] = vertex;
+			match[vertex] = to;
 			return true;
 		}
 	}
