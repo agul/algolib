@@ -7,7 +7,6 @@
 #include "maths/maths.hpp"
 #include "maths/random.hpp"
 #include "string/string_view.hpp"
-#include "double_hasher.hpp"
 
 template<typename T, typename Container = StringView>
 class Hasher {
@@ -17,7 +16,7 @@ public:
 	using value_type = T;
 
 	explicit Hasher(const container_type& data) : size_(data.size()), hash_(size_ + 1), data_(data) {
-		const value_type kHashPoint = Random::get(307, 877117);
+		static const value_type kHashPoint = Random::get(307, 877117);
 		deg_ = calc_powers(kHashPoint, size_ + 1);
 
 		hash_[0] = 0;

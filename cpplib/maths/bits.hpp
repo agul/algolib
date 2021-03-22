@@ -165,3 +165,12 @@ template<typename T, typename std::enable_if<std::is_integral<T>::value>::type* 
 constexpr bool test_bit(const T mask, const std::size_t bit_id) noexcept {
 	return mask & (T{1} << bit_id);
 }
+
+constexpr size_t binary_power(uint64_t value) noexcept {
+    size_t power = 0;
+    while (value > 1) {
+        value >>= 1;
+        ++power;
+    }
+    return power;
+}

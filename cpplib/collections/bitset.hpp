@@ -1,171 +1,229 @@
 #pragma once
 #include <algorithm>
+#include <limits>
+#include <utility>
+#include <vector>
 
 #include "maths/bits.hpp"
 
 template<size_t N>
 class Bitset {
 public:
-	static const int BITSET_LENGTH = (N >> 6) + 1;
-	unsigned long long data[BITSET_LENGTH];
+    using value_type = uint64_t;
+    using size_type = std::size_t;
+    using container_type = std::vector<value_type>;
 
-	Bitset() {
-		std::fill_n(data, BITSET_LENGTH, 0);
-	}
+    static constexpr size_type kValueBitWidth = std::numeric_limits<value_type>::digits;
+    static constexpr size_type kIndexMask = kValueBitWidth - 1;
+    static constexpr size_type kIndexPower = binary_power(kValueBitWidth);
 
-	Bitset& set(const int x) {
-		data[x >> 6] |= (1LL << (x & 63));
+	static constexpr size_type kBitsetLength = (N >> kIndexPower) + 1;
+
+	Bitset() : data_(kBitsetLength, 0) {}
+
+	Bitset& set(const size_type index) {
+		data_[index >> kIndexPower] |= (1LL << (index & kIndexMask));
 		return *this;
 	}
 
-	Bitset& flip(const int x) {
-		data[x >> 6] ^= (1LL << (x & 63));
+	Bitset& flip(const size_type index) {
+		data_[index >> kIndexPower] ^= (1LL << (index & kIndexMask));
 		return *this;
 	}
 
-	Bitset& clear(const int x) {
-		data[x >> 6] &= ~(1LL << (x & 63));
+	Bitset& clear(const size_type index) {
+		data_[index >> kIndexPower] &= ~(1LL << (index & kIndexMask));
 		return *this;
 	}
 
-	bool get(const int x) const {
-		return data[x >> 6] & (1LL << (x & 63));
+	bool get(const size_type index) const {
+		return data_[index >> kIndexPower] & (1LL << (index & kIndexMask));
 	}
 
-	int size() const {
+	bool operator[](const size_type index) const {
+	    return get(index);
+	}
+
+	container_type& data() {
+	    return data_;
+	}
+
+	const container_type& data() const {
+	    return data_;
+	}
+
+    size_type size() const {
 		return N;
 	}
 
 	bool any() const {
-		for (int i = 0; i < BITSET_LENGTH; ++i) {
-			if (data[i]) {
-				return true;
-			}
-		}
-		return false;
+	    return std::any_of(data_.cbegin(), data_.cend(), [](const value_type x) {
+	        return x != 0;
+	    });
 	}
 
 	bool none() const {
-		for (int i = 0; i < BITSET_LENGTH; ++i) {
-			if (data[i]) {
-				return false;
-			}
-		}
-		return true;
+        return !any();
+	}
+
+	void swap(Bitset& rhs) {
+	    data_.swap(rhs.data_);
 	}
 
 	Bitset& reset() {
-		std::fill_n(data, BITSET_LENGTH, 0);
+		data_.assign(kBitsetLength, 0);
 		return *this;
 	}
 
 	Bitset& set() {
-		std::fill_n(data, BITSET_LENGTH, 0xffffffffffffffffLL);
+        data_.assign(kBitsetLength, std::numeric_limits<value_type>::max());
 		return *this;
 	}
 
 	Bitset& flip() {
-		for (int i = 0; i < BITSET_LENGTH; ++i) {
-			data[i] = ~data[i];
-		}
+	    std::transform(data_.cbegin(), data_.cend(), data_.begin(), [](const value_type value) {
+	        return ~value;
+	    });
 		return *this;
 	}
 
-	int count() const {
-		int ret = 0;
-		for (int i = 0; i < BITSET_LENGTH; ++i) {
-			ret += popcount(data[i]);
-		}
-		return ret;
+    Bitset operator ~() const {
+        Bitset ret = *this;
+        ret.flip();
+        return ret;
+    }
+
+	size_type count() const {
+		return std::accumulate(data_.cbegin(), data_.cend(), 0, [](const size_type acc, value_type value) {
+		    return acc + popcount(value);
+		});
 	}
 
-	Bitset& operator &= (const Bitset& bitset) {
-		for (int i = 0; i < BITSET_LENGTH; ++i) {
-			data[i] &= bitset.data[i];
-		}
-		return *this;
+	bool equal(const Bitset& rhs) const {
+	    return data_ == rhs.data_;
 	}
 
-	Bitset& operator |= (const Bitset& bitset) {
-		for (int i = 0; i < BITSET_LENGTH; ++i) {
-			data[i] |= bitset.data[i];
-		}
-		return *this;
+	bool operator ==(const Bitset& rhs) const {
+		return equal(rhs);
 	}
 
-	Bitset& operator ^= (const Bitset& bitset) {
-		for (int i = 0; i < BITSET_LENGTH; ++i) {
-			data[i] ^= bitset.data[i];
-		}
-		return *this;
+	bool operator !=(const Bitset& rhs) const {
+		return !equal(rhs);
 	}
 
-	Bitset operator ~ () const {
-		Bitset ret;
-		for (int i = 0; i < BITSET_LENGTH; ++i) {
-			ret.data[i] = ~data[i];
-		}
-		return ret;
+	Bitset bit_and(const Bitset& rhs) const {
+        Bitset ret;
+        for (size_type i = 0; i < kBitsetLength; ++i) {
+            ret.data_[i] = data_[i] & rhs.data_[i];
+        }
+        return ret;
 	}
 
-	bool operator == (const Bitset& bitset) const {
-		for (int i = 0; i < BITSET_LENGTH; ++i) {
-			if (data[i] != bitset.data[i]) {
-				return false;
-			}
-		}
-		return true;
+	Bitset operator &(const Bitset& rhs) const {
+	    return bit_and(rhs);
 	}
 
-	bool operator != (const Bitset& bitset) const {
-		for (int i = 0; i < BITSET_LENGTH; ++i) {
-			if (data[i] != bitset.data[i]) {
-				return true;
-			}
-		}
-		return false;
+    Bitset& operator &=(const Bitset& rhs) {
+        Bitset res = bit_and(rhs);
+        swap(res);
+        return *this;
+    }
+
+    Bitset bit_or(const Bitset& rhs) const {
+        Bitset ret;
+        for (size_type i = 0; i < kBitsetLength; ++i) {
+            ret.data_[i] = data_[i] | rhs.data_[i];
+        }
+        return ret;
 	}
 
-	Bitset operator & (const Bitset& bitset) const {
-		Bitset ret;
-		for (int i = 0; i < BITSET_LENGTH; ++i) {
-			ret.data[i] = data[i] & bitset.data[i];
-		}
-		return ret;
+	Bitset operator |(const Bitset& rhs) const {
+	    return bit_or(rhs);
 	}
 
-	Bitset operator | (const Bitset& bitset) const {
-		Bitset ret;
-		for (int i = 0; i < BITSET_LENGTH; ++i) {
-			ret.data[i] = data[i] | bitset.data[i];
-		}
-		return ret;
+    Bitset& operator |=(const Bitset& rhs) {
+        Bitset res = bit_or(rhs);
+        swap(res);
+        return *this;
+    }
+
+    Bitset bit_xor(const Bitset& rhs) const {
+        Bitset ret;
+        for (size_type i = 0; i < kBitsetLength; ++i) {
+            ret.data_[i] = data_[i] ^ rhs.data_[i];
+        }
+        return ret;
 	}
 
-	Bitset operator ^ (const Bitset& bitset) const {
-		Bitset ret;
-		for (int i = 0; i < BITSET_LENGTH; ++i) {
-			ret.data[i] = data[i] ^ bitset.data[i];
-		}
-		return ret;
+	Bitset operator ^(const Bitset& rhs) const {
+	    return bit_xor(rhs);
+	}
+
+    Bitset& operator ^=(const Bitset& rhs) {
+        Bitset res = bit_xor(rhs);
+        swap(res);
+        return *this;
+    }
+
+    bool operator <(const Bitset& rhs) const {
+	    return data_ < rhs.data_;
 	}
 
 	Bitset rotate_left(const size_t shift) const {
 		Bitset ret;
-		int full_shift = shift >> 6;
-		int rem_shift = shift & 63;
-		for (int i = 0; i < BITSET_LENGTH; ++i) {
-			int ind = i + full_shift;
-			if (ind >= BITSET_LENGTH) {
-				ind -= BITSET_LENGTH;
+        const size_type full_shift = shift >> kIndexPower;
+        const size_type rem_shift = shift & kIndexMask;
+		for (size_type i = 0; i < kBitsetLength; ++i) {
+            size_type index = i + full_shift;
+			if (index >= kBitsetLength) {
+				index -= kBitsetLength;
 			}
-			int prv = i - 1;
-			if (prv < 0) {
-				prv += BITSET_LENGTH;
+            size_type prev = i - 1;
+			if (i == 0) {
+				prev = kBitsetLength - 1;
 			}
-			ret.data[ind] = (data[i] << rem_shift) | (data[prv] >> (64 - rem_shift));
+			ret.data_[index] = (data_[i] << rem_shift) | (data_[prev] >> (kValueBitWidth - rem_shift));
 		}
 		return ret;
 	}
 
+    size_type first_bit_from(const size_type index) const {
+        if (index >= size()) {
+            return index;
+        }
+        const value_type mask_from_index = ~((static_cast<value_type>(1) << (index & kIndexMask)) - 1);
+        const value_type first_block = data_[index >> kIndexPower];
+        const value_type value = mask_from_index & first_block;
+        if (value != 0) {
+            return (index & ~static_cast<value_type>(kIndexMask)) + countr_zero(value);
+        }
+        const auto it = std::find_if(data_.cbegin() + (index >> kIndexPower) + 1, data_.cend(), [](const value_type x) {
+            return x != 0;
+        });
+        if (it == data_.cend()) {
+            return size();
+        }
+        return (it - data_.cbegin()) * kValueBitWidth + countr_zero(*it);
+    }
+
+    size_type first_bit_after(const size_type index) const {
+        return first_bit_from(index + 1);
+    }
+
+    size_type least_significant_bit() const {
+        return first_bit_from(0);
+    }
+
+    std::vector<size_type> indices() const {
+	    std::vector<size_type> res;
+	    size_type index = least_significant_bit();
+	    while (index < size()) {
+            res.emplace_back(index);
+            index = first_bit_after(index);
+	    }
+	    return res;
+	}
+
+private:
+    container_type data_;
 };
