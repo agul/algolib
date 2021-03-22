@@ -1,6 +1,8 @@
 #pragma once
 #include <algorithm>
 
+#include "maths/bits.hpp"
+
 template<size_t N>
 class Bitset {
 public:

@@ -1,7 +1,7 @@
 #pragma once
 #include <functional>
 
-#include "containers/stack/cmp_stack.hpp"
+#include "collections/stack/cmp_stack.hpp"
 
 template<typename T, typename Cmp = std::less<T>>
 class CmpQueue {

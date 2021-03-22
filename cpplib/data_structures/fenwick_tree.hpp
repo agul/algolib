@@ -1,57 +1,84 @@
 #pragma once
 #include <algorithm>
 #include <cstdlib>
+#include <vector>
 
 template<typename T>
 class FenwickTreeSum {
 public:
-	T *data;
-	int N;
+	using value_type = T;
+	using size_type = std::size_t;
+	using container_type = std::vector<value_type>;
 
-	explicit FenwickTreeSum(const int N) : N(N) {
-		data = new T[N];
-		std::fill_n(data, N, 0);
+	explicit FenwickTreeSum(const size_type n) : data_(n, 0) {}
+
+	explicit FenwickTreeSum(const std::vector<value_type>& a) : data_(a) {
+		for (size_type i = 0; i < data_.size(); ++i) {
+			const size_type tree_index = (i | (i + 1));
+			if (tree_index < data_.size()) {
+				data_[tree_index] += data_[i];
+			}
+		}
 	}
 
-	~FenwickTreeSum() {
-		delete[] data;
+	bool operator ==(const FenwickTreeSum& rhs) const {
+		return data_ == rhs.data_;
 	}
 
 	void clear() {
-		std::fill_n(data, N, 0);
+		data_.assign(data_.size(), 0);
 	}
 
-	void setSize(const int n) {
-		N = n;
+	size_type size() const {
+		return data_.size();
 	}
 
-	void build(T a[], const int n) {
-		N = n;
-		for (int i = 0; i < N; ++i) {
-			inc(i, a[i]);
+	container_type& data() {
+		return data_;
+	}
+
+	const container_type& data() const {
+		return data_;
+	}
+
+	void inc(const size_type index, const value_type delta) {
+		for (size_type v = index; v < data_.size(); v = (v | (v + 1))) {
+			data_[v] += delta;
 		}
 	}
 
-	void inc(int v, const T delta) {
-		for (; v < N; v = (v | (v + 1))) {
-			data[v] += delta;
-		}
-	}
-
-	T query(int v) const {
-		T res = 0;
-		for (; v >= 0; v = (v & (v + 1)) - 1) {
-			res += data[v];
+	value_type query(const size_type index) const
+	// returns sum for range [0, index]
+	{
+		value_type res = 0;
+		for (int32_t v = index; v >= 0; v = (v & (v + 1)) - 1) {
+			res += data_[v];
 		}
 		return res;
 	}
 
-	T query(const int l, const int r) const {
-		if (r < l) {
+	value_type query(const size_type left, const size_type right) const
+	// returns sum for range [left, right]
+	{
+		if (right < left) {
 			return 0;
 		}
-		return query(r) - query(l - 1);
+		value_type res = 0;
+		int32_t r = right;
+		int32_t l = std::max(0, static_cast<int32_t>(left) - 1);
+		for (; r >= l; r = (r & (r + 1)) - 1) {
+			res += data_[r];
+		}
+		if (left > 0) {
+			for (; l > r; l = (l & (l + 1)) - 1) {
+				res -= data_[l];
+			}
+		}
+		return res;
 	}
+
+private:
+	container_type data_;
 };
 
 template<class T> class FenwickTreeSumRangeUpdates {

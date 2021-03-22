@@ -15,18 +15,92 @@ inline T gcd(T a, T b) {
 
 template<typename T>
 inline T lcm(const T& a, const T& b) {
-	return a / gcd(a, b) * b;
+    return a / gcd(a, b) * b;
 }
 
 template<typename T>
 constexpr inline T sqr(const T& x) {
-	return x * x;
+    return x * x;
 }
 
 template<typename T>
-T factorial(T n) {
+T extended_gcd(const T a, const T b, T& x, T& y) {
+    if (a == 0) {
+        x = 0;
+        y = 1;
+        return b;
+    }
+    const T p = b / a;
+    const T g = extended_gcd(b - p * a, a, y, x);
+    x -= p * y;
+    return g;
+}
+
+// |x|, |y| <= max(|a|, |b|, |c|)
+template<typename T>
+bool solve_diophantine(const T a, const T b, const T c, T& x, T& y, T& g) {
+    if (a == 0 && b == 0) {
+        if (c == 0) {
+            x = 0;
+            y = 0;
+            g = 0;
+            return true;
+        }
+        return false;
+    }
+    if (a == 0) {
+        if (c % b == 0) {
+            x = 0;
+            y = c / b;
+            g = std::abs(b);
+            return true;
+        }
+        return false;
+    }
+    if (b == 0) {
+        if (c % a == 0) {
+            x = c / a;
+            y = 0;
+            g = std::abs(a);
+            return true;
+        }
+        return false;
+    }
+    g = extended_gcd(a, b, x, y);
+    if (c % g != 0) {
+        return false;
+    }
+    T adjusted_c = c;
+    const T dx = adjusted_c / a;
+    adjusted_c -= dx * a;
+    const T dy = adjusted_c / b;
+    adjusted_c -= dy * b;
+    x = dx + static_cast<T>(static_cast<__int128>(x) * (adjusted_c / g) % b);
+    y = dy + static_cast<T>(static_cast<__int128>(y) * (adjusted_c / g) % a);
+    g = std::abs(g);
+    return true;
+}
+
+template<typename T, typename std::enable_if<std::is_floating_point<T>::value>::type* = nullptr>
+size_t solve_quadratic_equation(const T a, const T b, const T c, T& x1, T& x2) {
+    const T D = sqr(b) - 4 * a * c;
+    if (D < -EPS) {
+        return 0;
+    }
+    if (is_equal_to_zero(D)) {
+        const T x = -b / (a * 2);
+        x1 = x;
+        return 1;
+    }
+    x1 = (-b + std::sqrt(D)) / (a * 2);
+    x2 = (-b - std::sqrt(D)) / (a * 2);
+    return 2;
+}
+
+template<typename T>
+T factorial(const size_t n) {
 	T ret = 1;
-	for (int i = 2; i <= n; ++i) {
+	for (size_t i = 2; i <= n; ++i) {
 		ret *= i;
 	}
 	return ret;
@@ -34,7 +108,7 @@ T factorial(T n) {
 
 template<typename T, typename U>
 inline T binpow(T a, U b) {
-	static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow.");
+	static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow().");
 	T ret = 1;
 	while (b != 0) {
 		if ((b & 1) != 0) {
@@ -48,7 +122,7 @@ inline T binpow(T a, U b) {
 
 template<typename T, typename U, typename Q>
 inline T binpow(T a, U b, Q mod) {
-	static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow.");
+	static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow().");
 	long long ret = 1;
 	a %= mod;
 	while (b != 0) {
@@ -93,7 +167,7 @@ size_t digit_count(const T n) {
 
 template<typename T>
 std::vector<T> divisors_vector(const T n) {
-	const auto approximate_divisors_count = static_cast<size_t>(cbrt(n));
+	const auto approximate_divisors_count = static_cast<size_t>(std::cbrt(n));
 	std::vector<T> ans;
 	ans.reserve(approximate_divisors_count);
 	const auto floored_square_root = static_cast<T>(sqrt(n));
@@ -106,6 +180,47 @@ std::vector<T> divisors_vector(const T n) {
 		}
 	}
 	return ans;
+}
+
+template<typename T, typename size_type = std::size_t>
+std::vector<T> divisors_vector(const std::vector<std::pair<T, size_type>>& prime_divisors, const bool sorted = false) {
+    static std::vector<T> buffer;
+
+    size_t divisors_count = 1;
+    for (const auto& prime_divisor : prime_divisors) {
+        divisors_count *= prime_divisor.second + 1;
+    }
+
+    std::vector<T> factors = {1};
+    factors.reserve(divisors_count);
+    if (sorted) {
+        buffer.resize(divisors_count);
+    }
+
+    for (const auto& prime_divisor : prime_divisors) {
+        const T prime_div = prime_divisor.first;
+        const size_t exponent = prime_divisor.second;
+
+        const size_t prev_size = factors.size();
+        for (size_t i = 0; i < exponent * prev_size; ++i) {
+            factors.emplace_back(factors[factors.size() - prev_size] * prime_div);
+        }
+
+        if (sorted && factors[prev_size - 1] > prime_div) {
+            for (size_t section = prev_size; section < factors.size(); section *= 2) {
+                for (size_t i = 0; i + section < factors.size(); i += 2 * section) {
+                    const size_t length = std::min(2 * section, factors.size() - i);
+                    std::merge(factors.cbegin() + i,
+                               factors.cbegin() + i + section,
+                               factors.cbegin() + i + section,
+                               factors.cbegin() + i + length,
+                               buffer.begin());
+                    std::copy(buffer.cbegin(), buffer.cbegin() + length, factors.begin() + i);
+                }
+            }
+        }
+    }
+    return factors;
 }
 
 template<typename T>

@@ -82,7 +82,13 @@ void debug_out(std::vector<std::string> args, int idx, int LINE_NUM, Head H, Tai
 	} else {
 		std::cerr << "Line(" << LINE_NUM << ") ";
 	}
-	std::cerr << args[idx] << " = " << ss.str();
+	const std::string& arg = args[idx];
+	const std::string value = ss.str();
+	if (arg == value) {
+		std::cerr << arg;
+	} else {
+		std::cerr << arg << " = " << value;
+	}
 	debug_out(args, idx + 1, LINE_NUM, T...);
 }
 
