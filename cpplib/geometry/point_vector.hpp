@@ -68,12 +68,17 @@ public:
 		return *this;
 	}
 
-	square_type squared_dist(const Point& rhs) const {
+	constexpr square_type squared_dist(const Point& rhs) const {
 		return Coord::squared_dist(rhs);
 	}
 
 	decimal_type dist(const Point& rhs) const {
 		return Coord::dist(rhs);
+	}
+
+    template<typename std::enable_if<std::is_integral<value_type>::value>::type* = nullptr>
+	constexpr value_type manhattan_dist(const Point& rhs) const {
+	    return Coord::manhattan_dist(rhs);
 	}
 
 	constexpr Point move_by(const vector_type& vector) const {

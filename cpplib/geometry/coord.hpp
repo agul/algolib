@@ -86,6 +86,10 @@ public:
 		return{ static_cast<typename C::value_type>(x), static_cast<typename C::value_type>(y) };
 	}
 
+	std::string str() const {
+	    return "(" + std::to_string(x) + ", " + std::to_string(y) + ")";
+	}
+
 	friend std::istream& operator >> (std::istream& in, Coord2D& rhs) {
 		in >> rhs.x >> rhs.y;
 		return in;
@@ -102,6 +106,11 @@ protected:
 	decimal_type dist(const Coord2D& rhs) const {
 		return std::sqrt(squared_dist(rhs));
 	}
+
+    template<typename std::enable_if<std::is_integral<value_type>::value>::type* = nullptr>
+    constexpr value_type manhattan_dist(const Coord2D& rhs) const {
+        return std::abs(x - rhs.x) + std::abs(y - rhs.y);
+    }
 };
 
 template<typename T, typename SquareT = T, typename DecimalT = Decimal>
@@ -180,6 +189,10 @@ public:
 		return{ static_cast<typename C::value_type>(x), static_cast<typename C::value_type>(y), static_cast<typename C::value_type>(z) };
 	}
 
+    std::string str() const {
+        return "(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")";
+    }
+
 	friend std::istream& operator >> (std::istream& in, Coord3D& rhs) {
 		in >> rhs.x >> rhs.y >> rhs.z;
 		return in;
@@ -197,6 +210,11 @@ protected:
 	decimal_type dist(const Coord3D& rhs) const {
 		return std::sqrt(squared_dist(rhs));
 	}
+
+    template<typename std::enable_if<std::is_integral<value_type>::value>::type* = nullptr>
+    constexpr value_type manhattan_dist(const Coord3D& rhs) const {
+        return std::abs(x - rhs.x) + std::abs(y - rhs.y) + std::abs(z - rhs.z);
+    }
 };
 
 template<typename Coord>
@@ -212,6 +230,23 @@ struct is_3d
 	/// caide keep
 	static constexpr bool value = std::is_same<Coord, Coord3D<typename Coord::value_type, typename Coord::square_type, typename Coord::decimal_type>>::value;
 };
+
+template<typename Coord, typename std::enable_if<is_2d<Coord>::value>::type* = nullptr>
+struct CompareByY {
+    bool operator()(const Coord& lhs, const Coord& rhs) const {
+        return lhs.y < rhs.y || lhs.y == rhs.y && lhs.x < rhs.x;
+    }
+};
+
+template<typename T, typename S, typename D>
+std::string to_string(const Coord2D<T, S, D>& coord) {
+    return coord.str();
+}
+
+template<typename T, typename S, typename D>
+std::string to_string(const Coord3D<T, S, D>& coord) {
+    return coord.str();
+}
 
 namespace std {
 
