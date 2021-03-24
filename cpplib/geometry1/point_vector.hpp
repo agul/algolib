@@ -219,16 +219,16 @@ public:
 	}
 };
 
-template<typename T, typename SquareT = T, typename DecimalT = Decimal>
+template<typename T, typename SquareT = T, typename DecimalT = Decimal<>>
 using Point2D = Point<Coord2D<T, SquareT, DecimalT>>;
 
-template<typename T, typename SquareT = T, typename DecimalT = Decimal>
+template<typename T, typename SquareT = T, typename DecimalT = Decimal<>>
 using Point3D = Point<Coord3D<T, SquareT, DecimalT>>;
 
-template<typename T, typename SquareT = T, typename DecimalT = Decimal>
+template<typename T, typename SquareT = T, typename DecimalT = Decimal<>>
 using Vector2D = Vector<Coord2D<T, SquareT, DecimalT>>;
 
-template<typename T, typename SquareT = T, typename DecimalT = Decimal>
+template<typename T, typename SquareT = T, typename DecimalT = Decimal<>>
 using Vector3D = Vector<Coord3D<T, SquareT, DecimalT>>;
 
 template<typename Coord>

@@ -4,7 +4,7 @@
 #include "maths/decimal.hpp"
 #include "maths/maths.hpp"
 
-template<typename T, typename SquareT = T, typename DecimalT = Decimal>
+template<typename T, typename SquareT = T, typename DecimalT = Decimal<>>
 class Circle {
 public:
 	/// caide keep

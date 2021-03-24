@@ -1,13 +1,14 @@
 #pragma once
 #include <functional>
 #include <iostream>
+#include <string>
 
 #include "safe_double.hpp"
 
+template<typename T = long double, typename std::enable_if<std::is_floating_point<T>::value>::type* = nullptr>
 class Decimal {
 public:
-	/// caide keep
-	using T = long double;
+    using value_type = T;
 
 	/// caide keep
 	constexpr Decimal() : Decimal(0) {}
@@ -109,15 +110,15 @@ public:
 		return safe::greater_or_equal(value_, rhs.value_);
 	}
 
-	constexpr explicit operator T() const {
+	constexpr explicit operator value_type() const {
 		return value_;
 	}
 
-	constexpr T value() const {
+	constexpr value_type value() const {
 		return value_;
 	}
 
-	constexpr T double_value() const {
+	constexpr value_type double_value() const {
 		return value_;
 	}
 
@@ -141,7 +142,7 @@ public:
 	}
 
 	constexpr Decimal floor() const {
-		return{ static_cast<T>(long_value()) };
+		return{ static_cast<value_type>(long_value()) };
 	}
 
 	constexpr Decimal trunc() const {
@@ -149,7 +150,11 @@ public:
 	}
 
 	constexpr Decimal round() const {
-		return Decimal(value_ + 0.5).floor();
+		return Decimal{value_ + 0.5}.floor();
+	}
+
+	std::string str() const {
+	    return std::to_string(value_);
 	}
 
 	static Decimal pi() {
@@ -171,42 +176,53 @@ public:
 	}
 
 private:
-	T value_;
+	value_type value_;
 };
+
+template<typename T>
+std::string to_string(const Decimal<T> arg) {
+    return arg.str();
+}
 
 namespace std {
 
-template<>
-struct is_floating_point<Decimal> : std::true_type {};
+template<typename T>
+struct is_floating_point<Decimal<T>> : std::true_type {};
 
-Decimal abs(const Decimal arg) {
+template<typename T>
+Decimal<T> abs(const Decimal<T> arg) {
 	return arg.abs();
 }
 
-Decimal sqrt(const Decimal arg) {
+template<typename T>
+Decimal<T> sqrt(const Decimal<T> arg) {
 	return arg.sqrt();
 }
 
-Decimal asin(const Decimal arg) {
+template<typename T>
+Decimal<T> asin(const Decimal<T> arg) {
 	return arg.asin();
 }
 
-Decimal acos(const Decimal arg) {
+template<typename T>
+Decimal<T> acos(const Decimal<T> arg) {
 	return arg.acos();
 }
 
-Decimal pow(const Decimal lhs, const Decimal rhs) {
+template<typename T>
+Decimal<T> pow(const Decimal<T> lhs, const Decimal<T> rhs) {
 	return lhs.pow(rhs);
 }
 
-Decimal log(const Decimal arg) {
+template<typename T>
+Decimal<T> log(const Decimal<T> arg) {
 	return arg.log();
 }
 
-template<>
-struct hash<Decimal> {
-	size_t operator()(const Decimal arg) const {
-		return hash<Decimal::T>()(arg.value());
+template<typename T>
+struct hash<Decimal<T>> {
+	size_t operator()(const Decimal<T> arg) const {
+		return hash<typename Decimal<T>::value_type>()(arg.value());
 	}
 };
 

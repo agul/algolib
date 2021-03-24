@@ -6,7 +6,7 @@
 #include "maths/decimal.hpp"
 #include "maths/maths.hpp"
 
-template<typename T, typename SquareT = T, typename DecimalT = Decimal>
+template<typename T, typename SquareT = T, typename DecimalT = Decimal<>>
 class Coord2D {
 public:
 	/// caide keep
@@ -104,7 +104,7 @@ protected:
 	}
 };
 
-template<typename T, typename SquareT = T, typename DecimalT = Decimal>
+template<typename T, typename SquareT = T, typename DecimalT = Decimal<>>
 class Coord3D {
 public:
 	/// caide keep
