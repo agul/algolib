@@ -84,6 +84,26 @@ public:
 	    return to_vector().angle();
 	}
 
+	constexpr bool contains(const point_type& point) const {
+	    return is_equal_to_zero(value(point));
+	}
+
+	constexpr Line perpendicular(const point_type& point) const {
+	    return Line{-b_, a_, b_ * point.x - a_ * point.y};
+	}
+
+	constexpr bool is_parallel(const Line& rhs) const {
+        return is_equal_to_zero(a_ * rhs.b_ - b_ * rhs.a_);
+	}
+
+	constexpr decimal_type dist(const point_type& point) const {
+	    return std::abs(value(point));
+	}
+
+	constexpr bool operator ==(const Line& rhs) const {
+	    return is_parallel(rhs) && is_equal_to_zero(a_ * rhs.c_ - c_ * rhs.a_) && is_equal_to_zero(b_ * rhs.c_ - c_ * rhs.b_);
+	}
+
 private:
 	value_type a_;
 	value_type b_;
