@@ -23,7 +23,7 @@ public:
     constexpr Coord2D(const value_type x, const value_type y) : x(x), y(y) {}
 
     decimal_type angle() const {
-        return atan2(y, x);
+        return std::atan2(y, x);
     }
 
     constexpr Coord2D add(const Coord2D& rhs) const {
@@ -107,7 +107,7 @@ protected:
         return std::sqrt(squared_dist(rhs));
     }
 
-    template<typename std::enable_if<std::is_integral<value_type>::value>::type* = nullptr>
+    template<typename Value = value_type, typename std::enable_if<std::is_integral<Value>::value>::type* = nullptr>
     constexpr value_type manhattan_dist(const Coord2D& rhs) const {
         return std::abs(x - rhs.x) + std::abs(y - rhs.y);
     }
@@ -232,7 +232,7 @@ struct is_3d
 };
 
 template<typename Coord, typename std::enable_if<is_2d<Coord>::value>::type* = nullptr>
-struct CompareByY {
+struct LessByY {
     bool operator()(const Coord& lhs, const Coord& rhs) const {
         return lhs.y < rhs.y || lhs.y == rhs.y && lhs.x < rhs.x;
     }
@@ -264,4 +264,4 @@ struct hash<Coord3D<T, S, D>> {
     }
 };
 
-}
+}  // namespace std
