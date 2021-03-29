@@ -39,10 +39,18 @@ public:
 	}
 
 	constexpr decimal_point_type point_a() const {
+	    if (is_equal_to_zero(b_)) {
+            constexpr const value_type x = static_cast<decimal_type>(-c_) / a_;
+	        return decimal_point_type(x, 0);
+	    }
 		return decimal_point_type(0, static_cast<decimal_type>(-c_) / b_);
 	}
 
 	constexpr decimal_point_type point_b() const {
+        if (is_equal_to_zero(b_)) {
+            constexpr const value_type x = static_cast<decimal_type>(-c_) / a_;
+            return decimal_point_type(x, 100);
+        }
 		constexpr const value_type x = 100;
 		return decimal_point_type(x, static_cast<decimal_type>(-c_ - a_ * x) / b_);
 	}
@@ -60,12 +68,20 @@ public:
 			c_ /= g;
 			return;
 		}
-		const value_type z = sqrt(sqr(a) + sqr(b));
-		if (z != 0) {
+		const value_type z = std::sqrt(sqr(a_) + sqr(b_));
+		if (!is_equal_to_zero(z)) {
 			a_ /= z;
 			b_ /= z;
 			c_ /= z;
 		}
+	}
+
+	constexpr value_type value(const point_type& point) const {
+	    return point.x * a_ + point.y * b_ + c_;
+	}
+
+	decimal_type angle() const {
+	    return to_vector().angle();
 	}
 
 private:
