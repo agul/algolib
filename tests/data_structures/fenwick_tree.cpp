@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "data_structures/fenwick_tree.hpp"
+#include "cpplib/data_structures/fenwick_tree/fenwick_tree.hpp"
 
 TEST(FenwickTreeSum, build_from_vector) {
 	auto check = [](std::initializer_list<int>&& init_list) {
