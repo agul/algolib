@@ -66,6 +66,22 @@ public:
 		return{ safe::abs(value_) };
 	}
 
+	Decimal sin() const {
+	    return {std::sin(value_)};
+	}
+
+	Decimal cos() const {
+	    return {std::cos(value_)};
+	}
+
+    Decimal tan() const {
+        return {std::tan(value_)};
+    }
+
+    Decimal atan() const {
+        return {std::atan(value_)};
+    }
+
 	Decimal sqrt() const {
 		return{ safe::sqrt(value_) };
 	}
@@ -85,6 +101,10 @@ public:
 	Decimal log() const {
 		return{ std::log(value_) };
 	}
+
+    Decimal exp() const {
+        return{ std::exp(value_) };
+    }
 
 	constexpr bool operator ==(const Decimal& rhs) const {
 		return safe::equal(value_, rhs.value_);
@@ -200,6 +220,26 @@ Decimal<T> sqrt(const Decimal<T> arg) {
 }
 
 template<typename T>
+Decimal<T> sin(const Decimal<T> arg) {
+    return arg.sin();
+}
+
+template<typename T>
+Decimal<T> cos(const Decimal<T> arg) {
+    return arg.cos();
+}
+
+template<typename T>
+Decimal<T> tan(const Decimal<T> arg) {
+    return arg.tan();
+}
+
+template<typename T>
+Decimal<T> atan(const Decimal<T> arg) {
+    return arg.atan();
+}
+
+template<typename T>
 Decimal<T> asin(const Decimal<T> arg) {
 	return arg.asin();
 }
@@ -207,6 +247,11 @@ Decimal<T> asin(const Decimal<T> arg) {
 template<typename T>
 Decimal<T> acos(const Decimal<T> arg) {
 	return arg.acos();
+}
+
+template<typename T>
+Decimal<T> exp(const Decimal<T> arg) {
+    return arg.exp();
 }
 
 template<typename T>
