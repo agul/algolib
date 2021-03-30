@@ -63,6 +63,10 @@ public:
         }
     }
 
+    constexpr size_t size() const {
+        return 2;
+    }
+
     const value_type& operator [](const size_t index) const {
         if (index == 0) {
             return x;
@@ -181,6 +185,10 @@ public:
         if (index == 2) {
             return z;
         }
+    }
+
+    constexpr size_t size() const {
+        return 3;
     }
 
     /// caide keep

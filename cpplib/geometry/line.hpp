@@ -41,18 +41,18 @@ public:
 	constexpr decimal_point_type point_a() const {
 	    if (is_equal_to_zero(b_)) {
             constexpr const value_type x = static_cast<decimal_type>(-c_) / a_;
-	        return decimal_point_type(x, 0);
+	        return {x, 0};
 	    }
-		return decimal_point_type(0, static_cast<decimal_type>(-c_) / b_);
+		return {0, static_cast<decimal_type>(-c_) / b_};
 	}
 
 	constexpr decimal_point_type point_b() const {
         if (is_equal_to_zero(b_)) {
             constexpr const value_type x = static_cast<decimal_type>(-c_) / a_;
-            return decimal_point_type(x, 100);
+            return {x, 100};
         }
 		constexpr const value_type x = 100;
-		return decimal_point_type(x, static_cast<decimal_type>(-c_ - a_ * x) / b_);
+		return {x, static_cast<decimal_type>(-c_ - a_ * x) / b_};
 	}
 
 	void normalize() {
@@ -89,7 +89,7 @@ public:
 	}
 
 	constexpr Line perpendicular(const point_type& point) const {
-	    return Line{-b_, a_, b_ * point.x - a_ * point.y};
+	    return {-b_, a_, b_ * point.x - a_ * point.y};
 	}
 
 	constexpr bool is_parallel(const Line& rhs) const {
