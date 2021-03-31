@@ -6,11 +6,10 @@ add_library(cpplib INTERFACE)
 target_include_directories(cpplib INTERFACE .)
 target_sources(cpplib INTERFACE ${HEADERS})
 
-
 file(GLOB_RECURSE TESTS "tests/*.?pp")
 add_executable(unit_tests ${TESTS})
 target_link_libraries(unit_tests cpplib)
 
 add_subdirectory(gtest)
-target_link_libraries(unit_tests gtest_main)
+target_link_libraries(unit_tests gtest gtest_main)
 target_compile_options(unit_tests PRIVATE -Werror -std=c++1z)

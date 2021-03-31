@@ -1,7 +1,6 @@
 *caide*
 submission*
 vs_common.props
-include
 *build*
 CMakeFiles
 *.vcxproj
