@@ -6,7 +6,6 @@ add_library(cpplib INTERFACE)
 target_include_directories(cpplib INTERFACE .)
 target_sources(cpplib INTERFACE ${HEADERS})
 
-
 file(GLOB_RECURSE TESTS "tests/*.?pp")
 add_executable(unit_tests ${TESTS})
 target_link_libraries(unit_tests cpplib)
