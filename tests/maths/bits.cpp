@@ -147,3 +147,18 @@ TEST(Bits, bit_width) {
 	EXPECT_EQ(bit_width(1000000007), 30UL);
 	EXPECT_EQ(bit_width(1000000007LL * 1000000007 - 1), 60UL);
 }
+
+TEST(Bits, binary_power) {
+    auto binary_power_slow = [](uint64_t value) {
+        size_t power = 0;
+        while (value > 1) {
+            value >>= 1;
+            ++power;
+        }
+        return power;
+    };
+
+    for (uint32_t i = 0; i < 1000000; ++i) {
+        EXPECT_EQ(binary_power(i), binary_power_slow(i));
+    }
+}
