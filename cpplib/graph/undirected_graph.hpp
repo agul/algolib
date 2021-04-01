@@ -56,19 +56,18 @@ public:
 	}
 
 	bool is_connected() const {
-		return build_dsu().sets_count() == 1;
+		return dsu().sets_count() == 1;
 	}
 
-	std::vector<size_t> labelled_components() const {
-		return build_dsu().finalize().data();
-	}
-
-private:
-	DSU build_dsu() const {
+	DSU dsu() const {
 		DSU dsu(this->vertices_count_);
 		for (const auto& it : this->edges()) {
 			dsu.unite(it.from(), it.to());
 		}
 		return dsu;
+	}
+
+	std::vector<size_t> labelled_components() const {
+		return dsu().finalize().data();
 	}
 };
