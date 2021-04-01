@@ -17,6 +17,8 @@ public:
     using decimal_type = DecimalT;
     /// caide keep
     using decimal_coord_type = Coord2D<decimal_type, decimal_type, decimal_type>;
+    /// caide keep
+    using squared_coord_type = Coord2D<square_type, square_type, decimal_type>;
 
     /// caide keep
     constexpr Coord2D() : Coord2D(0, 0) {}
@@ -34,12 +36,20 @@ public:
         return{ x - rhs.x, y - rhs.y };
     }
 
+    constexpr Coord2D multiply(const value_type rhs) const {
+        return {x * rhs, y * rhs};
+    }
+
     constexpr Coord2D operator +(const Coord2D& rhs) const {
         return add(rhs);
     }
 
     constexpr Coord2D operator -(const Coord2D& rhs) const {
         return subtract(rhs);
+    }
+
+    constexpr Coord2D operator *(const value_type rhs) const {
+        return multiply(rhs);
     }
 
     Coord2D& operator +=(const Coord2D& rhs) {
@@ -54,6 +64,12 @@ public:
         return *this;
     }
 
+    Coord2D& operator *=(const value_type rhs) const {
+        x *= rhs;
+        y *= rhs;
+        return *this;
+    }
+
     value_type& operator [](size_t index) {
         if (index == 0) {
             return x;
@@ -63,11 +79,11 @@ public:
         }
     }
 
-    constexpr size_t size() const {
+    [[nodiscard]] constexpr size_t size() const {
         return 2;
     }
 
-    const value_type& operator [](const size_t index) const {
+    constexpr const value_type& operator [](const size_t index) const {
         if (index == 0) {
             return x;
         }
@@ -76,11 +92,19 @@ public:
         }
     }
 
-    bool operator == (const Coord2D& rhs) const {
+    constexpr bool is_equal(const Coord2D& rhs) const {
         return x == rhs.x && y == rhs.y;
     }
 
-    bool operator < (const Coord2D& rhs) const {
+    constexpr bool operator ==(const Coord2D& rhs) const {
+        return is_equal(rhs);
+    }
+
+    constexpr bool operator !=(const Coord2D& rhs) const {
+        return !is_equal(rhs);
+    }
+
+    constexpr bool operator <(const Coord2D& rhs) const {
         return x < rhs.x || (x == rhs.x && y < rhs.y);
     }
 
@@ -90,7 +114,7 @@ public:
         return{ static_cast<typename C::value_type>(x), static_cast<typename C::value_type>(y) };
     }
 
-    std::string str() const {
+    [[nodiscard]] std::string str() const {
         return "(" + std::to_string(x) + ", " + std::to_string(y) + ")";
     }
 
@@ -128,6 +152,8 @@ public:
     using decimal_type = DecimalT;
     /// caide keep
     using decimal_coord_type = Coord3D<decimal_type, decimal_type, decimal_type>;
+    /// caide keep
+    using squared_coord_type = Coord3D<square_type, square_type, decimal_type>;
 
     /// caide keep
     constexpr Coord3D() : Coord3D(0, 0, 0) {}
@@ -141,12 +167,20 @@ public:
         return{ x - rhs.x, y - rhs.y, z - rhs.z };
     }
 
+    constexpr Coord3D multiply(const value_type rhs) const {
+        return {x * rhs, y * rhs, z * rhs};
+    }
+
     constexpr Coord3D operator +(const Coord3D& rhs) const {
         return add(rhs);
     }
 
     constexpr Coord3D operator -(const Coord3D& rhs) const {
         return subtract(rhs);
+    }
+
+    constexpr Coord3D operator *(const value_type rhs) const {
+        return multiply(rhs);
     }
 
     Coord3D& operator +=(const Coord3D& rhs) const {
@@ -163,6 +197,13 @@ public:
         return *this;
     }
 
+    Coord3D& operator *=(const value_type rhs) const {
+        x *= rhs;
+        y *= rhs;
+        z *= rhs;
+        return *this;
+    }
+
     value_type& operator [](size_t index) {
         if (index == 0) {
             return x;
@@ -175,7 +216,7 @@ public:
         }
     }
 
-    const value_type& operator [](const size_t index) const {
+    constexpr const value_type& operator [](const size_t index) const {
         if (index == 0) {
             return x;
         }
@@ -187,8 +228,20 @@ public:
         }
     }
 
-    constexpr size_t size() const {
+    [[nodiscard]] constexpr size_t size() const {
         return 3;
+    }
+
+    constexpr bool is_equal(const Coord3D& rhs) const {
+        return x == rhs.x && y == rhs.y && z == rhs.z;
+    }
+
+    constexpr bool operator ==(const Coord3D& rhs) const {
+        return is_equal(rhs);
+    }
+
+    constexpr bool operator !=(const Coord3D& rhs) const {
+        return !is_equal(rhs);
     }
 
     /// caide keep
@@ -197,7 +250,7 @@ public:
         return{ static_cast<typename C::value_type>(x), static_cast<typename C::value_type>(y), static_cast<typename C::value_type>(z) };
     }
 
-    std::string str() const {
+    [[nodiscard]] std::string str() const {
         return "(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")";
     }
 
@@ -242,7 +295,7 @@ struct is_3d
 template<typename Coord, typename std::enable_if<is_2d<Coord>::value>::type* = nullptr>
 struct LessByY {
     bool operator()(const Coord& lhs, const Coord& rhs) const {
-        return lhs.y < rhs.y || lhs.y == rhs.y && lhs.x < rhs.x;
+        return lhs.y < rhs.y || (lhs.y == rhs.y && lhs.x < rhs.x);
     }
 };
 
