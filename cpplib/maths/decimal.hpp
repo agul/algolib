@@ -130,9 +130,13 @@ public:
 		return safe::greater_or_equal(value_, rhs.value_);
 	}
 
-	constexpr explicit operator value_type() const {
-		return value_;
-	}
+    constexpr explicit operator double() const {
+        return static_cast<double>(value_);
+    }
+
+    constexpr explicit operator long double() const {
+        return static_cast<long double>(value_);
+    }
 
 	constexpr value_type value() const {
 		return value_;
@@ -142,11 +146,11 @@ public:
 		return value_;
 	}
 
-	constexpr int int_value() const {
+	[[nodiscard]] constexpr int int_value() const {
 		return static_cast<int>(value_);
 	}
 
-	constexpr long long long_value() const {
+	[[nodiscard]] constexpr long long long_value() const {
 		return static_cast<long long>(value_);
 	}
 
@@ -173,7 +177,7 @@ public:
 		return Decimal{value_ + 0.5}.floor();
 	}
 
-	std::string str() const {
+	[[nodiscard]] std::string str() const {
 	    return std::to_string(value_);
 	}
 
