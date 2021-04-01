@@ -14,40 +14,44 @@ template<typename Coord>
 class Point : public Coord {
 public:
     /// caide keep
-    using vector_type = Vector<Coord>;
-    /// caide keep
-    using value_type = typename Coord::value_type;
-    /// caide keep
-    using square_type = typename Coord::square_type;
-    /// caide keep
-    using decimal_type = typename Coord::decimal_type;
-    /// caide keep
     using coordinates_type = Coord;
+    /// caide keep
+    using vector_type = Vector<coordinates_type>;
+    /// caide keep
+    using value_type = typename coordinates_type::value_type;
+    /// caide keep
+    using square_type = typename coordinates_type::square_type;
+    /// caide keep
+    using decimal_type = typename coordinates_type::decimal_type;
 
     /// caide keep
-    using decimal_point_type = Point<typename Coord::decimal_coord_type>;
+    using decimal_point_type = Point<typename coordinates_type::decimal_coord_type>;
     /// caide keep
     using decimal_vector_type = typename vector_type::decimal_vector_type;
 
     /// caide keep
-    constexpr Point() : Coord() {}
+    constexpr Point() : coordinates_type() {}
 
     /// caide keep
-    template<typename C = Coord, typename std::enable_if<is_2d<C>::value>::type* = nullptr>
-    constexpr Point(const value_type x, const value_type y) : Coord(x, y) {}
+    template<typename C = coordinates_type, typename std::enable_if<is_2d<C>::value>::type* = nullptr>
+    constexpr Point(const value_type x, const value_type y) : coordinates_type(x, y) {}
 
     /// caide keep
-    template<typename C = Coord, typename std::enable_if<is_3d<C>::value>::type* = nullptr>
-    constexpr Point(const value_type x, const value_type y, const value_type z) : Coord(x, y, z) {}
+    template<typename C = coordinates_type, typename std::enable_if<is_3d<C>::value>::type* = nullptr>
+    constexpr Point(const value_type x, const value_type y, const value_type z) : coordinates_type(x, y, z) {}
 
-    explicit constexpr Point(const Coord& coord) : Coord(coord) {}
+    explicit constexpr Point(const coordinates_type& coord) : coordinates_type(coord) {}
 
     constexpr Point add(const Point& rhs) const {
-        return Point(Coord::add(rhs));
+        return Point{coordinates_type::add(rhs)};
     }
 
     constexpr Point subtract(const Point& rhs) const {
-        return Point(Coord::subtract(rhs));
+        return Point{coordinates_type::subtract(rhs)};
+    }
+
+    constexpr Point multiply(const value_type rhs) const {
+        return Point{coordinates_type::multiply(rhs)};
     }
 
     constexpr Point operator +(const Point& rhs) const {
@@ -58,33 +62,40 @@ public:
         return subtract(rhs);
     }
 
+    constexpr Point operator *(const value_type rhs) const {
+        return multiply(rhs);
+    }
+
     Point& operator +=(const Point& rhs) {
-        Coord::operator +=(rhs);
+        coordinates_type::operator +=(rhs);
         return *this;
     }
 
     Point& operator -=(const Point& rhs) {
-        Coord::operator -=(rhs);
+        coordinates_type::operator -=(rhs);
+        return *this;
+    }
+
+    Point& operator *=(const value_type rhs) {
+        coordinates_type::operator *=(rhs);
         return *this;
     }
 
     constexpr square_type squared_dist(const Point& rhs) const {
-        return Coord::squared_dist(rhs);
+        return coordinates_type::squared_dist(rhs);
     }
 
     decimal_type dist(const Point& rhs) const {
-        return Coord::dist(rhs);
+        return coordinates_type::dist(rhs);
     }
-
 
     template<typename Value = value_type, typename std::enable_if<std::is_integral<Value>::value>::type* = nullptr>
     constexpr value_type manhattan_dist(const Point& rhs) const {
-        return Coord::manhattan_dist(rhs);
+        return coordinates_type::manhattan_dist(rhs);
     }
 
-
     constexpr Point move_by(const vector_type& vector) const {
-        return Point(this->x + vector.x, this->y + vector.y);
+        return {this->x + vector.x, this->y + vector.y};
     }
 
     decimal_point_type get_height(const Point& A, const Point& B) const {
@@ -106,7 +117,7 @@ public:
     /// caide keep
     template<typename P>
     constexpr P as() const {
-        return P(Coord::template as<typename P::coordinates_type>());
+        return P{coordinates_type::template as<typename P::coordinates_type>()};
     }
 };
 
@@ -114,40 +125,45 @@ template<typename Coord>
 class Vector : public Coord {
 public:
     /// caide keep
-    using point_type = Point<Coord>;
-    /// caide keep
-    using value_type = typename Coord::value_type;
-    /// caide keep
-    using square_type = typename Coord::square_type;
-    /// caide keep
-    using decimal_type = typename Coord::decimal_type;
-    /// caide keep
     using coordinates_type = Coord;
+    /// caide keep
+    using point_type = Point<coordinates_type>;
+    /// caide keep
+    using value_type = typename coordinates_type::value_type;
+    /// caide keep
+    using square_type = typename coordinates_type::square_type;
+    /// caide keep
+    using decimal_type = typename coordinates_type::decimal_type;
+    /// caide keep
+    using decimal_vector_type = Vector<typename coordinates_type::decimal_coord_type>;
+    /// caide keep
+    using squared_vector_type = Vector<typename coordinates_type::squared_coord_type>;
 
     /// caide keep
-    using decimal_vector_type = Vector<typename Coord::decimal_coord_type>;
+    constexpr Vector() : coordinates_type() {}
 
     /// caide keep
-    constexpr Vector() : Coord() {}
+    template<typename C = coordinates_type, typename std::enable_if<is_2d<C>::value>::type* = nullptr>
+    constexpr Vector(const value_type x, const value_type y) : coordinates_type(x, y) {}
 
     /// caide keep
-    template<typename C = Coord, typename std::enable_if<is_2d<C>::value>::type* = nullptr>
-    constexpr Vector(const value_type x, const value_type y) : Coord(x, y) {}
+    template<typename C = coordinates_type, typename std::enable_if<is_3d<C>::value>::type* = nullptr>
+    constexpr Vector(const value_type x, const value_type y, const value_type z) : coordinates_type(x, y, z) {}
 
-    /// caide keep
-    template<typename C = Coord, typename std::enable_if<is_3d<C>::value>::type* = nullptr>
-    constexpr Vector(const value_type x, const value_type y, const value_type z) : Coord(x, y, z) {}
+    constexpr explicit Vector(const coordinates_type& coord) : coordinates_type(coord) {}
 
-    constexpr explicit Vector(const Coord& coord) : Coord(coord) {}
-
-    constexpr Vector(const point_type& a, const point_type& b) : Coord(b.x - a.x, b.y - a.y) {}
+    constexpr Vector(const point_type& a, const point_type& b) : coordinates_type(b.x - a.x, b.y - a.y) {}
 
     constexpr Vector add(const Vector& rhs) const {
-        return Vector(Coord::add(rhs));
+        return Vector{coordinates_type::add(rhs)};
     }
 
     constexpr Vector subtract(const Vector& rhs) const {
-        return Vector(Coord::subtract(rhs));
+        return Vector{coordinates_type::subtract(rhs)};
+    }
+
+    constexpr Vector multiply(const value_type rhs) const {
+        return Vector{coordinates_type::multiply(rhs)};
     }
 
     constexpr Vector operator +(const Vector& rhs) const {
@@ -158,26 +174,27 @@ public:
         return subtract(rhs);
     }
 
-    Vector& operator +=(const Vector& rhs) const {
-        Coord::operator +=(rhs);
-        return *this;
-    }
-
-    Vector& operator -=(const Vector& rhs) const {
-        Coord::operator -=(rhs);
-        return *this;
-    }
-
-    constexpr Vector multiply(const value_type rhs) const {
-        return Vector(this->x * rhs, this->y * rhs);
-    }
-
     constexpr Vector operator *(const value_type rhs) const {
         return multiply(rhs);
     }
 
+    Vector& operator +=(const Vector& rhs) const {
+        coordinates_type::operator +=(rhs);
+        return *this;
+    }
+
+    Vector& operator -=(const Vector& rhs) const {
+        coordinates_type::operator -=(rhs);
+        return *this;
+    }
+
+    Vector& operator *=(const value_type rhs) const {
+        coordinates_type::operator *=(rhs);
+        return *this;
+    }
+
     decimal_type length() const {
-        return Coord::dist(Coord());
+        return coordinates_type::dist({});
     }
 
     constexpr bool is_zero() const {
@@ -185,7 +202,7 @@ public:
     }
 
     constexpr Vector negate() const {
-        return Vector(-this->x, -this->y);
+        return multiply(-1);
     }
 
     constexpr Vector operator -() const {
@@ -222,7 +239,7 @@ public:
     /// caide keep
     template<typename V>
     constexpr V as() const {
-        return V(Coord::template as<typename V::coordinates_type>());
+        return V{coordinates_type::template as<typename V::coordinates_type>()};
     }
 };
 
