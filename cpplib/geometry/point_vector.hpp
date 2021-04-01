@@ -203,12 +203,12 @@ public:
         return as<decimal_vector_type>().multiply(new_len / len);
     }
 
-    constexpr value_type scalar_mult(const Vector& rhs) const {
-        return this->x * rhs.x + this->y * rhs.y;
+    constexpr square_type scalar_mult(const Vector& rhs) const {
+        return static_cast<square_type>(this->x) * rhs.x + static_cast<square_type>(this->y) * rhs.y;
     }
 
-    constexpr value_type vector_mult(const Vector& rhs) const {
-        return this->x * rhs.y - this->y * rhs.x;
+    constexpr square_type vector_mult(const Vector& rhs) const {
+        return static_cast<square_type>(this->x) * rhs.y - static_cast<square_type>(this->y) * rhs.x;
     }
 
     constexpr value_type operator %(const Vector& rhs) const {

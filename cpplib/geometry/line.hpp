@@ -31,7 +31,7 @@ public:
 	constexpr Line(const point_type& a, const point_type& b)  {
 		a_ = a.y - b.y;
 		b_ = b.x - a.x;
-		c_ = -a_ * a.x - b_ * a.y;
+		c_ = static_cast<square_type>(-a_) * a.x - static_cast<square_type>(b_) * a.y;
 	}
 
 	constexpr vector_type to_vector() const {
@@ -52,7 +52,7 @@ public:
             return {x, 100};
         }
 		constexpr const value_type x = 100;
-		return {x, static_cast<decimal_type>(-c_ - a_ * x) / b_};
+		return {x, static_cast<decimal_type>(-c_ - static_cast<square_type>(a_) * x) / b_};
 	}
 
 	void normalize() {
@@ -68,7 +68,7 @@ public:
 			c_ /= g;
 			return;
 		}
-		const value_type z = std::sqrt(sqr(a_) + sqr(b_));
+		const value_type z = std::sqrt(sqr<square_type>(a_) + sqr<square_type>(b_));
 		if (!is_equal_to_zero(z)) {
 			a_ /= z;
 			b_ /= z;
@@ -76,8 +76,8 @@ public:
 		}
 	}
 
-	constexpr value_type value(const point_type& point) const {
-	    return point.x * a_ + point.y * b_ + c_;
+	constexpr square_type value(const point_type& point) const {
+	    return static_cast<square_type>(a_) * point.x + static_cast<square_type>(b_) * point.y + c_;
 	}
 
 	decimal_type angle() const {
@@ -89,11 +89,11 @@ public:
 	}
 
 	constexpr Line perpendicular(const point_type& point) const {
-	    return {-b_, a_, b_ * point.x - a_ * point.y};
+	    return {-b_, a_, static_cast<square_type>(b_) * point.x - static_cast<square_type>(a_) * point.y};
 	}
 
 	constexpr bool is_parallel(const Line& rhs) const {
-        return is_equal_to_zero(a_ * rhs.b_ - b_ * rhs.a_);
+        return is_equal_to_zero(static_cast<square_type>(a_) * rhs.b_ - static_cast<square_type>(b_) * rhs.a_);
 	}
 
 	constexpr decimal_type dist(const point_type& point) const {
@@ -101,11 +101,13 @@ public:
 	}
 
 	constexpr bool operator ==(const Line& rhs) const {
-	    return is_parallel(rhs) && is_equal_to_zero(a_ * rhs.c_ - c_ * rhs.a_) && is_equal_to_zero(b_ * rhs.c_ - c_ * rhs.b_);
+	    return is_parallel(rhs)
+	            && is_equal_to_zero(static_cast<square_type>(a_) * rhs.c_ - static_cast<square_type>(c_) * rhs.a_)
+	            && is_equal_to_zero(static_cast<square_type>(b_) * rhs.c_ - static_cast<square_type>(c_) * rhs.b_);
 	}
 
 private:
 	value_type a_;
 	value_type b_;
-	value_type c_;
+	square_type c_;
 };
