@@ -220,12 +220,28 @@ public:
         return as<decimal_vector_type>().multiply(new_len / len);
     }
 
+    template<typename C = coordinates_type, typename std::enable_if<is_2d<C>::value>::type* = nullptr>
     constexpr square_type scalar_mult(const Vector& rhs) const {
         return static_cast<square_type>(this->x) * rhs.x + static_cast<square_type>(this->y) * rhs.y;
     }
 
+    template<typename C = coordinates_type, typename std::enable_if<is_3d<C>::value>::type* = nullptr>
+    constexpr square_type scalar_mult(const Vector& rhs) const {
+        return static_cast<square_type>(this->x) * rhs.x + static_cast<square_type>(this->y) * rhs.y + static_cast<square_type>(this->z) * rhs.z;
+    }
+
+    template<typename C = coordinates_type, typename std::enable_if<is_2d<C>::value>::type* = nullptr>
     constexpr square_type vector_mult(const Vector& rhs) const {
         return static_cast<square_type>(this->x) * rhs.y - static_cast<square_type>(this->y) * rhs.x;
+    }
+
+    template<typename C = coordinates_type, typename std::enable_if<is_3d<C>::value>::type* = nullptr>
+    constexpr squared_vector_type vector_mult(const Vector& rhs) const {
+        return {
+            static_cast<square_type>(this->y) * rhs.z - static_cast<square_type>(this->z) * rhs.y,
+            static_cast<square_type>(this->z) * rhs.x - static_cast<square_type>(this->x) * rhs.z,
+            static_cast<square_type>(this->x) * rhs.y - static_cast<square_type>(this->y) * rhs.x,
+        };
     }
 
     constexpr value_type operator %(const Vector& rhs) const {
