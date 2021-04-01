@@ -6,7 +6,7 @@
 #include "maths/random.hpp"
 
 TEST(FenwickTreeSum2D, check_range_query) {
-    const int kMaxn = 100;
+    const int kMaxn = 50;
     const int kMaxValue = 10;
 
     auto a = make_vector<int>(kMaxn, kMaxn, 0);
