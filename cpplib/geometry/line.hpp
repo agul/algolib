@@ -120,6 +120,13 @@ public:
 	    point = {x, y};
 	}
 
+    constexpr decimal_line_type get_parallel(const value_type dist) const {
+        const vector_type orthogonal_vector = to_vector().orthogonal();
+        const decimal_point_type point = point_a().move_by(orthogonal_vector.normalize(dist));
+        const decimal_type c = static_cast<decimal_type>(-a_) * point.x + static_cast<decimal_type>(-b_) * point.y;
+        return {a_, b_, c};
+    }
+
     constexpr bool is_equal(const Line& rhs) const {
         return is_parallel(rhs)
                && is_equal_to_zero(static_cast<square_type>(a_) * rhs.c_ - static_cast<square_type>(c_) * rhs.a_)
