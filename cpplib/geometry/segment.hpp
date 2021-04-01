@@ -32,11 +32,7 @@ public:
     }
 
     constexpr decimal_point_type center() const {
-        decimal_point_type center = a_ + b_;
-        for (size_t i = 0; i < center.size(); ++i) {
-            center[i] /= 2;
-        }
-        return center;
+        return (a_ + b_).template as<decimal_point_type>() * 0.5;
     }
 
     constexpr const point_type& point_a() const {
@@ -47,7 +43,7 @@ public:
         return b_;
     }
 
-    constexpr bool operator==(const Segment& rhs) const {
+    constexpr bool operator ==(const Segment& rhs) const {
         return (a_ == rhs.a_ && b_ == rhs.b_) || (a_ == rhs.b_ && b_ == rhs.a_);
     }
 
