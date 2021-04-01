@@ -154,6 +154,11 @@ public:
 
     constexpr Vector(const point_type& a, const point_type& b) : coordinates_type(b.x - a.x, b.y - a.y) {}
 
+    template<typename C = coordinates_type, typename std::enable_if<is_2d<C>::value>::type* = nullptr>
+    constexpr Vector orthogonal() const {
+        return {this->y, -this->x};
+    }
+
     constexpr Vector add(const Vector& rhs) const {
         return Vector{coordinates_type::add(rhs)};
     }
