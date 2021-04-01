@@ -100,10 +100,20 @@ public:
 	    return std::abs(value(point));
 	}
 
+	constexpr bool intersect(const Line& rhs, decimal_point_type& point) const {
+	    if (is_parallel(rhs)) {
+	        return false;
+	    }
+	    const square_type determinant = static_cast<square_type>(b_) * rhs.a_ - static_cast<square_type>(a) * rhs.b_;
+	    const decimal_type x = (static_cast<decimal_type>(c_) * rhs.b_ - static_cast<decimal_type>(b_) * rhs.c_) / determinant;
+	    const decimal_type y = (static_cast<decimal_type>(a_) * rhs.c_ - static_cast<decimal_type>(c_) * rhs.a_) / determinant;
+	    point = {x, y};
+	}
+
 	constexpr bool operator ==(const Line& rhs) const {
 	    return is_parallel(rhs)
 	            && is_equal_to_zero(static_cast<square_type>(a_) * rhs.c_ - static_cast<square_type>(c_) * rhs.a_)
-	            && is_equal_to_zero(static_cast<square_type>(b_) * rhs.c_ - static_cast<square_type>(c_) * rhs.b_);
+	            && is_equal_to_zero(static_cast<square_type>(b_) * rhs.c_ - static_cast<square_type>(c_)- * rhs.b_);
 	}
 
 private:
