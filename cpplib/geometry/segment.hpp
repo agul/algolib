@@ -67,6 +67,19 @@ public:
         return is_parallel(segment.to_line());
     }
 
+    constexpr bool starts_from(const point_type& point) const {
+        return point == a_ || point == b_;
+    }
+
+    constexpr bool contains(const point_type& point, const bool strictly_inside = false) const {
+        if (!strictly_inside && starts_from(point)) {
+            return true;
+        }
+        const Vector2D<value_type, square_type, decimal_type> a_vector(point, a_);
+        const Vector2D<value_type, square_type, decimal_type> b_vector(point, b_);
+        return to_line().contains(point) && a_vector.scalar_mult(b_vector) < 0;
+    }
+
 private:
     point_type a_;
     point_type b_;
