@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <vector>
 
-#include "maths/maths.hpp"
+#include "maths/combinatorics.hpp"
 #include "maths/random.hpp"
 #include "string/string_view.hpp"
 

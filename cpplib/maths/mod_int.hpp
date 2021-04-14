@@ -4,6 +4,7 @@
 #include <type_traits>
 
 #include "maths.hpp"
+#include "euler_function.hpp"
 
 constexpr const int kBaseModulo = 1000000007;  /// caide keep
 
@@ -25,14 +26,70 @@ inline T& sub_mod(T& a, const T b, const T mod = kBaseModulo) {
 
 template<typename T>
 inline T& mul_mod(T& a, const T b, const T mod = kBaseModulo) {
-	a = static_cast<long long>(a) * b % mod;
+	a = static_cast<int64_t>(a) * b % mod;
 	return a;
+}
+
+template<typename T, typename U, typename Q>
+inline T binpow(T a, U b, Q mod) {
+    static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow().");
+    int64_t ret = 1;
+    a %= mod;
+    while (b != 0) {
+        if ((b & 1) != 0) {
+            ret = ret * a % mod;
+        }
+        a = a * a % mod;
+        b >>= 1;
+    }
+    return ret % mod;
+}
+
+template<typename T, typename U>
+T inverse_element(const T n, const U mod)
+// inverse element for prime mod
+{
+    return binpow(static_cast<int64_t>(n), mod - 2, mod);
+}
+
+template<typename T, typename U>
+std::vector<T> inverse_element_for_segment(const size_t n, const U mod)
+// inverse element for prime mod for numbers [1; n - 1]
+{
+    std::vector<T> res(n + 1);
+    res[1] = 1;
+    for (size_t i = 2; i < res.size(); ++i) {
+        res[i] = (mod -  static_cast<int64_t>(mod) / i * res[mod % i] % mod) % mod;
+    }
+    return res;
+}
+
+template<typename T>
+T inverse_element_comp_mod(const T n, const T mod)
+// inverse element for composite mod using formula inv(n) = n^(phi(mod) - 1)
+{
+    return binpow(n, euler_function(mod) - 1, mod);
+}
+
+template<typename T, typename U>
+std::vector<T> calc_inverse_factorial(const size_t n, const U mod) {
+    const std::vector<T> inv = inverse_element_for_segment<T>(n, mod);
+    std::vector<T> inversed_factorial(n + 1);
+    inversed_factorial[0] = 1;
+    inversed_factorial[1] = 1;
+    for (size_t i = 2; i < inversed_factorial.size(); ++i) {
+        inversed_factorial[i] = inversed_factorial[i - 1];
+        mul_mod(inversed_factorial[i], inv[i], mod);
+    }
+    return inversed_factorial;
 }
 
 template<typename T, T MOD = kBaseModulo>
 class ModInt {
 public:
 	using value_type = T;
+
+	static constexpr value_type Modulo = MOD;
 
 	/// caide keep
 	constexpr ModInt() : ModInt(0) {}
@@ -146,6 +203,14 @@ public:
 	template<typename C>
 	C as() const {
 		return static_cast<C>(value_);
+	}
+
+	explicit operator int() const {
+	    return as<int32_t>();
+	}
+
+	explicit operator long long() const {
+	    return as<int64_t>();
 	}
 
 	friend std::istream& operator >>(std::istream& in, ModInt& rhs) {
