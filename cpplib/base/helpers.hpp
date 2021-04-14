@@ -8,7 +8,6 @@
 
 #include "hash/safe_integral_hash.hpp"
 #include "hash/std_pair_hash.hpp"
-#include "maths/is_equal_to_zero.hpp"
 #include "constants.hpp"
 
 template<typename T>
@@ -43,15 +42,6 @@ struct MakeVector<T, 1> {
 template<typename T, typename... Args>
 auto make_vector(Args... args) -> decltype(MakeVector<T, sizeof...(Args)-1>::make_vector(args...)) {
 	return MakeVector<T, sizeof...(Args)-1>::make_vector(args...);
-}
-
-template<typename T>
-inline bool is_leap_year(const T year) {
-	return year % 400 == 0 || (year % 100 != 0 && (year & 3) == 0);
-}
-
-inline size_t get_days_in_month(const size_t month, const size_t year) {
-	return kDayMonth[month] + (month == 1 && is_leap_year(year) ? 1 : 0);
 }
 
 #define X first
