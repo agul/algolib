@@ -279,7 +279,7 @@ typename Matrix<T>::size_type Matrix<T>::get_matrix_rank(maximal_element_search_
 template <typename T>
 typename Matrix<T>::size_type Matrix<T>::get_matrix_rank(prime_modulo_calculations_tag, const value_type& mod) const {
 	static_assert(std::is_integral<value_type>::value, "Integral type required to process calculations by prime modulo");
-	Matrix<long long> tmp(*this);
+	Matrix<int64_t> tmp(*this);
 	for (auto& row : tmp) {
 		for (auto& col : row) {
 			if (col < 0) {
@@ -310,7 +310,7 @@ typename Matrix<T>::size_type Matrix<T>::get_matrix_rank(prime_modulo_calculatio
 				continue;
 			}
 			for (size_type j = col + 1; j < cols_cnt_; ++j) {
-				long long x = tmp[best_row][j];
+				int64_t x = tmp[best_row][j];
 				mul_mod(x, tmp[row][col], mod);
 				sub_mod(tmp[row][j], x, mod);
 			}
