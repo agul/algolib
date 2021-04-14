@@ -3,7 +3,7 @@
 
 #include "graph.hpp"
 
-template<typename T = long long, size_t MASK = 0>
+template<typename T = int64_t, size_t MASK = 0>
 class DirectedGraph : public Graph<T, MASK> {
 public:
 	DirectedGraph() : DirectedGraph(0) {}

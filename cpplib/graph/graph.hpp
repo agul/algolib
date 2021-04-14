@@ -19,7 +19,7 @@ struct is_weighted
 	static constexpr bool value = (MASK & GraphType::Weighted) != 0;
 };
 
-template<typename T = long long, size_t MASK = 0>
+template<typename T = int64_t, size_t MASK = 0>
 class Graph {
 public:
 	using EdgesList = std::vector<size_t>;
@@ -208,7 +208,7 @@ public:
 	}
 
 	bool is_sparse() const {
-		return vertices_count_ == 0 || sqr(static_cast<long long>(vertices_count_)) >= (edges_count() << 4);
+		return vertices_count_ == 0 || sqr<int64_t>(vertices_count_) >= (edges_count() << 4);
 	}
 
 	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
