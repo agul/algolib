@@ -15,7 +15,7 @@ public:
         find_bridges(graph);
     }
 
-    const std::vector<size_t>& bridges() const {
+    [[nodiscard]] const std::vector<size_t>& bridges() const {
         return bridges_;
     }
 

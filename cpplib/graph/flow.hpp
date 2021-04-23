@@ -30,7 +30,7 @@ public:
         push_edge(to, from, backward_capacity, 0);
     }
 
-    Edge get_edge(const size_t id) const {
+    [[nodiscard]] Edge get_edge(const size_t id) const {
         return edges[id];
     }
 

@@ -48,15 +48,15 @@ public:
         return *this;
     }
 
-    size_type size() const {
+    [[nodiscard]] size_type size() const {
         return parent_.size();
     }
 
-    size_type sets_count() const {
+    [[nodiscard]] size_type sets_count() const {
         return sets_count_;
     }
 
-    const std::vector<size_type>& data() const {
+    [[nodiscard]] const std::vector<size_type>& data() const {
         return parent_;
     }
 

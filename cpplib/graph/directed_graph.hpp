@@ -10,18 +10,18 @@ public:
 
     explicit DirectedGraph(const size_t vertices_count) : Graph<T, MASK>(vertices_count) {}
 
-    bool is_acyclic() const;
+    [[nodiscard]] bool is_acyclic() const;
     bool top_sort_acyclic(std::vector<size_t>* vertex_order = nullptr) const;
     void top_sort_rec(std::vector<size_t>* vertex_order) const;
 
     bool solve_2_sat(std::vector<size_t>* component_id = nullptr) const;
 
-    DirectedGraph reversed() const;
+    [[nodiscard]] DirectedGraph reversed() const;
 
     size_t scc(std::vector<size_t>* vertex_color = nullptr) const;
 
 private:
-    void top_sort_rec_impl(const size_t vertex, std::vector<size_t>& order, std::vector<bool>& used) const;
+    void top_sort_rec_impl(size_t vertex, std::vector<size_t>& order, std::vector<bool>& used) const;
 };
 
 template<typename T, size_t MASK>

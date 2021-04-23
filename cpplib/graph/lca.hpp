@@ -24,32 +24,32 @@ public:
         dfs(graph, starting_vertex, starting_vertex);
     }
 
-    const std::vector<size_type>& tin() const {
+    [[nodiscard]] const std::vector<size_type>& tin() const {
         return tin_;
     }
 
-    const std::vector<size_type>& tout() const {
+    [[nodiscard]] const std::vector<size_type>& tout() const {
         return tout_;
     }
 
-    const std::vector<std::vector<size_type>>& up() const {
+    [[nodiscard]] const std::vector<std::vector<size_type>>& up() const {
         return up_;
     }
 
-    size_type tin(const size_type vertex) const {
+    [[nodiscard]] size_type tin(const size_type vertex) const {
         return tin_[vertex];
     }
 
-    size_type tout(const size_type vertex) const {
+    [[nodiscard]] size_type tout(const size_type vertex) const {
         return tout_[vertex];
     }
 
-    bool upper(const size_type lhs, const size_type rhs) const {
+    [[nodiscard]] bool upper(const size_type lhs, const size_type rhs) const {
         const size_type time_in = tin_[rhs];
         return tin_[lhs] <= time_in && tout_[lhs] >= time_in;
     }
 
-    size_type query(const size_type lhs, const size_type rhs) const {
+    [[nodiscard]] size_type query(const size_type lhs, const size_type rhs) const {
         if (upper(lhs, rhs)) {
             return lhs;
         }

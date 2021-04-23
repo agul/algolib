@@ -30,20 +30,20 @@ public:
             const std::vector<T>& weight, const size_t index) :
             from_(from), to_(to), weight_(weight), index_(index) {}
 
-        size_t from() const {
+        [[nodiscard]] size_t from() const {
             return from_[index_];
         }
 
-        size_t to() const {
+        [[nodiscard]] size_t to() const {
             return to_[index_];
         }
 
-        template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
-        T weight() const {
+        template<size_t Mask = MASK, typename std::enable_if_t<is_weighted<Mask>::value>::type* = nullptr>
+        [[nodiscard]] T weight() const {
             return weight_[index_];
         }
 
-        constexpr size_t id() const {
+        [[nodiscard]] constexpr size_t id() const {
             return index_;
         }
 
@@ -51,7 +51,7 @@ public:
             index_ = index;
         }
 
-        constexpr Edge reversed() const {
+        [[nodiscard]] constexpr Edge reversed() const {
             return Edge(to_, from_, weight_, index_);
         }
 
@@ -97,15 +97,15 @@ public:
             const std::vector<size_t>& to, const std::vector<T>& weight) :
             begin_(range.begin(), from, to, weight), end_(range.end(), from, to, weight) {}
 
-        constexpr const_iterator begin() const {
+        [[nodiscard]] constexpr const_iterator begin() const {
             return begin_;
         }
 
-        constexpr const_iterator end() const {
+        [[nodiscard]] constexpr const_iterator end() const {
             return end_;
         }
 
-        constexpr size_t size() const {
+        [[nodiscard]] constexpr size_t size() const {
             return end_ - begin_;
         }
 
@@ -130,15 +130,15 @@ public:
         edges_.resize(vertices_count_);
     }
 
-    IntegerRange<size_t> vertices() const {
+    [[nodiscard]] IntegerRange<size_t> vertices() const {
         return range(vertices_count_);
     }
 
-    IntegerRange<size_t>::const_iterator begin() const {
+    [[nodiscard]] IntegerRange<size_t>::const_iterator begin() const {
         return vertices().begin();
     }
 
-    IntegerRange<size_t>::const_iterator end() const {
+    [[nodiscard]] IntegerRange<size_t>::const_iterator end() const {
         return vertices().end();
     }
 
@@ -150,7 +150,7 @@ public:
         return EdgesHolder<IntegerRange<size_t>>(range(from_.size()), from_, to_, weight_);
     }
 
-    const std::vector<size_t>& edges_list(const size_t vertex) const {
+    [[nodiscard]] const std::vector<size_t>& edges_list(const size_t vertex) const {
         return edges_[vertex];
     }
 
@@ -177,7 +177,7 @@ public:
     }
 
     template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
-    T weight(const size_t index) const {
+    [[nodiscard]] T weight(const size_t index) const {
         return weight_[index];
     }
 
@@ -212,7 +212,7 @@ public:
     }
 
     template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
-    std::vector<std::vector<T>> floyd() const {
+    [[nodiscard]] std::vector<std::vector<T>> floyd() const {
         auto dist = make_vector<T>(vertices_count_, vertices_count_, weight_infinity());
         for (const auto v : vertices()) {
             dist[v][v] = 0;

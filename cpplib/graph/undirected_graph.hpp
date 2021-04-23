@@ -55,11 +55,11 @@ public:
         return total_weight;
     }
 
-    bool is_connected() const {
+    [[nodiscard]] bool is_connected() const {
         return dsu().sets_count() == 1;
     }
 
-    DSU dsu() const {
+    [[nodiscard]] DSU dsu() const {
         DSU dsu(this->vertices_count_);
         for (const auto& it : this->edges()) {
             dsu.unite(it.from(), it.to());
@@ -67,7 +67,7 @@ public:
         return dsu;
     }
 
-    std::vector<size_t> labelled_components() const {
+    [[nodiscard]] std::vector<size_t> labelled_components() const {
         return dsu().finalize().data();
     }
 };
