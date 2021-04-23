@@ -156,23 +156,23 @@ public:
 
 	void clear();
 
-	size_t vertices_count() const {
+	[[nodiscard]] size_t vertices_count() const {
 		return vertices_count_;
 	}
 
-	size_t edges_count() const {
+	[[nodiscard]] size_t edges_count() const {
 		return from_.size();
 	}
 
-	size_t from(const size_t index) const {
+    [[nodiscard]] size_t from(const size_t index) const {
 		return from_[index];
 	}
 
-	size_t to(const size_t index) const {
+    [[nodiscard]] size_t to(const size_t index) const {
 		return to_[index];
 	}
 
-	Edge operator [](const size_t index) const {
+    [[nodiscard]] Edge operator [](const size_t index) const {
 		return Edge(from_, to_, weight_, index);
 	}
 
@@ -182,7 +182,7 @@ public:
 	}
 
 	template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
-	T weight_infinity() const {
+	static T weight_infinity() {
 		return std::numeric_limits<T>::max() / 2;
 	}
 
@@ -207,7 +207,7 @@ public:
 		add_directed_edge(edge.from(), edge.to(), edge.weight());
 	}
 
-	bool is_sparse() const {
+	[[nodiscard]] bool is_sparse() const {
 		return vertices_count_ == 0 || sqr<int64_t>(vertices_count_) >= (edges_count() << 4);
 	}
 
@@ -261,12 +261,12 @@ public:
 		return dist[finish_vertex];
 	}
 
-	size_t find_vertex_with_max_degree() const;
+	[[nodiscard]] size_t find_vertex_with_max_degree() const;
 
 	bool is_bipartite(std::vector<size_t>& partition) const;
 	void maximal_matching(std::vector<size_t>* match) const;
 
-	bool try_kuhn(const size_t vertex, std::vector<bool>& used, std::vector<size_t>& match) const;
+	bool try_kuhn(size_t vertex, std::vector<bool>& used, std::vector<size_t>& match) const;
 
 protected:
 	void push_edge(const size_t from, const size_t to) {
