@@ -32,7 +32,11 @@ public:
 		return tout_;
 	}
 
-	size_type tin(const size_type vertex) const {
+	const std::vector<std::vector<size_type>>& up() const {
+	    return up_;
+	}
+
+    size_type tin(const size_type vertex) const {
 		return tin_[vertex];
 	}
 
