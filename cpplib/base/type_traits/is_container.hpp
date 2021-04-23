@@ -4,12 +4,12 @@
 
 template<typename T>
 constexpr auto has_begin(int) -> decltype(std::begin(std::declval<T>()), true) {
-	return true;
+    return true;
 }
 
 template<typename T>
 constexpr bool has_begin(...) {
-	return false;
+    return false;
 }
 
 template <typename T>

@@ -9,21 +9,21 @@ static constexpr int32_t DX[8] = { -1, 0, 1, 0, -1, -1, 1, 1 };
 static constexpr int32_t DY[8] = { 0, 1, 0, -1, -1, 1, 1, -1 };
 
 enum Direction : uint8_t {
-	Up,
-	Right,
-	Down,
-	Left,
-	UpLeft,
-	UpRight,
-	DownRight,
-	DownLeft,
-	North = Up,
-	East = Right,
-	South = Down,
-	West = Left,
-	NorthWest = UpLeft,
-	NorthEast = UpRight,
-	SouthEast = DownRight,
-	SouthWest = DownLeft,
-	Unknown = 255
+    Up,
+    Right,
+    Down,
+    Left,
+    UpLeft,
+    UpRight,
+    DownRight,
+    DownLeft,
+    North = Up,
+    East = Right,
+    South = Down,
+    West = Left,
+    NorthWest = UpLeft,
+    NorthEast = UpRight,
+    SouthEast = DownRight,
+    SouthWest = DownLeft,
+    Unknown = 255
 };

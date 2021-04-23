@@ -11,24 +11,24 @@
 #include "base/type_traits/is_sane_integer.hpp"
 
 std::string to_string(const std::string& s) {
-	return '"' + s + '"';
+    return '"' + s + '"';
 }
 
 std::string to_string(const char* s) {
-	return to_string(std::string(s));
+    return to_string(std::string(s));
 }
 
 std::string to_string(const char ch) {
-	return {'\'', ch, '\''};
+    return {'\'', ch, '\''};
 }
 
 std::string to_string(const bool b) {
-	return (b ? "true" : "false");
+    return (b ? "true" : "false");
 }
 
 template<typename T, typename std::enable_if<Disjunction<is_sane_integer<T>::value, std::is_floating_point<T>::value>::value>::type* = nullptr>
 std::string to_string(const T value) {
-	return std::to_string(value);
+    return std::to_string(value);
 }
 
 template<typename A, typename B>
@@ -36,60 +36,60 @@ std::string to_string(const std::pair<A, B>&);
 
 template<typename T, typename std::enable_if<is_container<T>::value>::type* = nullptr>
 std::string to_string(const T& container) {
-	bool is_first = true;
-	std::string res = "{";
-	for (const auto & x : container) {
-		if (!is_first) {
-			res += ", ";
-		}
-		is_first = false;
-		res += to_string(x);
-	}
-	res += "}";
-	return res;
+    bool is_first = true;
+    std::string res = "{";
+    for (const auto & x : container) {
+        if (!is_first) {
+            res += ", ";
+        }
+        is_first = false;
+        res += to_string(x);
+    }
+    res += "}";
+    return res;
 }
 
 template<typename A, typename B>
 std::string to_string(const std::pair<A, B>& p) {
-	return "(" + to_string(p.first) + ", " + to_string(p.second) + ")";
+    return "(" + to_string(p.first) + ", " + to_string(p.second) + ")";
 }
 
 std::vector<std::string> vec_splitter(std::string s) {
-	s += ',';
-	std::vector<std::string> res;
-	while (!s.empty()) {
-		const size_t pos = s.find(',');
-		res.emplace_back(s.substr(0, pos));
-		s = s.substr(pos + 1);
-	}
-	return res;
+    s += ',';
+    std::vector<std::string> res;
+    while (!s.empty()) {
+        const size_t pos = s.find(',');
+        res.emplace_back(s.substr(0, pos));
+        s = s.substr(pos + 1);
+    }
+    return res;
 }
 
 void debug_out(
-		std::vector<std::string> __attribute__ ((unused)) args,
-		__attribute__ ((unused)) int idx,
-		__attribute__ ((unused)) int LINE_NUM)
+        std::vector<std::string> __attribute__ ((unused)) args,
+        __attribute__ ((unused)) int idx,
+        __attribute__ ((unused)) int LINE_NUM)
 {
-	std::cerr << std::endl;
+    std::cerr << std::endl;
 }
 
 template<typename Head, typename... Tail>
 void debug_out(std::vector<std::string> args, int idx, int LINE_NUM, Head H, Tail... T) {
-	std::stringstream ss;
-	ss << to_string(H);
-	if (idx > 0) {
-		std::cerr << ", ";
-	} else {
-		std::cerr << "Line(" << LINE_NUM << ") ";
-	}
-	const std::string& arg = args[idx];
-	const std::string value = ss.str();
-	if (arg == value) {
-		std::cerr << arg;
-	} else {
-		std::cerr << arg << " = " << value;
-	}
-	debug_out(args, idx + 1, LINE_NUM, T...);
+    std::stringstream ss;
+    ss << to_string(H);
+    if (idx > 0) {
+        std::cerr << ", ";
+    } else {
+        std::cerr << "Line(" << LINE_NUM << ") ";
+    }
+    const std::string& arg = args[idx];
+    const std::string value = ss.str();
+    if (arg == value) {
+        std::cerr << arg;
+    } else {
+        std::cerr << arg << " = " << value;
+    }
+    debug_out(args, idx + 1, LINE_NUM, T...);
 }
 
 #ifdef HOME

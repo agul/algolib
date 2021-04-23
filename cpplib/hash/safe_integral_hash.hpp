@@ -9,11 +9,11 @@
 template<typename T, typename std::enable_if<std::is_integral<T>::value>::type* = nullptr>
 class SafeIntegralHash {
 public:
-	const T kRandomValue = static_cast<T>(Random::current_timestamp());
+    const T kRandomValue = static_cast<T>(Random::current_timestamp());
 
-	T operator ()(const T& value) const {
-		return value ^ kRandomValue;
-	}
+    T operator ()(const T& value) const {
+        return value ^ kRandomValue;
+    }
 };
 
 template<typename Key, typename Value, typename std::enable_if<std::is_integral<Key>::value>::type* = nullptr>
