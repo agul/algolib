@@ -67,7 +67,7 @@ public:
 private:
     void push_edge(const vertex_id_type from, const vertex_id_type to, const weight_type capacity, const weight_type backward_capacity) {
         graph[from].emplace_back(edges.size());
-        edges.emplace_back(from, to, capacity, 0);
+        edges.emplace_back(from, to, capacity, backward_capacity);
     }
 
     bool bfs(const vertex_id_type from, const vertex_id_type to) {
