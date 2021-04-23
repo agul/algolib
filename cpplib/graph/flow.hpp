@@ -42,14 +42,18 @@ public:
 		T flow = 0;
 		while (bfs(from, to)) {
 			pointer.assign(pointer.size(), 0);
-			while ((const T pushed = dfs(from, to, infinity)) != 0) {
+			while (true) {
+                const T pushed = dfs(from, to, infinity);
+                if (pushed == 0) {
+                    break;
+                }
 				flow += pushed;
 			}
 		}
 		return flow;
 	}
 
-	size_t edges_count() const {
+	[[nodiscard]] size_t edges_count() const {
 		return edges.size();
 	}
 
@@ -87,7 +91,8 @@ private:
 			const size_t id = graph[vertex][i];
 			Edge& e = edges[id];
 			if (dist[e.to] == dist[vertex] + 1) {
-				if ((const T pushed = dfs(e.to, to, std::min(mx, e.cap - e.flow))) != 0) {
+                const T pushed = dfs(e.to, to, std::min(mx, e.cap - e.flow));
+				if (pushed != 0) {
 					e.flow += pushed;
 					edges[id ^ 1].flow -= pushed;
 					return pushed;
