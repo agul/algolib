@@ -6,7 +6,8 @@
 
 #include "maths/random.hpp"
 
-template<typename T, typename std::enable_if<std::is_integral<T>::value>::type* = nullptr>
+// todo[c++17] use is_integral_v
+template<typename T, typename std::enable_if_t<std::is_integral<T>::value>* = nullptr>
 class SafeIntegralHash {
 public:
     const T kRandomValue = static_cast<T>(Random::current_timestamp());
@@ -16,14 +17,14 @@ public:
     }
 };
 
-template<typename Key, typename Value, typename std::enable_if<std::is_integral<Key>::value>::type* = nullptr>
+template<typename Key, typename Value, typename std::enable_if_t<std::is_integral<Key>::value>* = nullptr>
 using SafeUnorderedMap = std::unordered_map<Key, Value, SafeIntegralHash<Key>>;
 
-template<typename Key, typename Value, typename std::enable_if<std::is_integral<Key>::value>::type* = nullptr>
+template<typename Key, typename Value, typename std::enable_if_t<std::is_integral<Key>::value>* = nullptr>
 using SafeUnorderedMultiMap = std::unordered_multimap<Key, Value, SafeIntegralHash<Key>>;
 
-template<typename Key, typename std::enable_if<std::is_integral<Key>::value>::type* = nullptr>
+template<typename Key, typename std::enable_if_t<std::is_integral<Key>::value>* = nullptr>
 using SafeUnorderedSet = std::unordered_set<Key, SafeIntegralHash<Key>>;
 
-template<typename Key, typename std::enable_if<std::is_integral<Key>::value>::type* = nullptr>
+template<typename Key, typename std::enable_if_t<std::is_integral<Key>::value>* = nullptr>
 using SafeUnorderedMultiSet = std::unordered_multiset<Key, SafeIntegralHash<Key>>;

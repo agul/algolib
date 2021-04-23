@@ -276,6 +276,7 @@ typename Matrix<T>::size_type Matrix<T>::get_matrix_rank(maximal_element_search_
     return rank;
 }
 
+// todo[c++17] use is_integral_v
 template <typename T>
 typename Matrix<T>::size_type Matrix<T>::get_matrix_rank(prime_modulo_calculations_tag, const value_type& mod) const {
     static_assert(std::is_integral<value_type>::value, "Integral type required to process calculations by prime modulo");

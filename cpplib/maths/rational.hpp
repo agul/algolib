@@ -5,6 +5,7 @@
 
 #include "maths.hpp"
 
+// todo[c++17] use is_integral_v
 template<typename T>
 class Rational {
 public:

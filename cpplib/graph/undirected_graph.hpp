@@ -18,29 +18,29 @@ public:
 
     explicit UndirectedGraph(const size_type vertices_count) : base_graph_type(vertices_count) {}
 
-    template<mask_type Mask = MASK, typename std::enable_if<!is_weighted<Mask>::value>::type* = nullptr>
+    template<mask_type Mask = MASK, typename std::enable_if_t<!is_weighted_v<Mask>>* = nullptr>
     void add_bidirectional_edge(const vertex_id_type from, const vertex_id_type to) {
         this->add_directed_edge(from, to);
         this->add_directed_edge(to, from);
     }
 
-    template<mask_type Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+    template<mask_type Mask = MASK, typename std::enable_if_t<is_weighted_v<Mask>>* = nullptr>
     void add_bidirectional_edge(const vertex_id_type from, const vertex_id_type to, const weight_type weight) {
         this->add_directed_edge(from, to, weight);
         this->add_directed_edge(to, from, weight);
     }
 
-    template<mask_type Mask = MASK, typename std::enable_if<!is_weighted<Mask>::value>::type* = nullptr>
+    template<mask_type Mask = MASK, typename std::enable_if_t<!is_weighted_v<Mask>>* = nullptr>
     void add_bidirectional_edge(const typename base_graph_type::Edge& edge) {
         add_bidirectional_edge(edge.from(), edge.to());
     }
 
-    template<mask_type Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+    template<mask_type Mask = MASK, typename std::enable_if_t<is_weighted_v<Mask>>* = nullptr>
     void add_bidirectional_edge(const typename base_graph_type::Edge& edge) {
         add_bidirectional_edge(edge.from(), edge.to(), edge.weight());
     }
 
-    template<mask_type Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+    template<mask_type Mask = MASK, typename std::enable_if_t<is_weighted_v<Mask>>* = nullptr>
     weight_type minimal_spanning_tree(std::vector<vertex_id_type>* mst = nullptr) const {
         std::vector<edge_id_type> graph_edges(this->edges_count());
         std::iota(graph_edges.begin(), graph_edges.end(), 0);

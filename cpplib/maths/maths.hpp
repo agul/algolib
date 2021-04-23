@@ -21,6 +21,7 @@ constexpr inline T sqr(const T& x) {
     return x * x;
 }
 
+// todo[c++17] use is_integral_v
 template<typename T, typename U>
 inline T binpow(T a, U b) {
     static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow().");

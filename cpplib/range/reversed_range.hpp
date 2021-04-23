@@ -5,7 +5,7 @@
 template<typename T>
 class ReversedRange {
 public:
-    using const_iterator = typename std::decay<T>::type::const_iterator;
+    using const_iterator = typename std::decay_t<T>::const_iterator;
     using reverse_iterator = std::reverse_iterator<const_iterator>;
 
     explicit constexpr ReversedRange(const T& iterable) : begin_(iterable.begin()), end_(iterable.end()) {}

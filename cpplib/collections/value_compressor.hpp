@@ -70,7 +70,8 @@ private:
     }
 };
 
-template<typename T, typename std::enable_if<std::is_integral<T>::value>::type* = nullptr>
+// todo[c++17] use is_integral_v
+template<typename T, typename std::enable_if_t<std::is_integral<T>::value>* = nullptr>
 using IntegralValueCompressor = ValueCompressor<T, SafeIntegralHash<T>>;
 
 
@@ -92,12 +93,12 @@ std::vector<size_type> compressed_impl(const Collection& collection) {
 }  // namespace
 
 
-template<typename T, typename Collection, typename std::enable_if<std::is_integral<T>::value>::type* = nullptr>
+template<typename T, typename Collection, typename std::enable_if_t<std::is_integral<T>::value>* = nullptr>
 std::vector<std::size_t> compressed(const Collection& collection) {
     return compressed_impl<T, Collection, IntegralValueCompressor<T>>(collection);
 }
 
-template<typename T, typename Collection, typename std::enable_if<!std::is_integral<T>::value>::type* = nullptr>
+template<typename T, typename Collection, typename std::enable_if_t<!std::is_integral<T>::value>* = nullptr>
 std::vector<std::size_t> compressed(const Collection& collection) {
     return compressed_impl<T, Collection, ValueCompressor<T>>(collection);
 }

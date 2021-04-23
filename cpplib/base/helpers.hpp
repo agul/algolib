@@ -45,7 +45,7 @@ auto make_vector(Args... args) -> decltype(MakeVector<T, sizeof...(Args)-1>::mak
     return MakeVector<T, sizeof...(Args)-1>::make_vector(args...);
 }
 
-template<typename T, typename U, typename std::enable_if<is_container<T>::value && is_container<U>::value>::type* = nullptr>
+template<typename T, typename U, typename std::enable_if_t<is_container_v<T> && is_container_v<U>>* = nullptr>
 T as_container(const U& collection) {
     return T{std::begin(collection), std::end(collection)};
 }

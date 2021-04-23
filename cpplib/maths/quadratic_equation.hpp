@@ -4,7 +4,8 @@
 #include "maths.hpp"
 #include "is_equal_to_zero.hpp"
 
-template<typename T, typename std::enable_if<std::is_floating_point<T>::value>::type* = nullptr>
+// todo[c++17] use is_floating_point_v
+template<typename T, typename std::enable_if_t<std::is_floating_point<T>::value>* = nullptr>
 size_t solve_quadratic_equation(const T a, const T b, const T c, T& x1, T& x2) {
     const T D = sqr(b) - 4 * a * c;
     if (D < -EPS) {

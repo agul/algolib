@@ -26,7 +26,7 @@ std::string to_string(const bool b) {
     return (b ? "true" : "false");
 }
 
-template<typename T, typename std::enable_if<Disjunction<is_sane_integer<T>::value, std::is_floating_point<T>::value>::value>::type* = nullptr>
+template<typename T, typename std::enable_if_t<Disjunction<is_sane_integer<T>::value, std::is_floating_point<T>::value>::value>* = nullptr>
 std::string to_string(const T value) {
     return std::to_string(value);
 }
@@ -34,7 +34,7 @@ std::string to_string(const T value) {
 template<typename A, typename B>
 std::string to_string(const std::pair<A, B>&);
 
-template<typename T, typename std::enable_if<is_container<T>::value>::type* = nullptr>
+template<typename T, typename std::enable_if_t<is_container_v<T>>* = nullptr>
 std::string to_string(const T& container) {
     bool is_first = true;
     std::string res = "{";

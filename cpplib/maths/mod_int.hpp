@@ -30,6 +30,7 @@ inline T& mul_mod(T& a, const T b, const T mod = kBaseModulo) {
     return a;
 }
 
+// todo[c++17] use is_integral_v
 template<typename T, typename U, typename Q>
 inline T binpow(T a, U b, Q mod) {
     static_assert(std::is_integral<U>::value, "Degree must be integral. For real degree use pow().");

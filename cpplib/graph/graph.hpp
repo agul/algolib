@@ -20,6 +20,9 @@ struct is_weighted
     static constexpr bool value = (MASK & GraphType::Weighted) != 0;
 };
 
+template<uint32_t MASK>
+constexpr bool is_weighted_v = is_weighted<MASK>::value;
+
 template<typename T = int64_t, uint32_t MASK = 0>
 class Graph {
 public:
@@ -50,7 +53,7 @@ public:
             return to_[index_];
         }
 
-        template<mask_type Mask = MASK, typename std::enable_if_t<is_weighted<Mask>::value>::type* = nullptr>
+        template<mask_type Mask = MASK, typename std::enable_if_t<is_weighted_v<Mask>>* = nullptr>
         [[nodiscard]] weight_type weight() const {
             return weight_[index_];
         }
@@ -200,33 +203,33 @@ public:
         return Edge(from_, to_, weight_, index);
     }
 
-    template<mask_type Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+    template<mask_type Mask = MASK, typename std::enable_if_t<is_weighted_v<Mask>>* = nullptr>
     [[nodiscard]] weight_type weight(const edge_id_type index) const {
         return weight_[index];
     }
 
-    template<mask_type Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+    template<mask_type Mask = MASK, typename std::enable_if_t<is_weighted_v<Mask>>* = nullptr>
     static weight_type weight_infinity() {
         return std::numeric_limits<weight_type>::max() / 2;
     }
 
-    template<mask_type Mask = MASK, typename std::enable_if<!is_weighted<Mask>::value>::type* = nullptr>
+    template<mask_type Mask = MASK, typename std::enable_if_t<!is_weighted_v<Mask>>* = nullptr>
     void add_directed_edge(const vertex_id_type from, const vertex_id_type to) {
         push_edge(from, to);
     }
 
-    template<mask_type Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+    template<mask_type Mask = MASK, typename std::enable_if_t<is_weighted_v<Mask>>* = nullptr>
     void add_directed_edge(const vertex_id_type from, const vertex_id_type to, const weight_type weight) {
         weight_.emplace_back(weight);
         push_edge(from, to);
     }
 
-    template<mask_type Mask = MASK, typename std::enable_if<!is_weighted<Mask>::value>::type* = nullptr>
+    template<mask_type Mask = MASK, typename std::enable_if_t<!is_weighted_v<Mask>>* = nullptr>
     void add_directed_edge(const Edge& edge) {
         add_directed_edge(edge.from(), edge.to());
     }
 
-    template<mask_type Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+    template<mask_type Mask = MASK, typename std::enable_if_t<is_weighted_v<Mask>>* = nullptr>
     void add_directed_edge(const Edge& edge) {
         add_directed_edge(edge.from(), edge.to(), edge.weight());
     }
@@ -235,7 +238,7 @@ public:
         return vertices_count_ == 0 || sqr<int64_t>(vertices_count_) >= (edges_count() << 4);
     }
 
-    template<mask_type Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+    template<mask_type Mask = MASK, typename std::enable_if_t<is_weighted_v<Mask>>* = nullptr>
     [[nodiscard]] std::vector<std::vector<weight_type>> floyd() const {
         auto dist = make_vector<weight_type>(vertices_count_, vertices_count_, weight_infinity());
         for (const auto v : vertices()) {
@@ -254,7 +257,7 @@ public:
         return dist;
     }
 
-    template<mask_type Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+    template<mask_type Mask = MASK, typename std::enable_if_t<is_weighted_v<Mask>>* = nullptr>
     void dijkstra(const vertex_id_type start_vertex, std::vector<weight_type>* distance, std::vector<edge_id_type>* last_edge = nullptr) const {
         if (is_sparse()) {
             sparse_dijkstra(start_vertex, distance, last_edge);
@@ -263,7 +266,7 @@ public:
         }
     }
 
-    template<mask_type Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+    template<mask_type Mask = MASK, typename std::enable_if_t<is_weighted_v<Mask>>* = nullptr>
     weight_type dijkstra(const vertex_id_type start_vertex, const vertex_id_type finish_vertex, std::vector<edge_id_type>* path = nullptr) const {
         if (start_vertex == finish_vertex) {
             return 0;
@@ -308,7 +311,7 @@ protected:
     size_type vertices_count_;
 
 private:
-    template<mask_type Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+    template<mask_type Mask = MASK, typename std::enable_if_t<is_weighted_v<Mask>>* = nullptr>
     void sparse_dijkstra(const vertex_id_type start_vertex, std::vector<weight_type>* distance, std::vector<edge_id_type>* last_edge) const {
         std::vector<weight_type> dist(vertices_count_, weight_infinity());
         std::vector<edge_id_type> last(vertices_count_, std::numeric_limits<edge_id_type>::max());
@@ -339,7 +342,7 @@ private:
         }
     }
 
-    template<mask_type Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+    template<mask_type Mask = MASK, typename std::enable_if_t<is_weighted_v<Mask>>* = nullptr>
     void dense_dijkstra(const vertex_id_type start_vertex, std::vector<weight_type>* distance, std::vector<edge_id_type>* last_edge) const {
         std::vector<bool> used(vertices_count_);
         std::vector<weight_type> dist(vertices_count_, weight_infinity());
