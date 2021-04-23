@@ -4,45 +4,52 @@
 #include "dsu.hpp"
 #include "graph.hpp"
 
-template<typename T = int64_t, size_t MASK = 0>
+template<typename T = int64_t, uint32_t MASK = 0>
 class UndirectedGraph : public Graph<T, MASK> {
 public:
+    using base_graph_type = Graph<T, MASK>;
+    using weight_type = typename base_graph_type::weight_type;
+    using vertex_id_type = typename base_graph_type::vertex_id_type;
+    using edge_id_type = typename base_graph_type::edge_id_type;
+    using size_type = typename base_graph_type::size_type;
+    using mask_type = typename base_graph_type::mask_type;
+
     UndirectedGraph() : UndirectedGraph(0) {}
 
-    explicit UndirectedGraph(const size_t vertices_count) : Graph<T, MASK>(vertices_count) {}
+    explicit UndirectedGraph(const size_type vertices_count) : base_graph_type(vertices_count) {}
 
-    template<size_t Mask = MASK, typename std::enable_if<!is_weighted<Mask>::value>::type* = nullptr>
-    void add_bidirectional_edge(const size_t from, const size_t to) {
+    template<mask_type Mask = MASK, typename std::enable_if<!is_weighted<Mask>::value>::type* = nullptr>
+    void add_bidirectional_edge(const vertex_id_type from, const vertex_id_type to) {
         this->add_directed_edge(from, to);
         this->add_directed_edge(to, from);
     }
 
-    template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
-    void add_bidirectional_edge(const size_t from, const size_t to, const T weight) {
+    template<mask_type Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+    void add_bidirectional_edge(const vertex_id_type from, const vertex_id_type to, const weight_type weight) {
         this->add_directed_edge(from, to, weight);
         this->add_directed_edge(to, from, weight);
     }
 
-    template<size_t Mask = MASK, typename std::enable_if<!is_weighted<Mask>::value>::type* = nullptr>
-    void add_bidirectional_edge(const typename Graph<T, MASK>::Edge& edge) {
+    template<mask_type Mask = MASK, typename std::enable_if<!is_weighted<Mask>::value>::type* = nullptr>
+    void add_bidirectional_edge(const typename base_graph_type::Edge& edge) {
         add_bidirectional_edge(edge.from(), edge.to());
     }
 
-    template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
-    void add_bidirectional_edge(const typename Graph<T, MASK>::Edge& edge) {
+    template<mask_type Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+    void add_bidirectional_edge(const typename base_graph_type::Edge& edge) {
         add_bidirectional_edge(edge.from(), edge.to(), edge.weight());
     }
 
-    template<size_t Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
-    T minimal_spanning_tree(std::vector<size_t>* mst = nullptr) const {
-        std::vector<size_t> graph_edges(this->edges_count());
+    template<mask_type Mask = MASK, typename std::enable_if<is_weighted<Mask>::value>::type* = nullptr>
+    weight_type minimal_spanning_tree(std::vector<vertex_id_type>* mst = nullptr) const {
+        std::vector<edge_id_type> graph_edges(this->edges_count());
         std::iota(graph_edges.begin(), graph_edges.end(), 0);
-        std::sort(graph_edges.begin(), graph_edges.end(), [&](const size_t& lhs, const size_t& rhs) {
+        std::sort(graph_edges.begin(), graph_edges.end(), [this](const edge_id_type& lhs, const edge_id_type& rhs) {
             return this->weight(lhs) < this->weight(rhs);
         });
         DSU dsu(this->vertices_count_);
-        T total_weight = 0;
-        std::vector<size_t> tree;
+        weight_type total_weight = 0;
+        std::vector<vertex_id_type> tree;
         for (const auto& it : graph_edges) {
             if (dsu.unite(this->from(it), this->to(it))) {
                 total_weight += this->weight(it);
@@ -67,7 +74,7 @@ public:
         return dsu;
     }
 
-    [[nodiscard]] std::vector<size_t> labelled_components() const {
+    [[nodiscard]] DSU::container_type labelled_components() const {
         return dsu().finalize().data();
     }
 };

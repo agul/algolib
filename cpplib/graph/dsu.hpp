@@ -1,12 +1,15 @@
 #pragma once
 #include <algorithm>
 #include <numeric>
+#include <vector>
 
 #include "maths/random.hpp"
 
 class DSU {
 public:
     using size_type = std::size_t;
+    using vertex_id_type = std::size_t;
+    using container_type = std::vector<vertex_id_type>;
 
     DSU() : DSU(0) {}
 
@@ -20,16 +23,16 @@ public:
         sets_count_ = vertices_count;
     }
 
-    size_type find_set(const size_type vertex) {
+    vertex_id_type find_set(const vertex_id_type vertex) {
         if (vertex != parent_[vertex]) {
             parent_[vertex] = find_set(parent_[vertex]);
         }
         return parent_[vertex];
     }
 
-    bool unite(const size_type a, const size_type b) {
-        size_type x = find_set(a);
-        size_type y = find_set(b);
+    bool unite(const vertex_id_type a, const vertex_id_type b) {
+        vertex_id_type x = find_set(a);
+        vertex_id_type y = find_set(b);
         if (x == y) {
             return false;
         }
@@ -56,11 +59,11 @@ public:
         return sets_count_;
     }
 
-    [[nodiscard]] const std::vector<size_type>& data() const {
+    [[nodiscard]] const container_type& data() const {
         return parent_;
     }
 
 private:
-    std::vector<size_type> parent_;
+    container_type parent_;
     size_type sets_count_;
 };
