@@ -45,7 +45,7 @@ public:
         return std::numeric_limits<weight_type>::max() / 2;
     }
 
-    weight_type findFlow(const vertex_id_type from, const vertex_id_type to, const weight_type infinity = weight_infinity()) {
+    weight_type find_flow(const vertex_id_type from, const vertex_id_type to, const weight_type infinity = weight_infinity()) {
         weight_type flow = 0;
         while (bfs(from, to)) {
             pointer.assign(pointer.size(), 0);
