@@ -501,6 +501,12 @@ bool Graph<T, MASK>::try_kuhn(const vertex_id_type vertex, std::vector<bool>& us
 template<typename T, uint32_t MASK>
 bool Graph<T, MASK>::find_eulerian_path(std::vector<edge_id_type>* eulerian_path, const bool strict_cycle, const vertex_id_type starting_vertex, const bool strict_starting_vertex) {
     const size_type real_edges_count = edges_count() / (is_directed() ? 1 : 2);
+    if (real_edges_count == 0) {
+        if (eulerian_path != nullptr) {
+            eulerian_path->clear();
+        }
+        return true;
+    }
     std::vector<size_type> inbound_degree(vertices_count_, 0);
     std::vector<size_type> outbound_degree(vertices_count_, 0);
     for (const auto& it : edges()) {
@@ -515,22 +521,43 @@ bool Graph<T, MASK>::find_eulerian_path(std::vector<edge_id_type>* eulerian_path
             odd_degree_vertices.emplace_back(v);
         }
     }
+    if (is_directed()) {
+        int32_t min_diff = 0;
+        int32_t max_diff = 0;
+        size_type not_equal_degree_vertices_count = 0;
+        for (const vertex_id_type v : vertices()) {
+            const int32_t diff = static_cast<int32_t>(outbound_degree[v]) - inbound_degree[v];
+            if (diff != 0) {
+                ++not_equal_degree_vertices_count;
+                min_diff = std::min(min_diff, diff);
+                max_diff = std::max(max_diff, diff);
+            }
+        }
+        if (not_equal_degree_vertices_count > 0 && (not_equal_degree_vertices_count != 2 || min_diff != -1 || max_diff != 1)) {
+            return false;
+        }
+    }
     vertex_id_type root = starting_vertex;
     if (!odd_degree_vertices.empty()) {
         if (odd_degree_vertices.size() > 2 || strict_cycle) {
             return false;
         }
         const bool starting_vertex_has_odd_degree = (std::find(odd_degree_vertices.cbegin(), odd_degree_vertices.cend(), starting_vertex) != odd_degree_vertices.cend());
-        if (!starting_vertex_has_odd_degree) {
+        if (!starting_vertex_has_odd_degree || outbound_degree[starting_vertex] < inbound_degree[starting_vertex]) {
             if (strict_starting_vertex) {
                 return false;
             }
-            root = odd_degree_vertices.front();
+            for (const vertex_id_type v : odd_degree_vertices) {
+                if (outbound_degree[v] > inbound_degree[v]) {
+                    root = v;
+                    break;
+                }
+            }
         }
     }
     else if (outbound_degree[root] == 0) {
         if (strict_starting_vertex) {
-            return real_edges_count == 0;
+            return false;
         }
         for (const vertex_id_type v : vertices()) {
             if (outbound_degree[v] > 0) {
