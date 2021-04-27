@@ -8,6 +8,7 @@
 #include "maths/maths.hpp"
 #include "range/ranges.hpp"
 #include "collections/queue/queue.hpp"
+#include "collections/stack/stack.hpp"
 
 enum GraphType {
     Weighted = 1
@@ -41,7 +42,7 @@ public:
                 const std::vector<vertex_id_type>& to,
                 const std::vector<weight_type>& weight,
                 const edge_id_type index
-            ) :
+        ) :
                 from_(from), to_(to), weight_(weight), index_(index)
         {}
 
@@ -92,7 +93,7 @@ public:
                     const std::vector<vertex_id_type>& from,
                     const std::vector<vertex_id_type>& to,
                     const std::vector<weight_type>& weight
-                ) :
+            ) :
                     BaseConstIterator(it),
                     cur_edge_(from, to, weight, 0)
             {}
@@ -119,7 +120,7 @@ public:
                 const std::vector<vertex_id_type>& from,
                 const std::vector<vertex_id_type>& to,
                 const std::vector<weight_type>& weight
-            ) :
+        ) :
                 begin_(range.begin(), from, to, weight),
                 end_(range.end(), from, to, weight)
         {}
@@ -305,6 +306,8 @@ public:
 
     [[nodiscard]] vertex_id_type find_vertex_with_max_degree() const;
 
+    bool find_eulerian_path(std::vector<edge_id_type>* eulerian_path = nullptr, bool strict_cycle = false, vertex_id_type starting_vertex = 0, bool strict_starting_vertex = false);
+
     bool is_bipartite(std::vector<vertex_id_type>& partition) const;
     void maximal_matching(std::vector<vertex_id_type>* match) const;
 
@@ -412,9 +415,9 @@ void Graph<T, MASK>::clear() {
 template<typename T, uint32_t MASK>
 typename Graph<T, MASK>::vertex_id_type Graph<T, MASK>::find_vertex_with_max_degree() const {
     const auto iter = std::max_element(edges_.begin(), edges_.end(),
-        [](const EdgesList& lhs, const EdgesList& rhs) {
-            return lhs.size() < rhs.size();
-        });
+                                       [](const EdgesList& lhs, const EdgesList& rhs) {
+                                           return lhs.size() < rhs.size();
+                                       });
     return static_cast<vertex_id_type>(std::distance(edges_.begin(), iter));
 }
 
@@ -493,4 +496,97 @@ bool Graph<T, MASK>::try_kuhn(const vertex_id_type vertex, std::vector<bool>& us
         }
     }
     return false;
+}
+
+template<typename T, uint32_t MASK>
+bool Graph<T, MASK>::find_eulerian_path(std::vector<edge_id_type>* eulerian_path, const bool strict_cycle, const vertex_id_type starting_vertex, const bool strict_starting_vertex) {
+    const size_type real_edges_count = edges_count() / (is_directed() ? 1 : 2);
+    std::vector<size_type> inbound_degree(vertices_count_, 0);
+    std::vector<size_type> outbound_degree(vertices_count_, 0);
+    for (const auto& it : edges()) {
+        ++outbound_degree[it.from()];
+        if (is_directed()) {
+            ++inbound_degree[it.to()];  // in undirected graph all edges are duplicated: forward and backward
+        }
+    }
+    std::vector<vertex_id_type> odd_degree_vertices;
+    for (const vertex_id_type v : vertices()) {
+        if ((inbound_degree[v] + outbound_degree[v]) % 2 == 1) {
+            odd_degree_vertices.emplace_back(v);
+        }
+    }
+    vertex_id_type root = starting_vertex;
+    if (!odd_degree_vertices.empty()) {
+        if (odd_degree_vertices.size() > 2 || strict_cycle) {
+            return false;
+        }
+        const bool starting_vertex_has_odd_degree = (std::find(odd_degree_vertices.cbegin(), odd_degree_vertices.cend(), starting_vertex) != odd_degree_vertices.cend());
+        if (!starting_vertex_has_odd_degree) {
+            if (strict_starting_vertex) {
+                return false;
+            }
+            root = odd_degree_vertices.front();
+        }
+    }
+    else if (outbound_degree[root] == 0) {
+        if (strict_starting_vertex) {
+            return real_edges_count == 0;
+        }
+        for (const vertex_id_type v : vertices()) {
+            if (outbound_degree[v] > 0) {
+                root = v;
+            }
+        }
+    }
+
+    std::vector<bool> used_edge(edges_count(), false);
+    auto mark_used = [&used_edge, this](const edge_id_type edge_id) {
+        used_edge[edge_id] = true;
+        if (!is_directed()) {
+            used_edge[edge_id ^ 1] = true;  // mark reversed edge as directed
+        }
+    };
+
+    std::vector<typename EdgesList::const_iterator> current_edge_pointer(vertices_count_);
+    for (const vertex_id_type v : vertices()) {
+        current_edge_pointer[v] = edges_[v].cbegin();
+    }
+    const edge_id_type kFakeEdgeId = std::numeric_limits<edge_id_type>::max();
+    const size_type max_edges_count = real_edges_count + 1;  // add fake edge
+    Stack<std::pair<vertex_id_type, edge_id_type>> stack(max_edges_count);
+    stack.push({root, kFakeEdgeId});
+
+    std::vector<edge_id_type> result;
+    result.reserve(max_edges_count);
+    while (!stack.empty()) {
+        vertex_id_type v;
+        edge_id_type last_edge_id;
+        std::tie(v, last_edge_id) = stack.top();
+
+        auto& iterator = current_edge_pointer[v];
+        if (iterator == edges_[v].cend()) {
+            result.emplace_back(last_edge_id);
+            stack.pop();
+            continue;
+        }
+
+        const edge_id_type next_edge_id = *iterator++;
+        if (used_edge[next_edge_id]) {
+            continue;
+        }
+        mark_used(next_edge_id);
+        stack.push({to(next_edge_id), next_edge_id});
+    }
+    if (!result.empty() && result.back() == kFakeEdgeId) {
+        result.pop_back();
+    }
+    if (result.size() != real_edges_count) {
+        return false;
+    }
+
+    if (eulerian_path != nullptr) {
+        std::reverse(result.begin(), result.end());
+        eulerian_path->swap(result);
+    }
+    return true;
 }

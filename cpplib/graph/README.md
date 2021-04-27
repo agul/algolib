@@ -10,6 +10,12 @@ Used and tested at:
 Used and tested at:
 - 2020-05-17 = **[Codeforces 1354E](https://codeforces.com/contest/1354/problem/E)** (https://github.com/agul/contest-tasks/blob/master/ERaskraskaGrafa.cpp)
 
+### `Graph::find_eulerian_path()`
+Used and tested at:
+- 2021-04-26 = **[Codeforces 1494F](https://codeforces.com/contest/1494/problem/F)** (https://github.com/agul/contest-tasks/blob/master/FUnichtozhenieReber.cpp)
+- 2021-04-27 = **[Codeforces 1361C](https://codeforces.com/contest/1361/problem/C)** (https://github.com/agul/contest-tasks/blob/master/FDzhonniIOzhereleMegan.cpp)
+- 2021-04-27 = **[Codeforces 267B](https://codeforces.com/contest/267/problem/B)** (https://github.com/agul/contest-tasks/blob/master/BDomino.cpp)
+
 ### `LCA`
 Used and tested at:
 - 2020-05-24 = **[Codechef CHEFTRIP](https://www.codechef.com/problems/CHEFTRIP)** (https://github.com/agul/contest-tasks/blob/master/ChefinaOnATrip.cpp)
