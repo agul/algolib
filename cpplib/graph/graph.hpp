@@ -151,6 +151,10 @@ public:
         clear();
     }
 
+    [[nodiscard]] virtual bool is_directed() const {
+        return true;
+    }
+
     void init(const size_type vertices_count) {
         clear();
         vertices_count_ = vertices_count;
@@ -222,6 +226,17 @@ public:
     void add_directed_edge(const vertex_id_type from, const vertex_id_type to, const weight_type weight) {
         weight_.emplace_back(weight);
         push_edge(from, to);
+    }
+
+    template<mask_type Mask = MASK, typename std::enable_if_t<!is_weighted_v<Mask>>* = nullptr>
+    void remove_last_directed_edge() {
+        pop_edge();
+    }
+
+    template<mask_type Mask = MASK, typename std::enable_if_t<is_weighted_v<Mask>>* = nullptr>
+    void remove_last_directed_edge() {
+        weight_.pop_back();
+        pop_edge();
     }
 
     template<mask_type Mask = MASK, typename std::enable_if_t<!is_weighted_v<Mask>>* = nullptr>
@@ -301,6 +316,13 @@ protected:
         from_.emplace_back(from);
         to_.emplace_back(to);
         edges_[from].emplace_back(edge_id);
+    }
+
+    void pop_edge() {
+        const vertex_id_type from = from_.back();
+        from_.pop_back();
+        to_.pop_back();
+        edges_[from].pop_back();
     }
 
     std::vector<EdgesList> edges_;
