@@ -10,7 +10,6 @@ public:
     using base_graph_type = Graph<T, MASK>;
     using weight_type = typename base_graph_type::weight_type;
     using vertex_id_type = typename base_graph_type::vertex_id_type;
-    using edge_id_type = typename base_graph_type::edge_id_type;
     using size_type = typename base_graph_type::size_type;
     using mask_type = typename base_graph_type::mask_type;
 
@@ -47,28 +46,6 @@ public:
     void remove_last_bidirectional_edge() {
         this->remove_last_directed_edge();
         this->remove_last_directed_edge();  // each bidirectional edge is added twice
-    }
-
-    template<mask_type Mask = MASK, typename std::enable_if_t<is_weighted_v<Mask>>* = nullptr>
-    weight_type minimal_spanning_tree(std::vector<vertex_id_type>* mst = nullptr) const {
-        std::vector<edge_id_type> graph_edges(this->edges_count());
-        std::iota(graph_edges.begin(), graph_edges.end(), 0);
-        std::sort(graph_edges.begin(), graph_edges.end(), [this](const edge_id_type& lhs, const edge_id_type& rhs) {
-            return this->weight(lhs) < this->weight(rhs);
-        });
-        DSU dsu(this->vertices_count_);
-        weight_type total_weight = 0;
-        std::vector<vertex_id_type> tree;
-        for (const auto& it : graph_edges) {
-            if (dsu.unite(this->from(it), this->to(it))) {
-                total_weight += this->weight(it);
-                tree.emplace_back(it);
-            }
-        }
-        if (mst != nullptr) {
-            mst->swap(tree);
-        }
-        return total_weight;
     }
 
     [[nodiscard]] bool is_connected() const {

@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <vector>
 
 #include "graph.hpp"
@@ -18,11 +19,7 @@ public:
     bool top_sort_acyclic(std::vector<vertex_id_type>* vertex_order = nullptr) const;
     void top_sort_rec(std::vector<vertex_id_type>* vertex_order) const;
 
-    bool solve_2_sat(std::vector<vertex_id_type>* component_id = nullptr) const;
-
     [[nodiscard]] DirectedGraph reversed() const;
-
-    size_type scc(std::vector<vertex_id_type>* vertex_color = nullptr) const;
 
 private:
     void top_sort_rec_impl(vertex_id_type vertex, std::vector<vertex_id_type>& order, std::vector<bool>& used) const;
@@ -40,47 +37,6 @@ DirectedGraph<T, MASK> DirectedGraph<T, MASK>::reversed() const {
 template<typename T, uint32_t MASK>
 bool DirectedGraph<T, MASK>::is_acyclic() const {
     return this->top_sort_acyclic();
-}
-
-template<typename T, uint32_t MASK>
-bool DirectedGraph<T, MASK>::solve_2_sat(std::vector<vertex_id_type>* component_id) const
-// requires graph with 2N vertices:
-// each initial vertex should be duplicated as v -> (v * 2, v * 2 + 1) as (v, !v)
-// returns false if the 2-SAT problem has no solution
-{
-    std::vector<vertex_id_type> order;
-    this->top_sort_rec(&order);
-
-    std::vector<vertex_id_type> component(this->vertices_count_, std::numeric_limits<vertex_id_type>::max());
-    const auto reversed = this->reversed();
-    std::function<void(vertex_id_type, vertex_id_type)> dfs = [&reversed, &dfs, &component](const vertex_id_type v, const vertex_id_type component_id) {
-        component[v] = component_id;
-        for (const auto& edge : reversed.edges(v)) {
-            const vertex_id_type to = edge.to();
-            if (component[to] == std::numeric_limits<vertex_id_type>::max()) {
-                dfs(to, component_id);
-            }
-        }
-    };
-
-    size_type components_count = 0;
-    for (const vertex_id_type v : order) {
-        if (component[v] == std::numeric_limits<vertex_id_type>::max()) {
-            dfs(v, components_count++);
-        }
-    }
-
-    bool result = true;
-    for (const vertex_id_type v : this->vertices()) {
-        if (component[v] == component[v ^ 1]) {
-            result = false;
-            break;
-        }
-    }
-    if (component_id != nullptr) {
-        component_id->swap(component);
-    }
-    return result;
 }
 
 template<typename T, uint32_t MASK>
@@ -138,38 +94,4 @@ void DirectedGraph<T, MASK>::top_sort_rec_impl(const vertex_id_type vertex, std:
         }
     }
     order.emplace_back(vertex);
-}
-
-template<typename T, uint32_t MASK>
-typename DirectedGraph<T, MASK>::size_type DirectedGraph<T, MASK>::scc(std::vector<vertex_id_type>* vertex_color) const {
-    const DirectedGraph<T, MASK> rev_graph = reversed();
-    std::vector<vertex_id_type> order(this->vertices_count_);
-    top_sort_rec(&order);
-    std::vector<bool> used(this->vertices_count_, false);
-    std::vector<vertex_id_type> color(this->vertices_count_);
-    Queue<vertex_id_type> queue(this->vertices_count_);
-    size_type components_count = 0;
-    for (const auto& v : order) {
-        if (!used[v]) {
-            queue.clear();
-            queue.push(v);
-            while (!queue.empty()) {
-                const vertex_id_type vertex = queue.pop_front();
-                color[vertex] = components_count;
-                used[vertex] = true;
-                for (const auto& it : rev_graph.edges(vertex)) {
-                    const vertex_id_type to = it.to();
-                    if (!used[to]) {
-                        used[to] = true;
-                        queue.push(to);
-                    }
-                }
-            }
-            ++components_count;
-        }
-    }
-    if (vertex_color != nullptr) {
-        vertex_color->swap(color);
-    }
-    return components_count;
 }

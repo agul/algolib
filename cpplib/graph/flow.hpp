@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <cstddef>
 #include <cstring>
 #include <limits>
@@ -14,19 +15,20 @@ public:
     using vertex_id_type = std::size_t;
     using size_type = std::size_t;
 
-    class Edge {
-    public:
-        Edge(const vertex_id_type from, const vertex_id_type to, const weight_type capacity, const weight_type flow) :
-            from(from), to(to), cap(capacity), flow(flow)
-        {}
-
+    struct Edge {
         vertex_id_type from;
         vertex_id_type to;
         weight_type cap;
         weight_type flow;
     };
 
-    explicit DinicFlow(const size_type n) : graph(n), queue(n), pointer(n), dist(n), used(n) {}
+    explicit DinicFlow(const size_type vertices_count) :
+            graph_(vertices_count),
+            queue_(vertices_count),
+            pointer_(vertices_count),
+            dist_(vertices_count),
+            used_(vertices_count)
+    {}
 
     void add_directed_edge(const vertex_id_type from, const vertex_id_type to, const weight_type capacity) {
         return add_bidirectional_edge(from, to, capacity, 0);
@@ -38,7 +40,7 @@ public:
     }
 
     [[nodiscard]] Edge get_edge(const edge_id_type id) const {
-        return edges[id];
+        return edges_[id];
     }
 
     [[nodiscard]] static weight_type weight_infinity() {
@@ -48,7 +50,7 @@ public:
     weight_type find_flow(const vertex_id_type from, const vertex_id_type to, const weight_type infinity = weight_infinity()) {
         weight_type flow = 0;
         while (bfs(from, to)) {
-            pointer.assign(pointer.size(), 0);
+            pointer_.assign(pointer_.size(), 0);
             while (true) {
                 const weight_type pushed = dfs(from, to, infinity);
                 if (pushed == 0) {
@@ -61,47 +63,47 @@ public:
     }
 
     [[nodiscard]] size_type edges_count() const {
-        return edges.size();
+        return edges_.size();
     }
 
 private:
     void push_edge(const vertex_id_type from, const vertex_id_type to, const weight_type capacity, const weight_type backward_capacity) {
-        graph[from].emplace_back(edges.size());
-        edges.emplace_back(from, to, capacity, backward_capacity);
+        graph_[from].emplace_back(edges_.size());
+        edges_.emplace_back(Edge{from, to, capacity, backward_capacity});
     }
 
     bool bfs(const vertex_id_type from, const vertex_id_type to) {
-        used.assign(used.size(), false);
-        queue.clear();
-        queue.push(from);
-        used[from] = true;
-        while (!queue.empty()) {
-            const vertex_id_type vertex = queue.pop_front();
-            for (const edge_id_type id : graph[vertex]) {
-                const Edge& edge = edges[id];
-                if (used[edge.to] || edge.cap == edge.flow) {
+        used_.assign(used_.size(), false);
+        queue_.clear();
+        queue_.push(from);
+        used_[from] = true;
+        while (!queue_.empty()) {
+            const vertex_id_type vertex = queue_.pop_front();
+            for (const edge_id_type id : graph_[vertex]) {
+                const Edge& edge = edges_[id];
+                if (used_[edge.to] || edge.cap == edge.flow) {
                     continue;
                 }
-                used[edge.to] = true;
-                dist[edge.to] = dist[vertex] + 1;
-                queue.push(edge.to);
+                used_[edge.to] = true;
+                dist_[edge.to] = dist_[vertex] + 1;
+                queue_.push(edge.to);
             }
         }
-        return used[to];
+        return used_[to];
     }
 
-    weight_type dfs(const vertex_id_type vertex, const vertex_id_type to, const weight_type mx) {
-        if (mx == 0 || vertex == to) {
-            return mx;
+    weight_type dfs(const vertex_id_type vertex, const vertex_id_type to, const weight_type max_capacity) {
+        if (max_capacity == 0 || vertex == to) {
+            return max_capacity;
         }
-        for (edge_id_type& i = pointer[vertex]; i < graph[vertex].size(); ++i) {
-            const edge_id_type id = graph[vertex][i];
-            Edge& e = edges[id];
-            if (dist[e.to] == dist[vertex] + 1) {
-                const weight_type pushed = dfs(e.to, to, std::min(mx, e.cap - e.flow));
+        for (edge_id_type& i = pointer_[vertex]; i < graph_[vertex].size(); ++i) {
+            const edge_id_type id = graph_[vertex][i];
+            Edge& e = edges_[id];
+            if (dist_[e.to] == dist_[vertex] + 1) {
+                const weight_type pushed = dfs(e.to, to, std::min(max_capacity, e.cap - e.flow));
                 if (pushed != 0) {
                     e.flow += pushed;
-                    edges[id ^ 1].flow -= pushed;
+                    edges_[id ^ 1].flow -= pushed;
                     return pushed;
                 }
             }
@@ -109,11 +111,11 @@ private:
         return 0;
     }
 
-    std::vector<std::vector<edge_id_type>> graph;
-    std::vector<Edge> edges;
+    std::vector<std::vector<edge_id_type>> graph_;
+    std::vector<Edge> edges_;
 
-    Queue<vertex_id_type> queue;
-    std::vector<edge_id_type> pointer;
-    std::vector<weight_type> dist;
-    std::vector<bool> used;
+    Queue<vertex_id_type> queue_;
+    std::vector<edge_id_type> pointer_;
+    std::vector<weight_type> dist_;
+    std::vector<bool> used_;
 };

@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "undirected_graph.hpp"
+#include "range/ranges.hpp"
 
 class LCA {
 public:
