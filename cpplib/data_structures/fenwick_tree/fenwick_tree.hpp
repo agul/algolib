@@ -2,11 +2,15 @@
 #include <algorithm>
 #include <cstdint>
 #include <cstdlib>
+#include <type_traits>
 #include <vector>
 
 template<typename T>
 class FenwickTreeSum {
 public:
+    using index_type = int32_t;
+    static_assert(std::is_signed<index_type>::value, "Index type in fenwick tree should be signed integer");
+
     using value_type = T;
     using size_type = std::size_t;
     using container_type = std::vector<value_type>;
@@ -30,15 +34,15 @@ public:
         data_.assign(data_.size(), 0);
     }
 
-    size_type size() const {
+    [[nodiscard]] size_type size() const {
         return data_.size();
     }
 
-    container_type& data() {
+    [[nodiscard]] container_type& data() {
         return data_;
     }
 
-    const container_type& data() const {
+    [[nodiscard]] const container_type& data() const {
         return data_;
     }
 
@@ -48,25 +52,25 @@ public:
         }
     }
 
-    value_type query(const size_type index) const
+    [[nodiscard]] value_type query(const size_type index) const
     // returns sum for range [0, index]
     {
         value_type res = 0;
-        for (int32_t v = index; v >= 0; v = (v & (v + 1)) - 1) {
+        for (index_type v = index; v >= 0; v = (v & (v + 1)) - 1) {
             res += data_[v];
         }
         return res;
     }
 
-    value_type query(const size_type left, const size_type right) const
+    [[nodiscard]] value_type query(const size_type left, const size_type right) const
     // returns sum for range [left, right]
     {
         if (right < left) {
             return 0;
         }
         value_type res = 0;
-        int32_t r = right;
-        int32_t l = std::max(0, static_cast<int32_t>(left) - 1);
+        index_type r = right;
+        index_type l = std::max(0, static_cast<index_type>(left) - 1);
         for (; r >= l; r = (r & (r + 1)) - 1) {
             res += data_[r];
         }
@@ -75,7 +79,6 @@ public:
                 res -= data_[l];
             }
         }
-        return res;
     }
 
 private:
