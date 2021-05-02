@@ -7,8 +7,8 @@
 template<typename T>
 class DoubleHasher {
 public:
-    static const uint32_t AMOD = static_cast<uint32_t>(1e9) + 7;
-    static const uint32_t BMOD = static_cast<uint32_t>(1e9) + 9;
+    static constexpr uint32_t AMOD = static_cast<uint32_t>(1e9) + 7;
+    static constexpr uint32_t BMOD = static_cast<uint32_t>(1e9) + 9;
 
     using a_integer_type = ModInt<T, AMOD>;
     using b_integer_type = ModInt<T, BMOD>;

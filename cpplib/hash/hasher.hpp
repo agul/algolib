@@ -25,13 +25,13 @@ public:
         }
     }
 
-    value_type get_hash(const size_type left, const size_type right) const
+    [[nodiscard]] value_type get_hash(const size_type left, const size_type right) const
     // returns hash for range [left, right]
     {
         return hash_[right + 1] - hash_[left] * deg_[right - left + 1];
     }
 
-    size_type lcp(const size_type a, const size_type b) const {
+    [[nodiscard]] size_type lcp(const size_type a, const size_type b) const {
         size_type L = 0;
         size_type R = size_ - std::max(a, b) + 1;
         while (R - L > 1) {
@@ -45,7 +45,7 @@ public:
         return L;
     }
 
-    bool compare_substrings(const size_type a, const size_type b) const {
+    [[nodiscard]] bool compare_substrings(const size_type a, const size_type b) const {
         return compare_substrings_impl(a, b);
     }
 
@@ -55,10 +55,9 @@ private:
     std::vector<value_type> hash_;
     const container_type& data_;
 
-    bool compare_substrings_impl(size_type a, size_type b) const {
+    [[nodiscard]] bool compare_substrings_impl(const size_type a, const size_type b) const {
         const size_type max_substring_length = size_ - std::max(a, b);
         const size_type lcp_length = lcp(a, b);
         return lcp_length < max_substring_length ? data_[a + lcp_length] < data_[b + lcp_length] : b < a;
     }
-
 };
