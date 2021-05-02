@@ -175,3 +175,20 @@ constexpr size_t binary_power(const T value) {
     }
     return bit_width(value) - 1;
 }
+
+template<typename T, typename std::enable_if_t<std::is_unsigned<T>::value>* = nullptr>
+std::string to_binary_string(const T value) {
+    if (value == 0) {
+        return "0";
+    }
+    std::string res;
+    for (size_t i = 0; i < bit_width(value); ++i) {
+        res += (test_bit(value, i) ? '1' : '0');
+    }
+    return res;
+}
+
+template<typename T, typename std::enable_if_t<!std::is_unsigned<T>::value>* = nullptr>
+std::string to_binary_string(const T value) {
+    return to_binary_string(static_cast<typename std::make_unsigned_t<T>>(value));
+}
